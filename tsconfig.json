@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "declarationDir": "wwwroot/assets/js",
+    "module": "ES6",
+    "noEmitOnError": true,
+    "noImplicitAny": false,
+    "outDir": "wwwroot/assets/js/",
+    "removeComments": true,
+    "sourceMap": true,
+    "strict": true,
+    "target": "ES6"
+  },
+  "include": [
+    "Scripts/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "wwwroot/lib"
+  ]
+}

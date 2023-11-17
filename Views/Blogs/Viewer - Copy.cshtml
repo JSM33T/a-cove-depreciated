@@ -3,8 +3,8 @@
 @{
     HTMLProps props = new()
             {
-                DataBsTheme = "dark",
-                HeaderClass = "navbar navbar-expand-lg fixed-top bg-dark",
+                DataBsTheme = "",
+                HeaderClass = "navbar navbar-expand-lg fixed-top bg-light",
                 IsLoaderActive = "",
                 BodyClass="bg-secondary"
             };
@@ -20,7 +20,7 @@
 }
 
 @section Styles{
-     <link rel="stylesheet" media="screen" href="/assets/vendor/prismjs/themes/prism.min.css">
+        <link rel="stylesheet" media="screen" href="/assets/vendor/prismjs/themes/prism.min.css">
     <link rel="stylesheet" media="screen" href="/assets/vendor/prismjs/plugins/toolbar/prism-toolbar.min.css">
     <link rel="stylesheet" media="screen" href="/assets/vendor/prismjs/plugins/line-numbers/prism-line-numbers.min.css">
     <link href="~/assets/vendor/prismjs/plugins/toolbar/prism-toolbar.min.css" rel="stylesheet" />
@@ -40,35 +40,34 @@
    
 }
 <style>
-     /* Define the initial state of the element */
-    /* Define the keyframes for the fade-in animation */
-    @@keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-    img{
+    /* Define the initial state of the element */
+/* Define the keyframes for the fade-in animation */
+@@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+img{
 
-    border-radius: 10px;
-    }
+border-radius: 10px;
+}
 
-    /* Apply the animation to elements with the class 'fd-in' */
-    pre {
-      animation: fadeIn 1s ease-in-out; /* You can adjust the duration and timing function as needed */
-    }
+/* Apply the animation to elements with the class 'fd-in' */
+pre {
+  animation: fadeIn 1s ease-in-out; /* You can adjust the duration and timing function as needed */
+}
 
-    /* Optionally, you can add a class to delay the animation */
-    pre.delayed {
-      animation-delay: 0.5s; /* You can adjust the delay as needed */
-    }
+/* Optionally, you can add a class to delay the animation */
+pre.delayed {
+  animation-delay: 0.5s; /* You can adjust the delay as needed */
+}
 
 </style>   
 
-<div class="bg-dark" style="border-bottom-left-radius: 20px;
-border-bottom-right-radius: 20px;">
+<div class="bg-dark" style="border-bottom-left-radius: 20px;border-bottom-right-radius: 20px;">
     <section class="container py-5 mt-5 mb-md-2 mb-lg-3 mb-xl-4 bg-dark btn-rad-1">
 
         <!-- Breadcrumb -->
@@ -84,21 +83,21 @@ border-bottom-right-radius: 20px;">
 
           <!-- Post title + post meta -->
           <div class="col-lg-12 pb-2 pb-lg-0 mb-4 mb-lg-0">
-            <h1 class="display-6 pb-2 pb-lg-3 text-light">Dynamic HTML Properties in Razor Pages (c#/.NET/MVC) </h1>
+            <h1 class="display-4 pb-2 pb-lg-3">Dynamic HTML Properties Rendering Tutorial</h1>
             <div class="d-flex flex-wrap align-items-center mt-n2">
-              <span class="text-light fs-sm fw-normal p-0 mt-2 me-3">
+              <span class="text-body-secondary fs-sm fw-normal p-0 mt-2 me-3">
                 12
                 <i class="ai-share fs-lg ms-1"></i>
               </span>
-              <a class="nav-link position-relative text-primary fs-sm fw-normal d-flex align-items-end p-0 mt-2" href="#comments" data-scroll data-scroll-offset="60">
-                <span class="text-light position-absolute w-100 h-100 top-0 start-0" data-bs-toggle="collapse" data-bs-target="#commentsCollapse"></span>
+              <a class="nav-link position-relative text-body-secondary fs-sm fw-normal d-flex align-items-end p-0 mt-2" href="#comments" data-scroll data-scroll-offset="60">
+                <span class="position-absolute w-100 h-100 top-0 start-0" data-bs-toggle="collapse" data-bs-target="#commentsCollapse"></span>
                 4
                 <i class="ai-message fs-lg ms-1"></i>
               </a>
               <span class="fs-xs opacity-20 mt-2 mx-3">|</span>
-              <span class="fs-sm text-light mt-2">16 hours ago</span>
+              <span class="fs-sm text-body-secondary mt-2">16 hours ago</span>
               <span class="fs-xs opacity-20 mt-2 mx-3">|</span>
-              <a class="badge text-nav text-light fs-xs border mt-2 " href="#">Inspiration</a>
+              <a class="badge text-nav fs-xs border mt-2" href="#">Inspiration</a>
             </div>
           </div>
 
@@ -118,7 +117,7 @@ border-bottom-right-radius: 20px;">
 
 
           <!-- Sidebar -->
-          <aside class="col-lg-3 offset-lg-1 pt-4 pt-lg-4 pb-5" style="margin-top: -5rem;">
+          <aside class="col-lg-3 offset-lg-1 pt-4 pt-lg-4 pb-5" style="margin-top: 3rem;">
             <div class="position-sticky top-0 mt-2 mt-md-3 mt-lg-0" style="padding-top: 7rem;">
 
               <!-- Sharing -->

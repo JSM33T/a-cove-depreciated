@@ -328,6 +328,42 @@
         "dist/jarallax.min.js",
         "dist/jarallax.min.js.map"
       ]
+    },
+    {
+      "library": "vue@3.3.8",
+      "destination": "wwwroot/lib/vue/",
+      "files": [
+        "dist/vue.cjs.js",
+        "dist/vue.cjs.min.js",
+        "dist/vue.cjs.prod.js",
+        "dist/vue.cjs.prod.min.js",
+        "dist/vue.d.mts",
+        "dist/vue.d.ts",
+        "dist/vue.esm-browser.js",
+        "dist/vue.esm-browser.min.js",
+        "dist/vue.esm-browser.prod.js",
+        "dist/vue.esm-browser.prod.min.js",
+        "dist/vue.esm-bundler.js",
+        "dist/vue.esm-bundler.min.js",
+        "dist/vue.global.js",
+        "dist/vue.global.min.js",
+        "dist/vue.global.prod.js",
+        "dist/vue.global.prod.min.js",
+        "dist/vue.runtime.esm-browser.js",
+        "dist/vue.runtime.esm-browser.min.js",
+        "dist/vue.runtime.esm-browser.prod.js",
+        "dist/vue.runtime.esm-browser.prod.min.js",
+        "dist/vue.runtime.esm-bundler.js",
+        "dist/vue.runtime.esm-bundler.min.js",
+        "dist/vue.runtime.global.js",
+        "dist/vue.runtime.global.min.js",
+        "dist/vue.runtime.global.prod.js",
+        "dist/vue.runtime.global.prod.min.js"
+      ]
+    },
+    {
+      "library": "@types/vue@2.0.0",
+      "destination": "wwwroot/lib/types/vue/"
     }
   ]
 }

@@ -6,16 +6,12 @@ namespace almondCove.Controllers
 {
     public class AuthRouteController : Controller
     {
-        [Route("/login")]
+        [Route("/account/{something?}")]
         public IActionResult Login()
         {
-            return View("Views/Auth/Login.cshtml");
+            return View("Views/Auth/Index.cshtml");
         }
-        [Route("/sing-up")]
-        public IActionResult SignUp()
-        {
-            return View("Views/Auth/SiugnUp.cshtml");
-        }
+     
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

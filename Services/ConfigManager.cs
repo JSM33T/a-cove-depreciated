@@ -36,7 +36,7 @@ namespace almondCove.Services
 
     public string GetCryptKey()
     {
-      return _configuration["EncryptionKey"];
+      return _configuration["EncryptionKey"]?.ToString();
     }
   }
 }

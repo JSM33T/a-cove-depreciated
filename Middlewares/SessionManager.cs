@@ -8,15 +8,18 @@ namespace almondCove.Middlewares
     {
         private readonly RequestDelegate _next;
         private readonly IConfigManager _configManager;
+        private readonly ILogger<SessionManager> _logger;
 
-        public SessionManager(RequestDelegate next,IConfigManager configManager)
+        public SessionManager(RequestDelegate next,IConfigManager configManager,ILogger<SessionManager> logger )
         {
             _next = next;
             _configManager = configManager;
+            _logger = logger;
         }
 
         public async Task InvokeAsync(HttpContext context)
         {
+            _logger.LogInformation("working serologgggg");
             if (context.Session.GetString("username") == null)
             {
                 if (context.Request.Cookies.ContainsKey("SessionKey"))

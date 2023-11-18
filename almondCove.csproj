@@ -34,6 +34,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.4" />
+    <PackageReference Include="Serilog" Version="3.1.1" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="5.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -1313,7 +1317,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Update="Scripts\dedicated\bbbb.ts">
+    <TypeScriptCompile Update="Scripts\dedicated\blogs.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Update="Scripts\dedicated\something.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Update="Scripts\theme-switcher.ts">

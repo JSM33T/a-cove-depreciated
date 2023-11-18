@@ -1,5 +1,5 @@
 ﻿// main.ts
-import { Email } from '../Interfaces/email.interface';
+import { Email } from '../dedicated/Interfaces/email.interface';
 import { validateEmail, postData } from '../global.js';
 
 document.addEventListener('DOMContentLoaded', function () {

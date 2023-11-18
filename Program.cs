@@ -2,6 +2,8 @@ using almondCove.Extensions;
 using almondCove.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Session;
+using Microsoft.Extensions.Logging;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSession(options =>
@@ -22,6 +24,20 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
            options.ExpireTimeSpan = TimeSpan.FromDays(150);
            options.SlidingExpiration = true; // Extend the expiration time with each request
        });
+
+
+Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Warning()
+           .WriteTo.Console() // Optional: Write to console for testing
+           .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day) // Specify the file path and rolling interval
+           .CreateLogger();
+
+builder.Services.AddLogging(loggingBuilder =>
+{
+    loggingBuilder.AddSerilog(); // Integrate Serilog with ASP.NET Core logging
+});
+
+
 
 var app = builder.Build();
 

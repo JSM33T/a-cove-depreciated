@@ -1,0 +1,790 @@
+﻿@using almondCove.Models.Props;
+
+@{
+    HTMLProps props = new()
+            {
+                DataBsTheme = "",
+                HeaderClass = "navbar navbar-expand-lg fixed-top",
+                IsLoaderActive = ""
+
+            };
+
+    MetaProps meta = new()
+            {
+                Title = "Gallery",
+            };
+
+    ViewData["HtmlProps"] = props;
+    ViewData["MetaProps"] = meta;
+}
+
+@section Styles{
+    <link rel="stylesheet" media="screen" href="/assets/vendor/aos/dist/aos.css">
+
+}
+
+@section Scripts{
+    <script src="/assets/vendor/aos/dist/aos.js"></script>
+    <script src="/assets/vendor/parallax-js/dist/parallax.min.js"></script>
+    <script type="module" src="/assets/js/dedicated/gallery.js"></script>
+}
+
+
+                 <!-- Cart offcanvas -->
+    <div class="offcanvas offcanvas-end py-2 p-sm-4 p-md-5" id="cartOffcanvas" style="width: 680px;">
+
+      <!-- Title -->
+      <div class="px-4 pt-3">
+        <div class="d-flex justify-content-between align-items-center border-bottom pb-3 pb-sm-4">
+          <h2 class="offcanvas-title d-flex align-items-center mb-1">
+            Your cart <span class="fs-base fw-normal text-body-secondary ms-3">(3 items)</span>
+          </h2>
+          <button class="btn-close mb-1 me-n1" type="button" data-bs-dismiss="offcanvas" data-bs-target="#cartOffcanvas" aria-label="Close"></button>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div class="offcanvas-body">
+
+        <!-- Item -->
+        <div class="d-sm-flex align-items-center pb-4"><a class="d-inline-block flex-shrink-0 bg-secondary rounded-1 p-sm-2 p-md-3 mb-2 mb-sm-0" href="shop-single.html"><img src="assets/img/shop/cart/01.png" width="110" alt="Product"></a>
+          <div class="w-100 pt-1 ps-sm-4">
+            <div class="d-flex">
+              <div class="me-3">
+                <h3 class="h5 mb-2">
+                  <a href="shop-single.html">Candle in concrete bowl</a>
+                </h3>
+                <div class="d-flex flex-wrap">
+                  <div class="text-body-secondary fs-sm me-3">
+                    Color: <span class="text-dark fw-medium">Gray night</span>
+                  </div>
+                  <div class="text-body-secondary fs-sm me-3">
+                    Weight: <span class="text-dark fw-medium">140g</span>
+                  </div>
+                </div>
+              </div>
+              <div class="text-end ms-auto">
+                <div class="fs-5 mb-2">$11.00</div>
+                <del class="text-body-secondary ms-auto">$15.00</del>
+              </div>
+            </div>
+            <div class="count-input ms-n3">
+              <button class="btn btn-icon fs-xl" type="button" data-decrement>-</button>
+              <input class="form-control" type="number" value="2" readonly>
+              <button class="btn btn-icon fs-xl" type="button" data-increment>+</button>
+            </div>
+            <div class="nav justify-content-end mt-n5 mt-sm-n3">
+              <a class="nav-link fs-xl p-2" href="#" data-bs-toggle="tooltip" title="Remove" aria-label="Remove">
+                <i class="ai-trash"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item -->
+        <div class="d-sm-flex align-items-center border-top py-4">
+          <a class="d-inline-block flex-shrink-0 bg-secondary rounded-1 p-sm-2 p-md-3 mb-2 mb-sm-0" href="shop-single.html">
+            <img src="assets/img/shop/cart/02.png" width="110" alt="Product">
+          </a>
+          <div class="w-100 pt-1 ps-sm-4">
+            <div class="d-flex">
+              <div class="me-3">
+                <h3 class="h5 mb-2">
+                  <a href="shop-single.html">Exquisite glass vase</a>
+                </h3>
+              </div>
+              <div class="text-end ms-auto">
+                <div class="fs-5 mb-2">$23.00</div>
+              </div>
+            </div>
+            <div class="count-input ms-n3">
+              <button class="btn btn-icon fs-xl" type="button" data-decrement>-</button>
+              <input class="form-control" type="number" value="1" readonly>
+              <button class="btn btn-icon fs-xl" type="button" data-increment>+</button>
+            </div>
+            <div class="nav justify-content-end mt-n5 mt-sm-n3">
+              <a class="nav-link fs-xl p-2" href="#" data-bs-toggle="tooltip" title="Remove" aria-label="Remove">
+                <i class="ai-trash"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Item -->
+        <div class="d-sm-flex align-items-center border-top pt-4">
+          <a class="d-inline-block flex-shrink-0 bg-secondary rounded-1 p-sm-2 p-md-3 mb-2 mb-sm-0" href="shop-single.html">
+            <img src="assets/img/shop/cart/03.png" width="110" alt="Product">
+          </a>
+          <div class="w-100 pt-1 ps-sm-4">
+            <div class="d-flex">
+              <div class="me-3">
+                <h3 class="h5 mb-2">
+                  <a href="shop-single.html">Set for a dinner party of 7 items</a>
+                </h3>
+              </div>
+              <div class="text-end ms-auto">
+                <div class="fs-5 mb-2">$47.00</div>
+              </div>
+            </div>
+            <div class="count-input ms-n3">
+              <button class="btn btn-icon fs-xl" type="button" data-decrement>-</button>
+              <input class="form-control" type="number" value="1" readonly>
+              <button class="btn btn-icon fs-xl" type="button" data-increment>+</button>
+            </div>
+            <div class="nav justify-content-end mt-n5 mt-sm-n3">
+              <a class="nav-link fs-xl p-2" href="#" data-bs-toggle="tooltip" title="Remove" aria-label="Remove">
+                <i class="ai-trash"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coupon input + Total -->
+      <div class="px-4 pb-3 pb-sm-4 pb-sm-5">
+        <div class="d-sm-flex align-items-center border-top pt-4">
+          <div class="input-group input-group-sm border-dashed mb-3 mb-sm-0 me-sm-4 me-md-5">
+            <input class="form-control text-uppercase" type="text" placeholder="Your coupon code">
+            <button class="btn btn-secondary" type="button">Apply coupon</button>
+          </div>
+          <div class="d-flex align-items-center justify-content-center">
+            <span class="fs-xl me-3">Total:</span>
+            <span class="h3 mb-0">$92.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="d-flex align-items-center justify-content-between px-4 pb-3">
+        <div class="nav d-none d-sm-block">
+          <a class="nav-link fw-semibold px-0" href="#cartOffcanvas" data-bs-dismiss="offcanvas">
+            <i class="ai-chevron-left fs-xl me-2"></i>
+            Back to shop
+          </a>
+        </div>
+        <a class="btn btn-lg btn-primary w-100 w-sm-auto" href="shop-checkout.html">
+          Proceed to checkout
+          <i class="ai-chevron-right ms-2 me-n1"></i>
+        </a>
+      </div>
+    </div>
+    
+
+    <!-- Page wrapper -->
+    <main class="page-wrapper">
+
+      <!-- Navbar. Remove 'fixed-top' class to make the navigation bar scrollable with the page -->
+      <header class="navbar navbar-expand-lg fixed-top bg-light">
+        <div class="container">
+
+          <!-- Navbar brand (Logo) -->
+          <a class="navbar-brand pe-sm-3" href="index.html">
+            <span class="text-primary flex-shrink-0 me-2">
+              <svg width="35" height="32" viewBox="0 0 36 33" xmlns="http://www.w3.org/2000/svg">
+                <path fill="currentColor" d="M35.6,29c-1.1,3.4-5.4,4.4-7.9,1.9c-2.3-2.2-6.1-3.7-9.4-3.7c-3.1,0-7.5,1.8-10,4.1c-2.2,2-5.8,1.5-7.3-1.1c-1-1.8-1.2-4.1,0-6.2l0.6-1.1l0,0c0.6-0.7,4.4-5.2,12.5-5.7c0.5,1.8,2,3.1,3.9,3.1c2.2,0,4.1-1.9,4.1-4.2s-1.8-4.2-4.1-4.2c-2,0-3.6,1.4-4,3.3H7.7c-0.8,0-1.3-0.9-0.9-1.6l5.6-9.8c2.5-4.5,8.8-4.5,11.3,0L35.1,24C36,25.7,36.1,27.5,35.6,29z"></path>
+              </svg>
+            </span>
+            <span class="d-none d-sm-inline">Around</span>
+          </a>
+
+          <!-- Theme switcher -->
+          <div class="form-check form-switch mode-switch order-lg-2 me-3 me-lg-4 ms-auto" data-bs-toggle="mode">
+            <input class="form-check-input" type="checkbox" id="theme-mode">
+            <label class="form-check-label" for="theme-mode">
+              <i class="ai-sun fs-lg"></i>
+            </label>
+            <label class="form-check-label" for="theme-mode">
+              <i class="ai-moon fs-lg"></i>
+            </label>
+          </div>
+
+          <!-- Search + Account + Cart -->
+          <div class="nav align-items-center order-lg-3 ms-n1 me-3 me-sm-0">
+            <a class="nav-link fs-4 p-2 mx-sm-1" href="#searchModal" data-bs-toggle="modal" aria-label="Search">
+              <i class="ai-search"></i>
+            </a>
+            <a class="nav-link fs-4 p-2 mx-sm-1 d-none d-sm-flex" href="account-signin.html" aria-label="Account">
+              <i class="ai-user"></i>
+            </a>
+            <a class="nav-link position-relative fs-4 p-2" href="#cartOffcanvas" data-bs-toggle="offcanvas" aria-label="Shopping cart">
+              <i class="ai-cart"></i>
+              <span class="badge bg-primary fs-xs position-absolute end-0 top-0 me-n1" style="padding: .25rem .375rem;">3</span>
+            </a>
+          </div>
+
+          <!-- Mobile menu toggler (Hamburger) -->
+          <button class="navbar-toggler ms-sm-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <!-- Navbar collapse (Main navigation) -->
+          <nav class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav navbar-nav-scroll me-auto" style="--ar-scroll-height: 520px;">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Landings</a>
+                <div class="dropdown-menu overflow-hidden p-0">
+                  <div class="d-lg-flex">
+                    <div class="mega-dropdown-column pt-1 pt-lg-3 pb-lg-4">
+                      <ul class="list-unstyled mb-0">
+                        <li>
+                          <a class="dropdown-item" href="index.html">Template Intro Page</a>
+                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 rounded-3 rounded-start-0" style="background-image: url(assets/img/megamenu/landings.jpg);"></span>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="landing-mobile-app-showcase.html">Mobile App Showcase</a>
+                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/mobile-app.jpg);"></span>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="landing-product.html">Product Landing</a>
+                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/product-landing.jpg);"></span>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="landing-saas-v1.html">SaaS v.1</a>
+                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/saas-1.jpg);"></span>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="landing-saas-v2.html">SaaS v.2</a>
+                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/saas-2.jpg);"></span>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="landing-saas-v3.html">SaaS v.3</a>
+                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/saas-3.jpg);"></span>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="landing-saas-v4.html">
+                            SaaS v.4
+                            <span class="text-danger fs-xs ms-2">New</span>
+                          </a>
+                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/saas-4.jpg);"></span>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="landing-shop-v1.html">Shop Homepage v.1</a>
+                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/shop-homepage-1.jpg);"></span>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="landing-shop-v2.html">
+                            Shop Homepage v.2
+                            <span class="text-danger fs-xs ms-2">New</span>
+                          </a>
+                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/shop-homepage-2.jpg);"></span>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="landing-marketing-agency.html">Marketing Agency</a>
+                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/marketing-agency.jpg);"></span>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="mega-dropdown-column pb-2 pt-lg-3 pb-lg-4">
+                      <ul class="list-unstyled mb-0">
+                        <li>
+                          <a class="dropdown-item" href="landing-creative-agency.html">Creative Agency</a>
+                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/creative-agency.jpg);"></span>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="landing-conference.html">Conference (Event)</a>
+                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/conference.jpg);"></span>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="landing-web-studio.html">Web Studio</a>
+                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/web-studio.jpg);"></span>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="landing-corporate.html">Corporate</a>
+                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/corporate.jpg);"></span>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="landing-insurance.html">
+                            Insurance Company
+                            <span class="text-danger fs-xs ms-2">New</span>
+                          </a>
+                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/insurance.jpg);"></span>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="landing-business-consulting.html">Business Consulting</a>
+                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/business-consulting.jpg);"></span>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="landing-coworking-space.html">Coworking Space</a>
+                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/coworking.jpg);"></span>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="landing-yoga-studio.html">Yoga Studio</a>
+                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/yoga-studio.jpg);"></span>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="landing-influencer.html">Influencer</a>
+                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/influencer.jpg);"></span>
+                        </li>
+                        <li>
+                          <a class="dropdown-item" href="landing-blog.html">Blog Homepage</a>
+                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/blog-homepage.jpg);"></span>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="mega-dropdown-column position-relative border-start z-3"></div>
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle active" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">Pages</a>
+                <ul class="dropdown-menu">
+                  <li class="dropdown">
+                    <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Portfolio</a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="portfolio-list-v1.html">List View v.1</a></li>
+                      <li><a class="dropdown-item" href="portfolio-list-v2.html">List View v.2</a></li>
+                      <li><a class="dropdown-item" href="portfolio-grid-v1.html">Grid View v.1</a></li>
+                      <li><a class="dropdown-item" href="portfolio-grid-v2.html">Grid View v.2</a></li>
+                      <li><a class="dropdown-item" href="portfolio-slider.html">Slider View</a></li>
+                      <li><a class="dropdown-item" href="portfolio-single-v1.html">Single Project v.1</a></li>
+                      <li><a class="dropdown-item" href="portfolio-single-v2.html">Single Project v.2</a></li>
+                    </ul>
+                  </li>
+                  <li class="dropdown">
+                    <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="shop-catalog.html">Catalog (Listing)</a></li>
+                      <li><a class="dropdown-item" href="shop-single.html">Product Page</a></li>
+                      <li><a class="dropdown-item" href="shop-checkout.html">Checkout</a></li>
+                    </ul>
+                  </li>
+                  <li class="dropdown">
+                    <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Blog</a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="blog-grid-sidebar.html">Grid View with Sidebar</a></li>
+                      <li><a class="dropdown-item" href="blog-grid.html">Grid View no Sidebar</a></li>
+                      <li><a class="dropdown-item" href="blog-list-sidebar.html">List View with Sidebar</a></li>
+                      <li><a class="dropdown-item" href="blog-list.html">List View no Sidebar</a></li>
+                      <li><a class="dropdown-item" href="blog-single-v1.html">Single post v.1</a></li>
+                      <li><a class="dropdown-item" href="blog-single-v2.html">Single post v.2</a></li>
+                      <li><a class="dropdown-item" href="blog-single-v3.html">Single post v.3</a></li>
+                    </ul>
+                  </li>
+                  <li class="dropdown">
+                    <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">About</a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="about-agency.html">About - Agency</a></li>
+                      <li><a class="dropdown-item" href="about-product.html">About - Product</a></li>
+                    </ul>
+                  </li>
+                  <li class="dropdown">
+                    <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Services</a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="services-v1.html">Services v.1</a></li>
+                      <li><a class="dropdown-item" href="services-v2.html">Services v.2</a></li>
+                      <li><a class="dropdown-item" href="services-v3.html">Services v.3</a></li>
+                    </ul>
+                  </li>
+                  <li><a class="dropdown-item" href="pricing.html">Pricing</a></li>
+                  <li class="dropdown">
+                    <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Contacts</a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="contacts-v1.html">Contacts v.1</a></li>
+                      <li><a class="dropdown-item" href="contacts-v2.html">Contacts v.2</a></li>
+                      <li><a class="dropdown-item" href="contacts-v3.html">Contacts v.3</a></li>
+                    </ul>
+                  </li>
+                  <li class="dropdown">
+                    <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Specialty Pages</a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="coming-soon-v1.html">Coming Soon v.1</a></li>
+                      <li><a class="dropdown-item" href="coming-soon-v2.html">Coming Soon v.2</a></li>
+                      <li><a class="dropdown-item" href="404-v1.html">404 Error v.1</a></li>
+                      <li><a class="dropdown-item" href="404-v2.html">404 Error v.2</a></li>
+                      <li><a class="dropdown-item" href="404-v3.html">404 Error v.3</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">Account</a>
+                <ul class="dropdown-menu">
+                  <li class="dropdown">
+                    <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Auth pages</a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="account-signin.html">Sign In</a></li>
+                      <li><a class="dropdown-item" href="account-signup.html">Sign Up</a></li>
+                      <li><a class="dropdown-item" href="account-signinup.html">Sign In / Up</a></li>
+                      <li><a class="dropdown-item" href="account-password-recovery.html">Password Recovery</a></li>
+                    </ul>
+                  </li>
+                  <li><a class="dropdown-item" href="account-overview.html">Overview</a></li>
+                  <li><a class="dropdown-item" href="account-settings.html">Settings</a></li>
+                  <li><a class="dropdown-item" href="account-billing.html">Billing</a></li>
+                  <li><a class="dropdown-item" href="account-orders.html">Orders</a></li>
+                  <li><a class="dropdown-item" href="account-earnings.html">Earnings</a></li>
+                  <li><a class="dropdown-item" href="account-chat.html">Chat (Messages)</a></li>
+                  <li><a class="dropdown-item" href="account-favorites.html">Favorites (Wishlist)</a></li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="components/typography.html">UI Kit</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="docs/getting-started.html">Docs</a>
+              </li>
+              <li class="nav-item border-top mt-2 py-2 d-sm-none">
+                <a class="nav-link" href="account-signin.html">
+                  <i class="ai-user fs-lg me-2"></i>
+                  Sign In
+                </a>
+              </li>
+            </ul>
+            <div class="d-md-none p-3 mt-n3">
+              <a class="btn btn-primary w-100 mb-1" href="https://themes.getbootstrap.com/product/around-multipurpose-template-ui-kit/" target="_blank" rel="noopener">
+                <i class="ai-cart fs-xl me-2 ms-n1"></i>
+                Buy now
+              </a>
+            </div>
+          </nav>
+        </div>
+      </header>
+
+
+      <!-- Page container -->
+      <div class="container py-5 mt-5 mb-lg-4 mb-xl-5">
+
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb">
+          <ol class="pt-lg-3 pb-2 breadcrumb">
+            <li class="breadcrumb-item">
+              <a href="index.html">Home</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Shop catalog</li>
+          </ol>
+        </nav>
+
+        
+        <!-- Banner -->
+        <section class="rounded-1 overflow-hidden mb-5" style="background-color: #e3e5e9;" data-bs-theme="light">
+          <div class="row align-items-center g-0">
+            <div class="col-md-6 offset-xl-1 text-center text-md-start">
+              <div class="py-4 px-4 px-sm-5 pe-md-0 ps-xl-4">
+                <p class="text-body fs-xs text-uppercase pt-3 pt-md-0 mb-3 mb-lg-4">Best selling</p>
+                <h2 class="h1 pb-2 pb-xl-3">Cozy corner for the living room at a <span class="text-primary">discount up to 40%</span></h2>
+                <a class="btn btn-sm btn-outline-dark" href="#" data-bs-theme="light">Explore</a>
+              </div>
+            </div>
+            <div class="col-md-6 col-xl-5 d-flex justify-content-end">
+              <img src="assets/img/shop/banner.jpg" width="491" alt="Banner">
+            </div>
+          </div>
+        </section>
+
+
+        <!-- Page title -->
+        <div class="row pt-xl-3 mt-n1 mt-sm-0">
+          <div class="col-lg-9 offset-lg-3 pt-lg-3">
+            <h1 class="pb-2 pb-sm-3">Home decoration</h1>
+          </div>
+        </div>
+        <div class="row pb-2 pb-sm-4">
+  
+          <!-- Sidebar (offcanvas on sreens < 992px) -->
+          <aside class="col-lg-3">
+            <div class="offcanvas-lg offcanvas-start" id="shopSidebar">
+              <div class="offcanvas-header">
+                <h5 class="offcanvas-title">Filters</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="offcanvas" data-bs-target="#shopSidebar" aria-label="Close"></button>
+              </div>
+  
+              <!-- Body -->
+              <div class="offcanvas-body pt-2 pt-lg-0 pe-lg-4">
+  
+                <!-- Categories (accordion with checkboxes) -->
+                <h3 class="h5">Categories</h3>
+                <div class="accordion accordion-alt pb-2 mb-4" id="shopCategories">
+                  <div class="accordion-item mb-0">
+                    <h4 class="accordion-header">
+                      <button class="accordion-button fs-xl fw-medium py-2" type="button" data-bs-toggle="collapse" data-bs-target="#livingRoom" aria-expanded="true" aria-controls="livingRoom">
+                        <span class="fs-base">Living room</span>
+                      </button>
+                    </h4>
+                    <div class="accordion-collapse collapse show" id="livingRoom" data-bs-parent="#shopCategories">
+                      <div class="accordion-body py-1 mb-1">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="lr-all">
+                          <label class="form-check-label d-flex align-items-center" for="lr-all">
+                            <span class="text-nav fw-medium">View all</span>
+                            <span class="fs-xs text-body-secondary ms-auto">697</span>
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" checked id="lr-vases">
+                          <label class="form-check-label d-flex align-items-center" for="lr-vases">
+                            <span class="text-nav fw-medium">Vases</span>
+                            <span class="fs-xs text-body-secondary ms-auto">234</span>
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="lr-mirrors">
+                          <label class="form-check-label d-flex align-items-center" for="lr-mirrors">
+                            <span class="text-nav fw-medium">Mirrors</span>
+                            <span class="fs-xs text-body-secondary ms-auto">182</span>
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="lr-paintings">
+                          <label class="form-check-label d-flex align-items-center" for="lr-paintings">
+                            <span class="text-nav fw-medium">Paintings</span>
+                            <span class="fs-xs text-body-secondary ms-auto">133</span>
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="lr-furniture">
+                          <label class="form-check-label d-flex align-items-center" for="lr-furniture">
+                            <span class="text-nav fw-medium">Furniture</span>
+                            <span class="fs-xs text-body-secondary ms-auto">24</span>
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" checked id="lr-clocks">
+                          <label class="form-check-label d-flex align-items-center" for="lr-clocks">
+                            <span class="text-nav fw-medium">Clocks</span>
+                            <span class="fs-xs text-body-secondary ms-auto">49</span>
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="lr-frames">
+                          <label class="form-check-label d-flex align-items-center" for="lr-frames">
+                            <span class="text-nav fw-medium">Photo frames</span>
+                            <span class="fs-xs text-body-secondary ms-auto">75</span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="accordion-item mb-0">
+                    <h4 class="accordion-header">
+                      <button class="accordion-button collapsed fs-xl fw-medium py-2" type="button" data-bs-toggle="collapse" data-bs-target="#kitchen" aria-expanded="false" aria-controls="kitchen">
+                        <span class="fs-base">Kitchen</span>
+                      </button>
+                    </h4>
+                    <div class="accordion-collapse collapse" id="kitchen" data-bs-parent="#shopCategories">
+                      <div class="accordion-body py-1 mb-1">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="kitchen-all">
+                          <label class="form-check-label d-flex align-items-center" for="kitchen-all">
+                            <span class="text-nav fw-medium">View all</span>
+                            <span class="fs-xs text-body-secondary ms-auto">813</span>
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="kitchen-cutlery">
+                          <label class="form-check-label d-flex align-items-center" for="kitchen-cutlery">
+                            <span class="text-nav fw-medium">Cutlery</span>
+                            <span class="fs-xs text-body-secondary ms-auto">387</span>
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="kitchen-storage">
+                          <label class="form-check-label d-flex align-items-center" for="kitchen-storage">
+                            <span class="text-nav fw-medium">Storage</span>
+                            <span class="fs-xs text-body-secondary ms-auto">124</span>
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="kitchen-bins">
+                          <label class="form-check-label d-flex align-items-center" for="kitchen-bins">
+                            <span class="text-nav fw-medium">Waste bins</span>
+                            <span class="fs-xs text-body-secondary ms-auto">59</span>
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="kitchen-holders">
+                          <label class="form-check-label d-flex align-items-center" for="kitchen-holders">
+                            <span class="text-nav fw-medium">Holders</span>
+                            <span class="fs-xs text-body-secondary ms-auto">227</span>
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="kitchen-sinks">
+                          <label class="form-check-label d-flex align-items-center" for="kitchen-sinks">
+                            <span class="text-nav fw-medium">Sinks</span>
+                            <span class="fs-xs text-body-secondary ms-auto">16</span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="accordion-item mb-0">
+                    <h4 class="accordion-header">
+                      <button class="accordion-button collapsed fs-xl fw-medium py-2" type="button" data-bs-toggle="collapse" data-bs-target="#bathroom" aria-expanded="false" aria-controls="bathroom">
+                        <span class="fs-base">Bathroom</span>
+                      </button>
+                    </h4>
+                    <div class="accordion-collapse collapse" id="bathroom" data-bs-parent="#shopCategories">
+                      <div class="accordion-body py-1 mb-1">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="bathroom-all">
+                          <label class="form-check-label d-flex align-items-center" for="bathroom-all">
+                            <span class="text-nav fw-medium">View all</span>
+                            <span class="fs-xs text-body-secondary ms-auto">1416</span>
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="bathroom-showers">
+                          <label class="form-check-label d-flex align-items-center" for="bathroom-showers">
+                            <span class="text-nav fw-medium">Showers</span>
+                            <span class="fs-xs text-body-secondary ms-auto">113</span>
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="bathroom-basins">
+                          <label class="form-check-label d-flex align-items-center" for="bathroom-basins">
+                            <span class="text-nav fw-medium">Basins</span>
+                            <span class="fs-xs text-body-secondary ms-auto">98</span>
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="bathroom-dispensers">
+                          <label class="form-check-label d-flex align-items-center" for="bathroom-dispensers">
+                            <span class="text-nav fw-medium">Dispensers</span>
+                            <span class="fs-xs text-body-secondary ms-auto">205</span>
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="bathroom-cleaning">
+                          <label class="form-check-label d-flex align-items-center" for="bathroom-cleaning">
+                            <span class="text-nav fw-medium">Cleaning</span>
+                            <span class="fs-xs text-body-secondary ms-auto">747</span>
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="bathroom-holders">
+                          <label class="form-check-label d-flex align-items-center" for="bathroom-holders">
+                            <span class="text-nav fw-medium">Holders</span>
+                            <span class="fs-xs text-body-secondary ms-auto">253</span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="accordion-item mb-0">
+                    <h4 class="accordion-header">
+                      <button class="accordion-button collapsed fs-xl fw-medium py-2" type="button" data-bs-toggle="collapse" data-bs-target="#bedroom" aria-expanded="false" aria-controls="bedroom">
+                        <span class="fs-base">Bedroom</span>
+                      </button>
+                    </h4>
+                    <div class="accordion-collapse collapse" id="bedroom" data-bs-parent="#shopCategories">
+                      <div class="accordion-body py-1 mb-1">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="bedroom-all">
+                          <label class="form-check-label d-flex align-items-center" for="bedroom-all">
+                            <span class="text-nav fw-medium">View all</span>
+                            <span class="fs-xs text-body-secondary ms-auto">1219</span>
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="bedroom-furniture">
+                          <label class="form-check-label d-flex align-items-center" for="bedroom-furniture">
+                            <span class="text-nav fw-medium">Furniture</span>
+                            <span class="fs-xs text-body-secondary ms-auto">43</span>
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="bedroom-linen">
+                          <label class="form-check-label d-flex align-items-center" for="bedroom-linen">
+                            <span class="text-nav fw-medium">Bed linen</span>
+                            <span class="fs-xs text-body-secondary ms-auto">528</span>
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="bedroom-lighting">
+                          <label class="form-check-label d-flex align-items-center" for="bedroom-lighting">
+                            <span class="text-nav fw-medium">Lighting</span>
+                            <span class="fs-xs text-body-secondary ms-auto">391</span>
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="bedroom-storage">
+                          <label class="form-check-label d-flex align-items-center" for="bedroom-storage">
+                            <span class="text-nav fw-medium">Storage</span>
+                            <span class="fs-xs text-body-secondary ms-auto">75</span>
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="bedroom-mirrors">
+                          <label class="form-check-label d-flex align-items-center" for="bedroom-mirrors">
+                            <span class="text-nav fw-medium">Mirrors</span>
+                            <span class="fs-xs text-body-secondary ms-auto">182</span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </aside>
+  
+  
+          <!-- Product grid -->
+          <div class="col-lg-9">
+
+            <!-- Active filters + Sorting -->
+            <div class="d-flex align-items-start justify-content-between mb-4">
+              <div class="d-flex align-items-center flex-shrink-0 mb-2"><span class="text-body-secondary text-nowrap fs-sm">Sort by:</span>
+                <select class="form-select form-select-flush py-0">
+                  <option value="popular">Most popular</option>
+                  <option value="low-high">Low-High price</option>
+                  <option value="high-low">High-Low price</option>
+                  <option value="rating">Average rating</option>
+                  <option value="az">A-Z order</option>
+                  <option value="za">Z-A order</option>
+                </select>
+              </div>
+            </div>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+                       <!-- Resources links -->
+            <div class="col-md-12 col-xl-6 pb-1 mb-4">
+            <h5 class="pb-md-1">Resources</h5>
+                <div class="position-relative d-flex align-items-center py-2 my-1">
+                  <div class="bg-primary bg-opacity-10 rounded-circle lh-1 p-3">
+                    <i class="ai-file-text text-primary fs-4 lh-1"></i>
+                  </div>
+                  <div class="nav flex-column ps-3">
+                    <a href="#" class="nav-link fw-semibold stretched-link p-0">Documentation</a>
+                    <div class="fs-xs">API, knowledge base, tutorials API, knowledge base, tutorials API, knowledge base, tutorials API, knowledge base, tutorials API, knowledge base, tutorials</div>
+                  </div>
+                </div>
+                <div class="position-relative d-flex align-items-center py-2 my-1">
+                  <div class="bg-primary bg-opacity-10 rounded-circle lh-1 p-3">
+                    <i class="ai-circle-info text-primary fs-4 lh-1"></i>
+                  </div>
+                  <div class="nav flex-column ps-3">
+                    <a href="#" class="nav-link fw-semibold stretched-link p-0">Help center</a>
+                    <div class="fs-xs">FAQs, articles, community forum</div>
+                  </div>
+                </div>
+                <div class="position-relative d-flex align-items-center py-2 my-1">
+                  <div class="bg-primary bg-opacity-10 rounded-circle lh-1 p-3">
+                    <i class="ai-edit-alt text-primary fs-4 lh-1"></i>
+                  </div>
+                  <div class="nav flex-column ps-3">
+                    <a href="#" class="nav-link fw-semibold stretched-link p-0">Blog articles</a>
+                    <div class="fs-xs">Recent news and updates</div>
+                  </div>
+                </div>
+                <div class="position-relative d-flex align-items-center py-2 my-1">
+                  <div class="bg-primary bg-opacity-10 rounded-circle lh-1 p-3">
+                    <i class="ai-github text-primary fs-4 lh-1"></i>
+                  </div>
+                  <div class="nav flex-column ps-3">
+                    <a href="#" class="nav-link fw-semibold stretched-link p-0">GitHub projects</a>
+                    <div class="fs-xs">Use our open source projects</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Sidebar toggle button -->
+      <button class="d-lg-none btn btn-sm fs-sm btn-primary w-100 rounded-0 fixed-bottom" type="button" data-bs-toggle="offcanvas" data-bs-target="#shopSidebar">
+        <i class="ai-filter me-2"></i>
+        Filters
+      </button>

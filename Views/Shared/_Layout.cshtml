@@ -5,7 +5,7 @@
     var metaProps = ViewData["MetaProps"] as MetaProps;
 }
 @{
-    //session vars
+    //set session data to ViewData
     var mySessionVariable = Context.Session.GetString("username");
     if (mySessionVariable != null)
     {
@@ -36,15 +36,15 @@
     <!-- SEO meta tags -->
     <title>@metaProps.Title | AlmondCove</title>
     <meta name="description" content="@metaProps.Description">
-    <meta name="keywords" content="bootstrap, business, corporate, coworking space, services, creative agency, dashboard, e-commerce, mobile app showcase, saas, multipurpose, product landing, shop, software, ui kit, web studio, landing, light and dark mode, html5, css3, javascript, gallery, slider, touch, creative">
-    <meta name="author" content="Createx Studio">
+    <meta name="keywords" content="@metaProps.Tags">
+    <meta name="author" content="@metaProps.Author">
 
     <!-- Webmanifest + Favicon / App icons -->
     <link rel="icon" type="image/png" href="/assets/app-icons/icon-32x32.png" sizes="32x32">
     <link rel="apple-touch-icon" href="/assets/app-icons/icon-180x180.png">
         
     <!-- Theme switcher (color modes) -->
-    <script src="/assets/js/theme-switcher.js"></script>
+    <script src="/assets/js/theme-switcher.min.js"></script>
 
     <!-- Import Google font (Inter) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -61,7 +61,7 @@
 
     <!-- Theme styles + Bootstrap -->
     <link rel="stylesheet" media="screen" href="/assets/css/theme.css">
-<link href="~/assets/css/almondcove.css" rel="stylesheet" />
+    <link href="~/assets/css/almondcove.css" rel="stylesheet" />
 
     @await RenderSectionAsync("Css", required: false)
 

@@ -15,16 +15,16 @@ namespace almondCove.Controllers
         public IActionResult Rough()
         {
 
-            var markdownFilePath = Path.Combine(_hostingEnvironment.WebRootPath,"something.md");
+            //var markdownFilePath = Path.Combine(_hostingEnvironment.WebRootPath,"something.md");
 
-            // Read the content of the Markdown file
-            string markdownContent = System.IO.File.ReadAllText(markdownFilePath);
+            //// Read the content of the Markdown file
+            //string markdownContent = System.IO.File.ReadAllText(markdownFilePath);
 
-            // Convert Markdown to HTML using Markdig
-            string htmlContent = ConvertMarkdownToHtml(markdownContent);
+            //// Convert Markdown to HTML using Markdig
+            //string htmlContent = ConvertMarkdownToHtml(markdownContent);
 
-            // Pass the HTML content to the view
-            ViewData["HtmlContent"] = htmlContent;
+            //// Pass the HTML content to the view
+            //ViewData["HtmlContent"] = htmlContent;
 
             return View("/Views/Test/Index.cshtml");
 

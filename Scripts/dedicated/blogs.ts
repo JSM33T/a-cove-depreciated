@@ -1,4 +1,4 @@
-﻿import { toaster,acInit } from './../global'
+﻿import { toaster,acInit ,classesToTags} from './../global.js'
 declare const axios;
 
 
@@ -22,7 +22,8 @@ const global_tags = gl_tag.value;
 
 acInit([
     loadTags,
-    loadAuthors
+    loadAuthors,
+    injectClasses
 ]);
 
 
@@ -95,7 +96,7 @@ function loadAuthors() {
                 for (var i = 0; i < data.length; i++) {
                     authorsdat = authorsdat + '<a href="/author/' + data[i].userName + '" class="no-decor">' + data[i].firstName + ' ' + data[i].lastName + '</a>, ';
                 }
-                document.getElementById('authorsPlaceholder2')!.innerHTML = authorsdat.slice(0, authorsdat.lastIndexOf(',')) + authorsdat.slice(authorsdat.lastIndexOf(',') + 1);
+                document.getElementById('authorsPlaceholder')!.innerHTML = authorsdat.slice(0, authorsdat.lastIndexOf(',')) + authorsdat.slice(authorsdat.lastIndexOf(',') + 1);
             }
         })
         .catch(error => {
@@ -153,3 +154,7 @@ function loadTags() {
     document.getElementById('tagsPlaceholder')!.innerHTML = tags;
 }
 
+function injectClasses()
+{
+    classesToTags('p', 'fs-lg');
+}

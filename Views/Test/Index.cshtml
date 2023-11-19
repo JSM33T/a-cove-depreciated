@@ -19,43 +19,11 @@
     ViewData["MetaProps"] = meta;
 }
 
-
-
-       <section class="container pt-5" id="appHome">
-             @Html.AntiForgeryToken()
-        <div class="bg-dark position-relative rounded-5 overflow-hidden px-4 pt-1 pb-2 py-sm-4 py-lg-5">
-          <div class="d-none d-dark-mode-block position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(255,255,255, .03);"></div>
-          <div class="position-absolute top-0 end-0 pe-5 z-2">
-            <svg class="me-5" width="514" height="254" viewBox="0 0 514 254" fill="white" fill-opacity=".03" xmlns="http://www.w3.org/2000/svg">
-              <ellipse cx="257" cy="0.5" rx="257" ry="253.5"></ellipse>
-            </svg>
-          </div>
-          <div class="d-none d-lg-flex position-absolute start-0 bottom-0 ms-n4">
-          
-            
-          </div>
-          <div class="position-relative z-3 text-center py-5 my-xl-3 mx-auto" style="max-width: 565px;" data-bs-theme="dark">
-            <h2 class="display-5">Subscribe to {{message}}</h2>
-            <p class="text-body fs-lg pb-3 mb-3 mb-lg-4">Subscribe to our newsletter to receive early discount offers, new templates info and updates.</p>
-            <div class="subscription-form mx-auto">
-              <div class="input-group"><span class="input-group-text"><i class="ai-mail"></i></span>
-                 <input class="form-control form-control-lg" type="text" v-model="emailValue" placeholder="Your email" autocomplete="off">
-                <button type="button" class="btn btn-lg btn-primary btn-dark ripple" @@click="submitMail" id="submitBtn">Submit</button>
-              </div>
-           
-              <div class="subscription-status mx-auto"></div>
-            </div>
-          </div>
-        </div>
-      </section>
+       
 
 @section Scripts{
 
-<script src="~/lib/aos/dist/aos.min.js"></script>
-    <script src="~/lib/vue/vue.global.prod.min.js"></script>
-    <script src="~/lib/vue-router/vue-router.global.prod.min.js"></script>
-    <script src="~/lib/axios/dist/axios.min.js"></script>
-    <script src="/assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+
     <script type="module" src="/assets/js/dedicated/bbbb.js"></script>
 
 }
@@ -64,5 +32,11 @@
 
     <section class="container py-5 mt-5 mb-md-2 mb-lg-3 mb-xl-4 bg-dark btn-rad-1">
 
+        hey there this is a test
+    <button id="falana">Change Query</button>
+
 
     </section>
+<script>
+   
+</script>

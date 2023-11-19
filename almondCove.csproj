@@ -1317,6 +1317,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Update="Scripts\dedicated\bbbb.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
     <TypeScriptCompile Update="Scripts\dedicated\blogs.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>

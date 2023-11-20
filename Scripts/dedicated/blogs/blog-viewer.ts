@@ -1,4 +1,4 @@
-﻿import { toaster,acInit ,classesToTags} from './../global.js'
+﻿import { toaster,acInit ,classesToTags} from '../../global.js'
 declare const axios;
 
 
@@ -156,5 +156,5 @@ function loadTags() {
 
 function injectClasses()
 {
-    classesToTags('p', 'fs-lg');
+    classesToTags('img', 'rounded-3');
 }

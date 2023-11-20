@@ -1,32 +1,48 @@
 using System.Net.Mail;
 using System.Net;
+using Serilog;
+using almondCove.Models.Domain;
 
 namespace almondCove.Services
 {
   public class Mailer : IMailer
   {
     private readonly IConfigManager _configManager;
+        private readonly ILogger<Mailer> _logger;
 
-    public Mailer(IConfigManager configurationService)
+    public Mailer(IConfigManager configurationService,ILogger<Mailer> logger)
     {
 		_configManager = configurationService;
+        _logger = logger;
     }
 
-    public async Task SendEmailAsync(string to, string subject, string body)
+    public bool SendEmailAsync(string to, string subject, string body)
     {
-      using var client = new SmtpClient(_configManager.GetSmtpServer(), int.Parse(_configManager.GetSmtpPort()));
-      client.UseDefaultCredentials = false;
-      client.Credentials = new NetworkCredential(_configManager.GetSmtpUsername(), _configManager.GetSmtpPassword());
-      client.EnableSsl = true;
-
-      var message = new MailMessage(_configManager.GetSmtpUsername(), to)
-      {
-        Subject = subject,
-        Body = body,
-        IsBodyHtml = true
-      };
-
-      await client.SendMailAsync(message);
-    }
+            try
+            {
+                MailMessage message = new()
+                {
+                    From = new MailAddress("mail@almondCove.in", "AlmondCove"),
+                    Subject = subject,
+                    Body = body,
+                    IsBodyHtml = true
+                };
+                message.To.Add(to);
+                SmtpClient smtpClient = new()
+                {
+                    Host = "almondcove.in",
+                    Port = 587, // or 465 for SSL
+                    EnableSsl = false, // or true for SSL
+                    Credentials = new NetworkCredential(_configManager.GetSmtpUsername(), _configManager.GetSmtpPassword()),
+                    Timeout = 10000
+                };
+                smtpClient.Send(message);
+                return true;
+            }
+            catch(Exception ex) {
+                _logger.LogError(ex.Message);
+                return false;
+            }
+     }
   }
 }

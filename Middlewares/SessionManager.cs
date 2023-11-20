@@ -19,7 +19,6 @@ namespace almondCove.Middlewares
 
         public async Task InvokeAsync(HttpContext context)
         {
-            _logger.LogInformation("working serologgggg");
             if (context.Session.GetString("username") == null)
             {
                 if (context.Request.Cookies.ContainsKey("SessionKey"))

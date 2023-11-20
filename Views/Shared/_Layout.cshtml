@@ -184,7 +184,7 @@
 
   <body class="@htmlProps.BodyClass">
     <!-- Page loading spinner -->
-    <div class="page-loading @htmlProps.IsLoaderActive">
+    <div class="page-loading active">
       <div class="page-loading-inner">
         <div class="page-spinner"></div>
         <span>Loading...</span>
@@ -198,7 +198,7 @@
       <header data-bs-theme="@htmlProps.DataBsTheme">
         <div class="@htmlProps.HeaderClass">
           <div class="container">
-               @await Html.PartialAsync("Partials/NavBars/Default") 
+                @await Html.PartialAsync("Partials/NavBars/Default") 
           </div>
         </div>
       </header>

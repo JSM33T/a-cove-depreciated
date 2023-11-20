@@ -1,66 +1,46 @@
 ﻿// main.ts
-import { submitMail } from '../global.js';
-
-
+import { getData, submitMail } from '../global.js';
 
 submitMail();
+loadTopBlogs();
 
-//document.addEventListener('DOMContentLoaded', function () {
-//    const form = document.querySelector('.subscription-form') as HTMLFormElement;
-//    form.addEventListener('submit', function (event) {
-//        event.preventDefault();
-//        const emailInput = document.getElementById('subscr-email') as HTMLInputElement;
-//        const emailData = {
-//            email: emailInput.value,
-//            origin: "HomePage",
-//        };
-//        postEmailToAPI(emailData);
-//    });
-//});
+async function loadTopBlogs() {
 
 
-//export function submitMail() {
-//    document.addEventListener('DOMContentLoaded', function () {
-//        const form = document.querySelector('.subscription-form') as HTMLFormElement;
+    getData("/api/topblogs/get")
+        .then(async (data) => {
+            console.log('Data received:', data);
+            await constructArticles(data);
+        })
+        .catch((error) => {
+            console.error('Error:', error.message);
+        });
 
-//        form.addEventListener('submit', function (event) {
-//            event.preventDefault();
 
-//            const emailInput = document.getElementById('subscr-email') as HTMLInputElement;
-//            const emailData = {
-//                email: emailInput.value,
-//                origin: "HomePage",
-//            };
+}
 
-//            postEmailToAPI(emailData);
-//        });
-//    });
-//}
+async function constructArticles(responsedata:any)
+{
+    var articleTags = responsedata.map(post => `
+        <article class="col">
+            <div class="pb-4 pt-2 pt-xl-3 ms-md-3 border-bottom">
+                <h3 class="h4">
+                    <a href="/blog/${post.datePosted.substring(0,4)}/${post.urlHandle}">${post.title}</a>
+                </h3>
+                
+                <p class="mb-4">${post.description}</p>
+                <div class="d-flex align-items-center">
+                    <span class="fs-sm text-body-secondary">${post.dateFormatted}</span>
+                    <span class="fs-xs opacity-20 mx-3">|</span>
+                    <a class="badge text-nav fs-xs border" href="#">${post.category}</a>
+                </div>
+            </div>
+        </article>
+    `).join('');
 
-//function postEmailToAPI(emailData: Email) {
 
-//    if (!validateEmail(emailData.email)) {
-//        alert("invalid email");
-//        return;
-//    }
-//    const submitBtn = document.getElementById('submitMail') as HTMLButtonElement;
-//    submitBtn.textContent = "loading";
-//    const apiUrl = '/api/mailinglist/subscribe';
-//    try {
-//        postData(apiUrl, emailData)
-//            .then((result) => {
-//                console.log('Result:', result);
-//            })
-//            .catch((error) => {
-//                console.error('Error:', error);
-//            });   
-
-//    } catch (error: any) {
-//        if (error.response.data) {
-
-//        }
-//    }
-//    finally {
-//        submitBtn.textContent = "Subscribe";
-//    }
-//}
+    const artcl = document.getElementById('articlePlaceholder');
+    if (artcl) {
+        artcl.innerHTML = articleTags;
+    }
+}

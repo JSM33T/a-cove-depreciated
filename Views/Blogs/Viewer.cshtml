@@ -32,13 +32,11 @@
     }
 }
 
-
-
     @Html.AntiForgeryToken()
     <input id="ip_slug" value="@blogDeet.Slug" class="hidden"/>
     <input id="ip_tags" value="@blogDeet.Tags" class="hidden"/>
     <div id="blogview">
-        <section class="container blog-section py-5 mb-lg-4 mt-1 bg-faded-primary" id="blog_intro">
+        <section class="container blog-section py-5 mb-lg-4 px-2 mt-1 bg-faded-primary" id="blog_intro">
             <nav aria-label="breadcrumb" class="pt-4">
                 <ol class=" pb-lg-4 pb-2 pt-4 breadcrumb">
                     <li class="breadcrumb-item"><a href="/">Home</a></li>
@@ -46,9 +44,7 @@
                     <li class="breadcrumb-item active" aria-current="page">@blogDeet.Slug</li>
                 </ol>
             </nav>
-               <div class="row">
-
-              <!-- Post title + post meta -->
+            <div class="row">
               <div class="col-lg-12 pb-2 pb-lg-0 mb-4 mb-lg-0">
                 <h1 class="display-4 pb-2 pb-lg-3">@blogDeet.Title</h1>
                 <div class="d-flex flex-wrap align-items-center ml-2 mt-n2">
@@ -73,16 +69,13 @@
                   <a class="badge text-nav fs-xs border mt-2" id="categoryPlaceholder" href="">asa</a>
                 </div>
               </div>
-
             </div>
         
-              <section class="container ">
+         <section class="container ">
             <div class="row pt-xxl-2">
               <div class="col-lg-8 col-xl-8 pe-lg-4 pe-xl-0 pt-5 pb-5">
                     @Html.Raw(htmlContent)
               </div>
-
-
               <!-- Sidebar -->
               <aside class="col-lg-3 offset-lg-1 pt-4 pt-lg-4 pb-5" style="margin-top: -7rem;">
                 <div class="position-sticky top-0 mt-2 mt-md-3 mt-lg-0" style="padding-top: 7rem;">
@@ -188,9 +181,8 @@
         </div>
     </section>
 </div>
-@* <script src="~/lib/vue/vue.global.min.js"></script> *@
 <script src="~/lib/axios/dist/axios.min.js"></script>
-<script type="module" src="~/assets/js/dedicated/blogs.js"></script>
+<script type="module" src="~/assets/js/dedicated/blogs/blog-viewer.js"></script>
 
 
 

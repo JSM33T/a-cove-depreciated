@@ -1,4 +1,6 @@
-﻿using almondCove.Models;
+﻿using almondCove.Api;
+using almondCove.Models;
+using almondCove.Modules;
 using almondCove.Services;
 using Markdig;
 using Microsoft.AspNetCore.Mvc;
@@ -26,28 +28,10 @@ namespace almondCove.Controllers
             _configManager = configManager;
         }
 
-        [Route("/blogs")]
+        [Route("/blogs/{something?}/{anotherthing?}")]
         public IActionResult Index()
         {
             return View("Views/Blogs/Index.cshtml");
-        }
-
-        [Route("/blogs/browse")]
-        public IActionResult Browse()
-        {
-            var markdownFilePath = Path.Combine(_hostingEnvironment.WebRootPath, "something.md");
-
-            string markdownContent = System.IO.File.ReadAllText(markdownFilePath);
-            string htmlContent = ConvertMarkdownToHtml(markdownContent);
-
-            ViewData["HtmlContent"] = htmlContent;
-            return View("Views/Blogs/Browse.cshtml");
-        }
-        private static string ConvertMarkdownToHtml(string markdownContent)
-        {
-            // Use Markdig to perform the conversion
-            var pipeline = new MarkdownPipelineBuilder().Build();
-            return Markdig.Markdown.ToHtml(markdownContent, pipeline);
         }
 
         [HttpGet]
@@ -89,35 +73,12 @@ namespace almondCove.Controllers
         }
 
 
-        //[HttpGet]
-        //[Route("/blog/{Year}/{Slug}")]
-        //public IActionResult Blogs(string Year, string Slug)
-        //{
-        //    string connectionString = _configManager.GetConnString();
-        //    BlogLoad blogLoad = null;
-        //    using var connection = new SqlConnection(connectionString);
-        //    connection.Open();
-        //    var command = new SqlCommand("SELECT a.Id, a.Tags, a.Title, a.UrlHandle, COUNT(b.blogid) AS LikeCount FROM TblBlogMaster a LEFT JOIN TblBlogLike b ON a.Id = b.blogid WHERE a.UrlHandle = '" + Slug + "' GROUP BY a.Id, a.Tags, a.Title, a.UrlHandle; ", connection);
-        //    var reader = command.ExecuteReader();
-        //    string tags = string.Empty;
-
-        //    if (reader.Read())
-        //    {
-        //        blogLoad = new()
-        //        {
-        //            Id = (int)reader["Id"],
-        //            Tags = reader["Tags"].ToString(),
-        //            Title = reader["Title"].ToString(),
-        //            Slug = reader["UrlHandle"].ToString(),
-        //            Year = Year,
-        //            Likes = reader["LikeCount"].ToString(),
-        //        };
-        //    }
-
-        //    reader.Close();
-        //    return View("Views/Blogs/Viewer.cshtml", blogLoad);
-        //}
-
+        private static string ConvertMarkdownToHtml(string markdownContent)
+        {
+            // Use Markdig to perform the conversion
+            var pipeline = new MarkdownPipelineBuilder().Build();
+            return Markdig.Markdown.ToHtml(markdownContent, pipeline);
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

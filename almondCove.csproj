@@ -45,12 +45,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Views\Auth\Components\_base.cshtml" />
-    <None Include="Views\Auth\Components\_login.cshtml" />
-    <None Include="Views\Auth\Components\_otplogin.cshtml" />
-    <None Include="Views\Auth\Components\_recovery.cshtml" />
-    <None Include="Views\Auth\Components\_signup.cshtml" />
-    <None Include="Views\Auth\Components\_verify.cshtml" />
+    <None Include="Views\Account\Components\_base.cshtml" />
+    <None Include="Views\Account\Components\_login.cshtml" />
+    <None Include="Views\Account\Components\_otplogin.cshtml" />
+    <None Include="Views\Account\Components\_recovery.cshtml" />
+    <None Include="Views\Account\Components\_signup.cshtml" />
+    <None Include="Views\Account\Components\_verify.cshtml" />
     <None Include="wwwroot\assets\vendor\aos\.babelrc" />
     <None Include="wwwroot\assets\vendor\aos\.editorconfig" />
     <None Include="wwwroot\assets\vendor\aos\.gitattributes" />
@@ -1292,7 +1292,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\content\studio\" />
+    <Folder Include="wwwroot\content\gallery\2023\garden-state\assets\" />
     <Folder Include="wwwroot\stores\configurations\" />
     <Folder Include="wwwroot\stores\studio\" />
   </ItemGroup>
@@ -1317,10 +1317,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Update="Scripts\dedicated\bbbb.ts">
+    <TypeScriptCompile Update="Scripts\dedicated\account\account.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
-    <TypeScriptCompile Update="Scripts\dedicated\blogs.ts">
+    <TypeScriptCompile Update="Scripts\dedicated\account\login.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Update="Scripts\dedicated\blogs\blog-viewer.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Update="Scripts\dedicated\blogs\blogs.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Update="Scripts\dedicated\something.ts">

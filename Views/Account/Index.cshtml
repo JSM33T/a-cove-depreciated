@@ -1,0 +1,59 @@
+﻿@using almondCove.Models.Props;
+ 
+@{
+    Layout = "_LayoutEmpty";
+    HTMLProps props = new()
+        {
+             DataBsTheme = "",
+             HeaderClass = "navbar navbar-expand-lg fixed-top bg-light"
+        };
+
+    MetaProps meta = new()
+            {
+                Title = "Home",
+            };
+
+    ViewData["HtmlProps"] = props;
+    ViewData["MetaProps"] = meta;
+
+}
+@section Styles{
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+
+        .homebtn
+        {
+            z-index:4000;
+        }
+    </style>
+}
+@Html.AntiForgeryToken()
+<div class="d-lg-flex position-relative h-100" id="app">
+    
+    <router-view></router-view>
+    
+    <div 
+        class="w-50 bg-size-cover bg-repeat-0 bg-position-center" 
+        style="background-image: url(/assets/images/covers/login.jpg);"
+    ></div>
+</div>
+
+@section Scripts
+{
+
+
+       <script src="~/lib/axios/dist/axios.min.js"></script>
+       <script src="~/lib/vue/vue.global.prod.min.js"></script>
+       <script src="~/lib/vue-router/vue-router.global.prod.min.js"></script>
+       
+<script type="module" src="~/assets/js/dedicated/account.js"></script>
+
+<script>
+       // const routerViewElement = document.querySelector('router-view');
+
+
+   </script>
+}
+

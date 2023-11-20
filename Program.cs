@@ -27,7 +27,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 
 Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Warning()
+           .MinimumLevel.Warning()
            .WriteTo.Console() // Optional: Write to console for testing
            .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day) // Specify the file path and rolling interval
            .CreateLogger();

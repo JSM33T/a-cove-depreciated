@@ -1,24 +1,34 @@
 ﻿@using almondCove.Models.Props;
-
+  
 @{
     HTMLProps props = new()
-            {
-                DataBsTheme = "",
-                HeaderClass = "navbar navbar-expand-lg fixed-top bg-light",
-                IsLoaderActive = "",
-                BodyClass="bg-secondary"
-            };
+        {
+             DataBsTheme = "",
+             HeaderClass = "navbar navbar-expand-lg fixed-top"
+
+        };
 
     MetaProps meta = new()
             {
-                Title = "Blog Home Page",
+                Title = "Home",
             };
-
 
     ViewData["HtmlProps"] = props;
     ViewData["MetaProps"] = meta;
 }
-@Html.AntiForgeryToken()
+
+@section Styles{
+        <link rel="stylesheet" media="screen" href="/assets/vendor/aos/dist/aos.css">
+
+}
+@section Scripts{
+     <script src="/assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+    <script src="/assets/vendor/shufflejs/dist/shuffle.min.js"></script>
+       <script src="~/lib/axios/dist/axios.min.js"></script>
+       <script src="~/lib/vue/vue.global.prod.min.js"></script>
+       <script src="~/lib/vue-router/vue-router.global.prod.min.js"></script>
+<script src="~/assets/js/dedicated/blogs/blogs.js"></script>
+}
 
 <div class="container py-5 mb-lg-4" id="app" >
     <!-- Breadcrumb-->
@@ -52,7 +62,7 @@
                     <!-- Search box-->
                     <div class="position-relative mb-4 mb-lg-5">
                         <i class="ai-search position-absolute top-50 start-0 translate-middle-y ms-3"></i>
-                        <input v-model="inputValue" @@keyup="navigateToBlog" class="form-control ps-5" type="search" placeholder="Enter keyword">
+                        <input v-model="inputValue" v-on:keyup="navigateToBlog" class="form-control ps-5" type="search" placeholder="Enter keyword">
                     </div>
                     <h4 class="pt-1 pt-lg-0 mt-lg-n2">Categories:</h4>
                     <ul class="nav flex-column mb-lg-5 mb-4">   
@@ -84,14 +94,5 @@
 </div>
 
 <button class="d-lg-none btn btn-sm fs-sm btn-primary w-100 rounded-0 fixed-bottom" data-bs-toggle="offcanvas" data-bs-target="#sidebarBlog"><i class="ai-layout-column me-2"></i>Sidebar</button>
-<script src="~/lib/axios/dist/axios.min.js"></script>
-    <script>
-      
-    </script>
 
-    
-@section Scripts{
-    <script src="/assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
-    <script src="/assets/js/dedicated/blogs.js" asp-append-version="true"></script>
 
-}

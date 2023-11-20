@@ -1,59 +1,8 @@
-﻿@using almondCove.Models.Props;
- 
-@{
-    Layout = "_LayoutEmpty";
-    HTMLProps props = new()
-        {
-             DataBsTheme = "",
-             HeaderClass = "navbar navbar-expand-lg fixed-top bg-light"
-        };
-
-    MetaProps meta = new()
-            {
-                Title = "Home",
-            };
-
-    ViewData["HtmlProps"] = props;
-    ViewData["MetaProps"] = meta;
-
-}
-@section Styles{
-    <style>
-        [v-cloak] {
-            display: none;
-        }
-
-        .homebtn
-        {
-            z-index:4000;
-        }
-    </style>
-}
-@Html.AntiForgeryToken()
-<div class="d-lg-flex position-relative h-100" id="app">
-    
-    <router-view></router-view>
-    
-    <div 
-        class="w-50 bg-size-cover bg-repeat-0 bg-position-center" 
-        style="background-image: url(/assets/images/covers/login.jpg);"
-    ></div>
-</div>
-
-@section Scripts
-{
-
-
-       <script src="~/lib/axios/dist/axios.min.js"></script>
-       <script src="~/lib/vue/vue.global.prod.min.js"></script>
-       <script src="~/lib/vue-router/vue-router.global.prod.min.js"></script>
-
-<script>
-       // const routerViewElement = document.querySelector('router-view');
-
-        const BaseComponent = {
-            template:
-                `
+﻿// @ts-nocheck
+import { showToast } from './../global.js'
+const BaseComponent = {
+    template:
+        `
 <a class="text-nav btn btn-icon bg-light border rounded-circle position-absolute top-0 end-0 p-0 mt-3 me-3 mt-sm-4 me-sm-4 homebtn" href="/" data-bs-toggle="tooltip" data-bs-placement="left" title="Back to home"><i class="ai-home"></i></a>
 <div class="d-flex flex-column align-items-center w-lg-50 h-100 px-1 px-lg-1  bg-secondary">
     <div class="w-100 mt-auto fade-in" style="max-width: 526px;">
@@ -99,25 +48,25 @@
     </div>
 </div>
             `,
-            data() {
-                return {
-                };
-            },
-            async mounted() {
-                this.$initToggle();
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth',
-                });
-            },
-            methods: {
-
-
-            }
+    data() {
+        return {
         };
+    },
+    async mounted() {
+        this.$initToggle();
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+        });
+    },
+    methods: {
 
-        const LoginComponent = {
-            template: `
+
+    }
+};
+
+const LoginComponent = {
+    template: `
            <a class="text-nav btn btn-icon bg-light border rounded-circle position-absolute top-0 end-0 p-0 mt-3 me-3 mt-sm-4 me-sm-4 homebtn" href="/" data-bs-toggle="tooltip" data-bs-placement="left" title="Back to home"><i class="ai-home"></i></a>
 <div class="d-flex flex-column align-items-center w-lg-50 h-100 px-3 px-lg-5 pt-5">
     <div class="w-100 mt-auto fade-in" style="max-width: 526px;">
@@ -178,55 +127,55 @@
     <div class="w-50 bg-size-cover bg-repeat-0 bg-position-center" style="background-image: url(/assets/images/covers/login.jpg);"></div>
 </div>
                             `,
-            data() {
-                return {
-                    buttonText: 'Log In',
-                    username: '',
-                    password: '',
-                };
-            },
-            async mounted() {
-                this.$initToggle();
-                this.username = '';
-                this.password = '';
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth',
-                });
-            },
-            methods: {
-                submitLogin() {
-                    this.buttonText = '<span class="spinner-grow spinner-grow-sm me-2" role="status" aria-hidden="true"></span>Logging In...';
-                    const details = {
-                        UserName: this.username,
-                        PassWord: this.password,
-                    };
-                    const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
-                    axios.defaults.headers.common['RequestVerificationToken'] = token;
-                    axios.post('/api/account/login', details)
-                        .then((response) => {
-                            //toaster("success", "Logging in..");
-                            let prevlink = localStorage.getItem("prev_link");
-                            if (prevlink !== '' && prevlink !== undefined && prevlink !== '/account/login') {
-                                window.location.href = prevlink;
-                            }
-                            else {
-                                window.location.href = "/";
-                            }
-
-                        })
-                        .catch((error) => {
-                            toaster("error", error.response.data);
-                        })
-                        .finally(() => {
-                            this.buttonText = 'Log In';
-                        });
-                },
-            }
+    data() {
+        return {
+            buttonText: 'Log In',
+            username: '',
+            password: '',
         };
+    },
+    async mounted() {
+        this.$initToggle();
+        this.username = '';
+        this.password = '';
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+        });
+    },
+    methods: {
+        submitLogin() {
+            this.buttonText = '<span class="spinner-grow spinner-grow-sm me-2" role="status" aria-hidden="true"></span>Logging In...';
+            const details = {
+                UserName: this.username,
+                PassWord: this.password,
+            };
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+            axios.defaults.headers.common['RequestVerificationToken'] = token;
+            axios.post('/api/account/login', details)
+                .then((response) => {
+                    //showToast("success", "Logging in..");
+                    let prevlink = localStorage.getItem("prev_link");
+                    if (prevlink !== '' && prevlink !== undefined && prevlink !== '/account/login') {
+                        window.location.href = prevlink;
+                    }
+                    else {
+                        window.location.href = "/";
+                    }
 
-        const SignupComponent = {
-            template: `
+                })
+                .catch((error) => {
+                    showToast("error", error.response.data);
+                })
+                .finally(() => {
+                    this.buttonText = 'Log In';
+                });
+        },
+    }
+};
+
+const SignupComponent = {
+    template: `
                  <a class="text-nav btn btn-icon bg-light border rounded-circle position-absolute top-0 end-0 p-0 mt-3 me-3 mt-sm-4 me-sm-4 homebtn" href="/" data-bs-toggle="tooltip" data-bs-placement="left" title="Back to home"><i class="ai-home"></i></a>
 
 <div class="d-flex flex-column align-items-center w-lg-50 h-100 px-3 px-lg-5 pt-5 fade-in">
@@ -279,68 +228,69 @@
 
                             `,
 
-            data() {
-                return {
-                    buttonText: 'Sign Up',
-                    username: '',
-                    password: '',
-                    passconfirm: '',
-                    firstname: '',
-                    lastname: '',
-                    email: '',
+    data() {
+        return {
+            buttonText: 'Sign Up',
+            username: '',
+            password: '',
+            passconfirm: '',
+            firstname: '',
+            lastname: '',
+            email: '',
 
-                };
-            },
-            async mounted() {
-                this.$initToggle();
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth',
-                });
-            },
-            methods: {
-                submitSignup() {
-                    if (this.firstname == "") {
-                        toaster('error', 'first name is mandatory!!');
-                    }
-                    else if (this.username == "") {
-                        toaster('error', 'username is mandatory!!');
-                    }
-                    else if (this.password !== this.passconfirm) {
-                        toaster('error', 'passwords dont match!!');
-                    }
-                    else {
-                        this.buttonText = '<span class="spinner-grow spinner-grow-sm me-2" role="status" aria-hidden="true"></span>Signing Up...';
-                        const details = {
-                            FirstName: this.firstname,
-                            LastName: this.lastname,
-                            UserName: this.username,
-                            Password: this.password,
-                            EMail: this.email
-                        };
-                        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
-                        axios.defaults.headers.common['RequestVerificationToken'] = token;
-                        axios.post('/api/account/signup', details)
-                            .then((response) => {
-                                console.log(response.data);
-                                toaster("success", response.data.message);
-                            })
-                            .catch((error) => {
-                                toaster("error", error.response.data);
-                            })
-                            .finally(() => {
-                                this.buttonText = 'Sign Up';
-                                this.lala = 'Sign Up';
-                                this.$router.push('/account/verify/' + this.username);
-                            });
-                    }
-
-                },
-            },
         };
+    },
+    async mounted() {
+        this.$initToggle();
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+        });
+    },
+    methods: {
+        submitSignup() {
+            if (this.firstname == "") {
+                showToast('error', 'first name is mandatory!!');
+            }
+            else if (this.username == "") {
+                showToast('error', 'username is mandatory!!');
+            }
+            else if (this.password !== this.passconfirm) {
+                showToast('error', 'passwords dont match!!');
+            }
+            else {
+                this.buttonText = '<span class="spinner-grow spinner-grow-sm me-2" role="status" aria-hidden="true"></span>Signing Up...';
+                const details = {
+                    FirstName: this.firstname,
+                    LastName: this.lastname,
+                    UserName: this.username,
+                    Password: this.password,
+                    EMail: this.email
+                };
+                const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                axios.defaults.headers.common['RequestVerificationToken'] = token;
+                axios.post('/api/account/signup', details)
+                    .then((response) => {
+                        console.log(response.data);
+                        showToast("success", response.data.message);
+                        this.$router.push('/account/verify/' + this.username);
+                    })
+                    .catch((error) => {
+                        showToast("error", error.response.data);
+                    })
+                    .finally(() => {
+                        this.buttonText = 'Sign Up';
+                        this.lala = 'Sign Up';
 
-        const PasswordReset = {
-            template: `
+                    });
+            }
+
+        },
+    },
+};
+
+const PasswordReset = {
+    template: `
                  <a class="text-nav btn btn-icon bg-light border rounded-circle position-absolute top-0 end-0 p-0 mt-3 me-3 mt-sm-4 me-sm-4" href="/" data-bs-toggle="tooltip" data-bs-placement="left" title="Back to home"><i class="ai-home"></i></a>
 <div class="d-flex flex-column align-items-center w-lg-50 h-100 px-3 px-lg-5 pt-5 fade-in">
     <div class="w-100 mt-auto" style="max-width: 526px;">
@@ -369,78 +319,78 @@
     <div class="w-50 bg-size-cover bg-repeat-0 bg-position-center" style="background-image: url(/assets/images/covers/login.jpg);"></div>
 </div>
                   `,
-            data() {
-                return {
-                    buttonText: 'Send Recovery Key',
-                    stringRec: '',
-                    password: '',
-                    showOtpPanel: false,
-                    email: '',
-                };
-            },
-            async mounted() {
-                this.$initToggle();
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth',
-                });
-            },
-            methods: {
-                passReset() {
-                    if (this.email == "") {
-                        toaster('error', 'please enter your username or email!!');
-                    }
-                    else {
-                        this.buttonText = '<span class="spinner-grow spinner-grow-sm me-2" role="status" aria-hidden="true"></span>Loading...';
-                        const details = {
-                            StringRec: this.email
-                        };
-
-                        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
-                        axios.defaults.headers.common['RequestVerificationToken'] = token;
-                        axios.post('/api/account/recover', details)
-                            .then((response) => {
-                                toaster("success", response.data);
-                                this.showOtpPanel = true;
-                                this.isReadOnly = true;
-                                this.$refs.otpBox.focus();
-                            })
-                            .catch((error) => {
-                                toaster("error", error.response.data);
-                            })
-                            .finally(() => {
-                                this.buttonText = 'Send Recovery Key';
-                            });
-                    }
-
-                },
-                loginViaOtp() {
-
-                    const loginDeets = {
-                        otp: this.otp,
-                        username: this.email
-
-                    };
-                    const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
-                    axios.defaults.headers.common['RequestVerificationToken'] = token;
-                    axios.post('/api/account/loginviaotp', loginDeets)
-                        .then((response) => {
-                            toaster("success", response.data);
-                            window.location.href = '/profile/security';
-                        })
-                        .catch((error) => {
-                            toaster("error", error.response.data);
-                        })
-                        .finally(() => {
-                            this.buttonText = 'Login';
-                        });
-                },
-            }
+    data() {
+        return {
+            buttonText: 'Send Recovery Key',
+            stringRec: '',
+            password: '',
+            showOtpPanel: false,
+            email: '',
         };
+    },
+    async mounted() {
+        this.$initToggle();
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+        });
+    },
+    methods: {
+        passReset() {
+            if (this.email == "") {
+                showToast('error', 'please enter your username or email!!');
+            }
+            else {
+                this.buttonText = '<span class="spinner-grow spinner-grow-sm me-2" role="status" aria-hidden="true"></span>Loading...';
+                const details = {
+                    StringRec: this.email
+                };
 
-        const VerifyAcc = {
-            props: ['username'],
-            template: `
+                const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                axios.defaults.headers.common['RequestVerificationToken'] = token;
+                axios.post('/api/account/recover', details)
+                    .then((response) => {
+                        showToast("success", response.data);
+                        this.showOtpPanel = true;
+                        this.isReadOnly = true;
+                        this.$refs.otpBox.focus();
+                    })
+                    .catch((error) => {
+                        showToast("error", error.response.data);
+                    })
+                    .finally(() => {
+                        this.buttonText = 'Send Recovery Key';
+                    });
+            }
+
+        },
+        loginViaOtp() {
+
+            const loginDeets = {
+                otp: this.otp,
+                username: this.email
+
+            };
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+            axios.defaults.headers.common['RequestVerificationToken'] = token;
+            axios.post('/api/account/loginviaotp', loginDeets)
+                .then((response) => {
+                    showToast("success", response.data);
+                    window.location.href = '/profile/security';
+                })
+                .catch((error) => {
+                    showToast("error", error.response.data);
+                })
+                .finally(() => {
+                    this.buttonText = 'Login';
+                });
+        },
+    }
+};
+
+const VerifyAcc = {
+    props: ['username'],
+    template: `
         <a class="text-nav btn btn-icon bg-light border rounded-circle position-absolute top-0 end-0 p-0 mt-3 me-3 mt-sm-4 me-sm-4 homebtn" href="/" data-bs-toggle="tooltip" data-bs-placement="left" title="Back to home"><i class="ai-home"></i></a>
 <div class="d-flex flex-column align-items-center w-lg-50 h-100 px-3 px-lg-5 pt-5">
     <div class="w-100 mt-auto fade-in" style="max-width: 526px;">
@@ -466,44 +416,44 @@
 </div>
 
                                             `,
-            data() {
-                return {
-                    buttonText: 'Verify',
-                };
-            },
-            async mounted() {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth',
-                });
-            },
-            methods: {
-                verifyAcc() {
-                    this.buttonText = '<span class="spinner-grow spinner-grow-sm me-2" role="status" aria-hidden="true"></span>Logging In...';
-                    const details = {
-                        UserName: this.username,
-                        OTP: this.OTP,
-                    };
-                 //   const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
-                  //  axios.defaults.headers.common['RequestVerificationToken'] = token;
-                    axios.post('/api/user/verification', details)
-                        .then((response) => {
-                            toaster("success", "User Verified");
-                            this.$router.push('/account/login/');
-                            
-                        })
-                        .catch((error) => {
-                            toaster("error", error.response.data);
-                        })
-                        .finally(() => {
-                            this.buttonText = 'Verify';
-                        });
-                },
-            }
+    data() {
+        return {
+            buttonText: 'Verify',
         };
+    },
+    async mounted() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+        });
+    },
+    methods: {
+        verifyAcc() {
+            this.buttonText = '<span class="spinner-grow spinner-grow-sm me-2" role="status" aria-hidden="true"></span>Logging In...';
+            const details = {
+                UserName: this.username,
+                OTP: this.OTP,
+            };
+            //   const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+            //  axios.defaults.headers.common['RequestVerificationToken'] = token;
+            axios.post('/api/user/verification', details)
+                .then((response) => {
+                    showToast("success", "User Verified");
+                    this.$router.push('/account/login/');
 
-        const Loginviaotp = {
-            template: `
+                })
+                .catch((error) => {
+                    showToast("error", error.response.data);
+                })
+                .finally(() => {
+                    this.buttonText = 'Verify';
+                });
+        },
+    }
+};
+
+const Loginviaotp = {
+    template: `
         <a class="text-nav btn btn-icon bg-light border rounded-circle position-absolute top-0 end-0 p-0 mt-3 me-3 mt-sm-4 me-sm-4" href="/" data-bs-toggle="tooltip" data-bs-placement="left" title="Back to home"><i class="ai-home"></i></a>
 <div class="d-flex flex-column align-items-center w-lg-50 h-100 px-3 px-lg-5 pt-5 fade-in-pop">
     <div class="w-100 mt-auto" style="max-width: 526px;">
@@ -548,102 +498,97 @@
 </div>
                       
                                     `,
-            data() {
-                return {
-                    buttonText: 'Log In',
-                    username: '',
-                    password: '',
-                };
-            },
-            async mounted() {
-                this.$initToggle();
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth',
+    data() {
+        return {
+            buttonText: 'Log In',
+            username: '',
+            password: '',
+        };
+    },
+    async mounted() {
+        this.$initToggle();
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+        });
+    },
+    methods: {
+        submitLogin() {
+            this.buttonText = '<span class="spinner-grow spinner-grow-sm me-2" role="status" aria-hidden="true"></span>Logging In...';
+            const details = {
+                UserName: this.username,
+                PassWord: this.password,
+            };
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+            axios.defaults.headers.common['RequestVerificationToken'] = token;
+            axios.post('/api/account/login', details)
+                .then((response) => {
+                    showToast("success", "Logging in..");
+                    window.location.href = localStorage.getItem("curr_link");
+                })
+                .catch((error) => {
+                    showToast("error", error.response.data);
+                })
+                .finally(() => {
+                    this.buttonText = 'Log In';
                 });
-            },
-            methods: {
-                submitLogin() {
-                    this.buttonText = '<span class="spinner-grow spinner-grow-sm me-2" role="status" aria-hidden="true"></span>Logging In...';
-                    const details = {
-                        UserName: this.username,
-                        PassWord: this.password,
-                    };
-                    const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
-                    axios.defaults.headers.common['RequestVerificationToken'] = token;
-                    axios.post('/api/account/login', details)
-                        .then((response) => {
-                            toaster("success", "Logging in..");
-                            window.location.href = localStorage.getItem("curr_link");
-                        })
-                        .catch((error) => {
-                            toaster("error", error.response.data);
-                        })
-                        .finally(() => {
-                            this.buttonText = 'Log In';
-                        });
-                },
-            }
+        },
+    }
+};
+
+const routes = [
+    {
+        path: '/account/',
+        component: BaseComponent
+    }, {
+        path: '/account/login/',
+        component: LoginComponent
+    }, {
+        path: '/account/signup',
+        component: SignupComponent
+    }, {
+        path: '/account/accountrecovery',
+        component: PasswordReset
+    }, {
+        path: '/account/loginviaotp',
+        component: Loginviaotp
+    }, {
+        path: '/account/verify/:username',
+        component: VerifyAcc,
+        props: true
+    }
+];
+const router = VueRouter.createRouter({
+    history: VueRouter.createWebHistory(),
+    routes
+});
+
+const app = Vue.createApp({
+    data() {
+        return {
+            isLoading: true,
         };
-
-        const routes = [
-            {
-                path: '/account/',
-                component: BaseComponent
-            }, {
-                path: '/account/login/',
-                component: LoginComponent
-            }, {
-                path: '/account/signup',
-                component: SignupComponent
-            }, {
-                path: '/account/accountrecovery',
-                component: PasswordReset
-            }, {
-                path: '/account/loginviaotp',
-                component: Loginviaotp
-            }, {
-                path: '/account/verify/:username',
-                component: VerifyAcc,
-                props: true
-            }
-        ];
-        const router = VueRouter.createRouter({
-            history: VueRouter.createWebHistory(),
-            routes
-        });
-
-        const app = Vue.createApp({
-            data() {
-                return {
-                    isLoading: true,
-                };
-            },
-        });
-        app.config.globalProperties.$initToggle = function () {
-            var passwordVisibilityToggle = function () {
-                var elements = document.querySelectorAll('.password-toggle');
-                var _loop2 = function _loop2(i) {
-                    var passInput = elements[i].querySelector('.form-control'),
-                        passToggle = elements[i].querySelector('.password-toggle-btn');
-                    passToggle.addEventListener('click', function (e) {
-                        if (e.target.type !== 'checkbox') return;
-                        if (e.target.checked) {
-                            passInput.type = 'text';
-                        } else {
-                            passInput.type = 'password';
-                        }
-                    }, false);
-                };
-                for (var i = 0; i < elements.length; i++) {
-                    _loop2(i);
+    },
+});
+app.config.globalProperties.$initToggle = function () {
+    var passwordVisibilityToggle = function () {
+        var elements = document.querySelectorAll('.password-toggle');
+        var _loop2 = function _loop2(i) {
+            var passInput = elements[i].querySelector('.form-control'),
+                passToggle = elements[i].querySelector('.password-toggle-btn');
+            passToggle.addEventListener('click', function (e) {
+                if (e.target.type !== 'checkbox') return;
+                if (e.target.checked) {
+                    passInput.type = 'text';
+                } else {
+                    passInput.type = 'password';
                 }
-            }();
+            }, false);
         };
-        app.use(router);
-        app.mount('#app');
-
-
-   </script>
-}
-
+        for (var i = 0; i < elements.length; i++) {
+            _loop2(i);
+        }
+    }();
+};
+app.use(router);
+app.mount('#app');

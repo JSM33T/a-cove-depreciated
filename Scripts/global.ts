@@ -1,5 +1,6 @@
 ﻿import { Email } from './Interfaces/email.interface';
 declare const axios: any;
+declare const AxiosResponse: any;
 declare const bootstrap: any;
 
 ///===================== URL UTILS ====================
@@ -30,45 +31,88 @@ function acSanitize(text: string)
 }
 
 //===================== XHR VIA AXIOS ====================
-function postData(apiUrl, ipData): Promise<string> {
-    return new Promise<string>(async (resolve, reject) => {
-        try {
-            const token = document.querySelector('input[name="__RequestVerificationToken"]') as HTMLInputElement;
-            axios.defaults.headers.common['RequestVerificationToken'] = token.value;
-            const response = await axios.post(apiUrl, ipData);
-            resolve(response.data.toString());
-        } catch (error: any) {
-            if (error.response && error.response.data) {
-                resolve(error.response.data.toString());
-            } else if (error.request) {
-                resolve('No response received from the server');
-            } else {
-                resolve('Error sending API request');
-            }
+//function postData(apiUrl, ipData): Promise<string> {
+//    return new Promise<string>(async (resolve, reject) => {
+//        try {
+//            const token = document.querySelector('input[name="__RequestVerificationToken"]') as HTMLInputElement;
+//            axios.defaults.headers.common['RequestVerificationToken'] = token.value;
+//            const response = await axios.post(apiUrl, ipData);
+//            resolve(response.data.toString());
+//        } catch (error: any) {
+//            if (error.response && error.response.data) {
+//                resolve(error.response.data.toString());
+//            } else if (error.request) {
+//                resolve('No response received from the server');
+//            } else {
+//                resolve('Error sending API request');
+//            }
+//        }
+//    });
+//}
+
+//async function postData(apiUrl: string, data: any): Promise<AxiosResponse<any>> {
+//    try {
+//        const response = await axios.post(apiUrl, data);
+//        return response;
+//    } catch (error) {
+//        console.error('Error:', error);
+
+//        // Rethrow the error for the caller to handle if needed
+//        throw error;
+//    }
+//}
+
+
+async function postData(apiUrl: string, data: any): Promise<any> {
+    try {
+        const response = await axios.post(apiUrl, data);
+
+        // You can handle non-OK responses here
+        if (response.status !== 200) {
+            console.log(response.data);
         }
-    });
+        return response.data;
+    } catch (error) {
+        console.error('Error:', error);
+        alert("hmm");
+        throw error;
+        
+    }
 }
 
 
+async function getData(apiUrl: string): Promise<{ success: boolean; data?: any; error?: string }> {
+    try {
+        const response = await axios.get(apiUrl);
+        return { success: true, data: response.data };
+    } catch (error: any) {
+        console.error('Error:', error);
 
-function getData(apiUrl): Promise<string> {
-    return new Promise<string>(async (resolve, reject) => {
-        try {
-            const token = document.querySelector('input[name="__RequestVerificationToken"]') as HTMLInputElement;
-            axios.defaults.headers.common['RequestVerificationToken'] = token.value;
-            const response = await axios.get(apiUrl);
-            resolve(response.data.toString());
-        } catch (error: any) {
-            if (error.response && error.response.data) {
-                resolve(error.response.data.toString());
-            } else if (error.request) {
-                resolve('No response received from the server');
-            } else {
-                resolve('Error sending API request');
-            }
-        }
-    });
+        // Adjust the error handling as needed
+        const errorMessage = error.response?.data?.message || 'An error occurred';
+        return { success: false, error: errorMessage };
+    }
 }
+
+
+//function getData(apiUrl): Promise<string> {
+//    return new Promise<string>(async (resolve, reject) => {
+//        try {
+//            const token = document.querySelector('input[name="__RequestVerificationToken"]') as HTMLInputElement;
+//            axios.defaults.headers.common['RequestVerificationToken'] = token.value;
+//            const response = await axios.get(apiUrl);
+//            resolve(response.data.toString());
+//        } catch (error: any) {
+//            if (error.response && error.response.data) {
+//                resolve(error.response.data.toString());
+//            } else if (error.request) {
+//                resolve('No response received from the server');
+//            } else {
+//                resolve('Error sending API request');
+//            }
+//        }
+//    });
+//}
 
 //===================== HTML UTILS ====================
 
@@ -242,25 +286,16 @@ function submitMail() {
 function postEmailToAPI(emailData: Email) {
 
     if (!validateEmail(emailData.email)) {
-        alert("invalid email");
+        showToast("error","Invalid email")
         return;
     }
     const submitBtn = document.getElementById('submitMail') as HTMLButtonElement;
     submitBtn.textContent = "loading";
     const apiUrl = '/api/mailinglist/subscribe';
     try {
-        postData(apiUrl, emailData)
-            .then((result) => {
-                console.log('Result:', result);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-
+       console.log(postData(apiUrl, emailData));
     } catch (error: any) {
-        if (error.response.data) {
 
-        }
     }
     finally {
         submitBtn.textContent = "Subscribe";
@@ -293,7 +328,7 @@ function showToast(type: string, message: string) {
     // Close button with data-bs-dismiss attribute
     const closeBtn = document.createElement('button');
     closeBtn.type = 'button';
-    closeBtn.classList.add('ml-2', 'mb-1', 'close');
+    closeBtn.classList.add('ml-2', 'mb-1', 'close','btn','btn-sm');
     closeBtn.setAttribute('data-dismiss', 'toast');
     closeBtn.setAttribute('aria-label', 'Close');
     closeBtn.setAttribute('data-bs-dismiss', 'toast'); // This line closes modals

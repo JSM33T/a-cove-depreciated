@@ -4,14 +4,20 @@ using System.Diagnostics;
 
 namespace almondCove.Controllers
 {
-    public class AuthRouteController : Controller
+    public class AccountRouteController : Controller
     {
-        [Route("/account/{something?}")]
+        [Route("/account/")]
+        public IActionResult Index()
+        {
+            return View("Views/Account/Index.cshtml");
+        }
+
+        [Route("/account/login/")]
         public IActionResult Login()
         {
-            return View("Views/Auth/Index.cshtml");
+            return View("Views/Account/Login.cshtml");
         }
-     
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

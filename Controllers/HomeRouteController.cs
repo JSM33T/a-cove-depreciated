@@ -1,5 +1,6 @@
 ﻿using almondCove.Models;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using System.Diagnostics;
 
 namespace almondCove.Controllers

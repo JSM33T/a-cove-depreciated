@@ -32,6 +32,17 @@
     }
 }
 
+@section Styles{
+<style>
+    .hidden
+    {
+        display:none;
+    }
+</style>
+
+
+}
+
     @Html.AntiForgeryToken()
     <input id="ip_slug" value="@blogDeet.Slug" class="hidden"/>
     <input id="ip_tags" value="@blogDeet.Tags" class="hidden"/>

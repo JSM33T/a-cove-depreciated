@@ -80,9 +80,11 @@ namespace almondCove.Api
     {
         readonly string connectionString = "";
         private readonly IConfigManager _configManager;
-        public BlogApiController(IConfigManager configManager)
+        private readonly ILogger<BlogApiController> _logger;
+        public BlogApiController(IConfigManager configManager,ILogger<BlogApiController> logger)
         {
             _configManager = configManager;
+            _logger = logger;
             connectionString = _configManager.GetConnString();
             
         }
@@ -156,7 +158,7 @@ namespace almondCove.Api
             }
             catch (Exception ex)
             {
-                //// Log.Error("error in get top blogs: " + ex.Message.ToString());
+                 _logger.LogError("error in get top blogs: " + ex.Message.ToString());
                 return BadRequest("something went wrong");
             }
         }

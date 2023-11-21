@@ -17,7 +17,6 @@ function getUrl(url?: string) {
     };
 }
 
-
 //===================== VALIDATIONS ====================
 //email validation
 function validateEmail(email: string): boolean {
@@ -25,74 +24,62 @@ function validateEmail(email: string): boolean {
     return emailRegex.test(email);
 }
 
-function acSanitize(text: string)
-{
+function acSanitize(text: string) {
 
 }
 
-//===================== XHR VIA AXIOS ====================
-//function postData(apiUrl, ipData): Promise<string> {
-//    return new Promise<string>(async (resolve, reject) => {
-//        try {
-//            const token = document.querySelector('input[name="__RequestVerificationToken"]') as HTMLInputElement;
-//            axios.defaults.headers.common['RequestVerificationToken'] = token.value;
-//            const response = await axios.post(apiUrl, ipData);
-//            resolve(response.data.toString());
-//        } catch (error: any) {
-//            if (error.response && error.response.data) {
-//                resolve(error.response.data.toString());
-//            } else if (error.request) {
-//                resolve('No response received from the server');
-//            } else {
-//                resolve('Error sending API request');
-//            }
-//        }
-//    });
-//}
+async function acPostData(apiUrl, data) {
+    try {
+        const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]') as HTMLInputElement;
+        if (!tokenElement) {
+            return { type: 'error', message: 'Anti-forgery token element not found' };
+        }
+        const token = tokenElement.value;
+        axios.defaults.headers.common['RequestVerificationToken'] = token;
+        const response = await axios.post(apiUrl, data);
+        return { type: 'ok', data: response.data };
+    } catch (error: any) {
+        if (error) {
+            return { type: 'error', data: error.response.data };
+        }
+        else {
+            return { type: 'error', data: "Something went wrong" };
+        }
+    }
+}
 
-//async function postData(apiUrl: string, data: any): Promise<AxiosResponse<any>> {
+
+async function acGetData(apiUrl) {
+    try {
+        const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]') as HTMLInputElement;
+        if (!tokenElement) {
+            return { type: 'error', message: 'Anti-forgery token element not found' };
+        }
+        const token = tokenElement.value;
+        axios.defaults.headers.common['RequestVerificationToken'] = token;
+        const response = await axios.get(apiUrl);
+        return { type: 'ok', data: response.data };
+    } catch (error: any) {
+        if (error) {
+            return { type: 'error', data: error.response.data };
+        }
+        else {
+            return { type: 'error', data: "Something went wrong" };
+        }
+    }
+}
+//async function acGetData(apiUrl: string): Promise<{ success: boolean; data?: any; error?: string }> {
 //    try {
-//        const response = await axios.post(apiUrl, data);
-//        return response;
-//    } catch (error) {
+//        const response = await axios.get(apiUrl);
+//        return { success: true, data: response.data };
+//    } catch (error: any) {
 //        console.error('Error:', error);
 
-//        // Rethrow the error for the caller to handle if needed
-//        throw error;
+//        // Adjust the error handling as needed
+//        const errorMessage = error.response?.data?.message || 'An error occurred';
+//        return { success: false, error: errorMessage };
 //    }
 //}
-
-
-async function postData(apiUrl: string, data: any): Promise<any> {
-    try {
-        const response = await axios.post(apiUrl, data);
-
-        // You can handle non-OK responses here
-        if (response.status !== 200) {
-            console.log(response.data);
-        }
-        return response.data;
-    } catch (error) {
-        console.error('Error:', error);
-        alert("hmm");
-        throw error;
-        
-    }
-}
-
-
-async function getData(apiUrl: string): Promise<{ success: boolean; data?: any; error?: string }> {
-    try {
-        const response = await axios.get(apiUrl);
-        return { success: true, data: response.data };
-    } catch (error: any) {
-        console.error('Error:', error);
-
-        // Adjust the error handling as needed
-        const errorMessage = error.response?.data?.message || 'An error occurred';
-        return { success: false, error: errorMessage };
-    }
-}
 
 
 //function getData(apiUrl): Promise<string> {
@@ -113,6 +100,8 @@ async function getData(apiUrl: string): Promise<{ success: boolean; data?: any; 
 //        }
 //    });
 //}
+
+
 
 //===================== HTML UTILS ====================
 
@@ -163,14 +152,9 @@ function classesToTags(tag, classes) {
 
 //===================== XHR VIA AXIOS ====================
 
-function toaster(type: string, msg: string)
-{
-    alert(type + " :- " + msg);
-}
 
 
-function acSetEvent(trigger, target)
-{
+function acSetEvent(trigger, target) {
     const commentButton = document.getElementById(trigger);
     if (commentButton) {
         commentButton.addEventListener('click', target);
@@ -208,19 +192,17 @@ function acTemplate(templateId: any, data: JSON, divid: string) {
         });
         // Insert the rendered template into the container
         const target = document.getElementById(divid);
-        if (target)
-        { target.innerHTML = renderedTemplate;  }
-        
+        if (target) { target.innerHTML = renderedTemplate; }
+
     }
-    else
-    {
+    else {
         console.error("template rendering failed")
     }
 
 
 
     // Replace variables in the template with actual data
-   
+
 }
 
 
@@ -261,60 +243,24 @@ function getQueryParameters() {
 }
 
 
-//============global almondcove methods=============
-
-function submitMail() {
-
-    console.log("event ready");
-    document.addEventListener('DOMContentLoaded', function () {
-        const form = document.querySelector('.subscription-form') as HTMLFormElement;
-
-        form.addEventListener('submit', function (event) {
-            event.preventDefault();
-
-            const emailInput = document.getElementById('subscr-email') as HTMLInputElement;
-            const emailData = {
-                email: emailInput.value,
-                origin: "HomePage",
-            };
-
-            postEmailToAPI(emailData);
-        });
-    });
-}
-
-function postEmailToAPI(emailData: Email) {
-
-    if (!validateEmail(emailData.email)) {
-        showToast("error","Invalid email")
-        return;
-    }
-    const submitBtn = document.getElementById('submitMail') as HTMLButtonElement;
-    submitBtn.textContent = "loading";
-    const apiUrl = '/api/mailinglist/subscribe';
-    try {
-       console.log(postData(apiUrl, emailData));
-    } catch (error: any) {
-
-    }
-    finally {
-        submitBtn.textContent = "Subscribe";
-    }
-}
+//============global ac methods=============
 
 
-function showToast(type: string, message: string) {
+function acToast(type: string, message: string) {
+
+    let toastContainer = document.getElementById('toast-container');
+
     // Create a new toast element using the DOM API
     const toastElement = document.createElement('div');
     toastElement.classList.add('toast');
     toastElement.setAttribute('role', 'alert');
-    toastElement.setAttribute('autohide', 'true');
+    toastElement.setAttribute('autohide', 'false');
     toastElement.setAttribute('aria-live', 'assertive');
     toastElement.setAttribute('aria-atomic', 'true');
 
     // Create toast header
     const toastHeader = document.createElement('div');
-    toastHeader.classList.add('toast-header');
+    toastHeader.classList.add('toast-header','bg-primary','text-white');
 
     //const i = document.createElement('i');
     //i.classList.add('ai-bell', 'fs-lg me-2');
@@ -328,7 +274,7 @@ function showToast(type: string, message: string) {
     // Close button with data-bs-dismiss attribute
     const closeBtn = document.createElement('button');
     closeBtn.type = 'button';
-    closeBtn.classList.add('ml-2', 'mb-1', 'close','btn','btn-sm');
+    closeBtn.classList.add('btn-close', 'btn-close-white', 'ms-2');
     closeBtn.setAttribute('data-dismiss', 'toast');
     closeBtn.setAttribute('aria-label', 'Close');
     closeBtn.setAttribute('data-bs-dismiss', 'toast'); // This line closes modals
@@ -345,32 +291,56 @@ function showToast(type: string, message: string) {
     toastElement.appendChild(toastBody);
 
     // Append the toast element to the body
-    document.body.appendChild(toastElement);
+   // document.body.appendChild(toastElement);
+    toastContainer!.appendChild(toastElement);
 
-    // Create a new Bootstrap Toast instance
     const toast = new bootstrap.Toast(toastElement);
-
-    // Show the toast
     toast.show();
 
-    // Optional: Remove the toast from the DOM after it's hidden
     toastElement.addEventListener('hidden.bs.toast', function () {
-        document.body.removeChild(toastElement);
+        toastContainer!.removeChild(toastElement);
     });
 }
 
+
+
+function shareIt() {
+    // share using apis
+}
+
+
+
+function acQueryParams(key: string, value: string) {
+    let currentUrl = new URL(window.location.href);
+    // Check if the query parameter is already present
+    if (currentUrl.searchParams.has(key)) {
+        // If yes, update the existing value
+        currentUrl.searchParams.set(key, value);
+    } else {
+        // If not, add a new query parameter
+        currentUrl.searchParams.append(key, value);
+    }
+    // Update the browser URL
+    history.pushState({}, '', currentUrl.href);
+}
+function acClearParams() {
+}
+
+
+
 export {
+    //ac methods
+    //
+    acInit, acTemplate, acSetEvent,
+    //manage query param states
+    acQueryParams, acClearParams,
+    //getter and poster currently axios
+    acGetData, acPostData,
+
     validateEmail,
-    postData,
-    submitMail,
-    getData,
-    acSetEvent,
-    acInit,
-    acTemplate,
-    toaster,
     classesToTags,
     getQueryParameters,
     getUrl,
-    showToast
-
+    acToast,
+    shareIt
 }

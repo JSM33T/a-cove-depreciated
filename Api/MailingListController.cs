@@ -71,7 +71,7 @@ namespace almondCove.Api
 
                         int rowsAffected = await command.ExecuteNonQueryAsync();
                         _logger.LogInformation("email added:" + mail.Email?.ToString());
-                        return Ok("rows affected" + rowsAffected);
+                        return Ok("Email added successfully");
                     }
                     else
                     {

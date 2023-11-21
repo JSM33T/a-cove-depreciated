@@ -25,9 +25,9 @@
      <script src="/assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
     <script src="/assets/vendor/shufflejs/dist/shuffle.min.js"></script>
        <script src="~/lib/axios/dist/axios.min.js"></script>
-       <script src="~/lib/vue/vue.global.prod.min.js"></script>
-       <script src="~/lib/vue-router/vue-router.global.prod.min.js"></script>
-<script src="~/assets/js/dedicated/blogs/browse/index.js"></script>
+<script src="~/lib/vue/vue.global.min.js"></script>
+<script src="~/lib/vue-router/dist/vue-router.global.prod.min.js"></script>
+<script type="module" src="~/assets/js/dedicated/blogs/browse.js"></script>
 }
 
 <div class="container py-5 mb-lg-4" id="app" >
@@ -67,7 +67,7 @@
                     <h4 class="pt-1 pt-lg-0 mt-lg-n2">Categories:</h4>
                     <ul class="nav flex-column mb-lg-5 mb-4">   
                         <li class="mb-2">
-                            <router-link id="cat_all" class="nav-link d-flex p-0" to="/blogs">All categories</router-link>
+                            <router-link id="cat_all" class="nav-link d-flex p-0" to="/blogs/browse">All categories</router-link>
                         </li>
                         <li class="mb-2" v-for="category in categories" :key="category.id">
                             <router-link :to="'/blogs/browse/category/' + category.locator" class="nav-link d-flex p-0" v-bind:class="{ disabled: category.qty === 0 }">{{ category.title }}<span class="fs-sm text-muted ms-2">({{category.qty}})</span></router-link>
@@ -82,9 +82,9 @@
 
                     <h4 class="pt-1 pt-lg-0 mt-lg-n2">Top Tags:</h4>
                     <ul class="nav flex-column mb-lg-5 mb-4">
-                        <li class="mb-2"><router-link to="/blogs/browse/tag/tech" class="nav-link d-flex p-0 ">#tech</router-link></li>
-                        <li class="mb-2"><router-link to="/blogs/browse/tag/tv" class="nav-link  d-flex p-0 ">#tv</router-link></li>
-                        <li class="mb-2"><router-link to="/blogs/browse/tag/urbex" class="nav-link d-flex p-0 ">#urbex</router-link></li>
+                        <li class="mb-2"><router-link to="/blogs/tag/tech" class="nav-link d-flex p-0 ">#tech</router-link></li>
+                        <li class="mb-2"><router-link to="/blogs/tag/tv" class="nav-link  d-flex p-0 ">#tv</router-link></li>
+                        <li class="mb-2"><router-link to="/blogs/tag/urbex" class="nav-link d-flex p-0 ">#urbex</router-link></li>
                     </ul>
 
                 </div>

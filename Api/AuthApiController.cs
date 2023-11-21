@@ -41,7 +41,7 @@ namespace almondCove.Api
         }
 
         [HttpPost("/api/account/login")]
-        [ValidateAntiForgeryToken]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> UserLogin([FromBody] LoginCreds loginCreds)
         {
 
@@ -261,14 +261,6 @@ namespace almondCove.Api
                 }
             
             }
-        }
-
-        [Route("/account/logout")]
-        public void LogOut()
-        {
-            Response.Cookies.Delete("SessionKey");
-            HttpContext.Session.Clear();
-            Response.Redirect("/");
         }
     }
 }

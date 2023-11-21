@@ -1,4 +1,4 @@
-﻿import { toaster,acInit ,classesToTags} from '../../global.js'
+﻿import { acToast,acInit  ,classesToTags} from '../../global.js'
 declare const axios;
 
 
@@ -10,14 +10,6 @@ const gl_tag = document.getElementById("ip_tags") as HTMLInputElement;
 const token = tokenele.value;
 const global_slug = gl_slug.value;
 const global_tags = gl_tag.value;
-
-//document.addEventListener('DOMContentLoaded', () => {
-//    loadTags();
-//    loadAuthors();
-//    //loadComments();
-//    //loadLikes();
-//});
-
 
 
 acInit([
@@ -51,7 +43,6 @@ acInit([
 
 function loadLikes() {
     const likes = document.getElementById("likes") as HTMLElement;
-    console.log(likes.innerHTML);
     //get no of likes
     axios.get('/api/blog/' + global_slug + '/likes')
         .then(response => {

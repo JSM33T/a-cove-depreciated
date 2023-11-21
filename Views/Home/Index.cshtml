@@ -18,15 +18,16 @@
 }
 
 @section Styles{
-        <link rel="stylesheet" media="screen" href="/assets/vendor/aos/dist/aos.css">
+<link href="~/lib/aos/dist/aos.min.css" rel="stylesheet" />
 
 }
 
 @section Scripts{
-        <script src="/assets/vendor/aos/dist/aos.js"></script>
-        <script src="/assets/vendor/parallax-js/dist/parallax.min.js"></script>
+        <script src="~/lib/aos/dist/aos.min.js"></script>
+        <script src="~/lib/parallax-js/dist/parallax.min.js"></script>
         <script type="module" src="/assets/js/dedicated/home.js"></script>
 }
+@Html.AntiForgeryToken()
  <section class="position-relative bg-primary bg-opacity-10 pt-sm-3 pt-md-5">
         <div class="position-absolute top-0 end-0 overflow-hidden mt-n5 mt-md-0">
           <svg class="d-block mt-n5 mt-md-0 me-md-n5 me-xxl-0" width="1207" height="894" viewBox="0 0 1207 894" fill="currentColor" xmlns="http://www.w3.org/2000/svg" style="color: var(--ar-gray-100);">
@@ -150,7 +151,7 @@
 
         <!-- All articles link -->
         <div class="text-end pb-md-4 pt-3 mt-2 mt-sm-3 mt-lg-4">
-          <a class="d-inline-flex align-items-center fw-semibold text-decoration-none" href="/blogs">
+          <a class="d-inline-flex align-items-center fw-semibold text-decoration-none" href="/blogs/browse">
             All Blogs
             <i class="ai-arrow-right fs-4 ms-2"></i>
           </a>
@@ -258,4 +259,26 @@
         </div>
       </section>
 
+    <section class="container mb-2 mb-md-3 mb-xl-4 pb-2" data-bs-theme="dark">
+      <div class="position-relative bg-dark rounded-5 overflow-hidden p-md-5 p-4">
+        <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(255, 255, 255, .03);"></div>
+        <div class="position-relative p-xl-5 p-md-4 py-4 px-sm-3">
+          <h2 class="h1 pb-md-4 pb-3 text-center mt-n2">Join our Newsletter!</h2>
+              <p class="text-body text-center fs-sm mb-4">Subscribe to our mailing list to stay updated about new content!!</p>
+          <div class="row gy-md-5 gy-4 gx-xl-5">
+            <div class="col-lg-6 offset-lg-3 text-center">
+              
+                <form class="subscription-form">
+                    <div class="input-group input-group-sm rounded-pill">
+                      <input class="form-control" type="text" placeholder="Email address"id="subscr-email">
+                      <button class="btn btn-primary rounded-pill" id="submitMail" type="submit">Subscribe</button>
+                    </div>
+                </form>
+              
+              <div class="form-text mt-3 fs-sm">* Yes, I agree to the <a href="#">terms</a> and <a href="#">privacy policy</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
      

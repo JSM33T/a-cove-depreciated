@@ -28,10 +28,10 @@ namespace almondCove.Controllers
             _configManager = configManager;
         }
 
-        [Route("/blogs/{something?}/{anotherthing?}")]
+        [Route("/blogs/browse/{something?}/{anotherthing?}")]
         public IActionResult Index()
         {
-            return View("Views/Blogs/Index.cshtml");
+            return View("Views/Blogs/Browse.cshtml");
         }
 
         [HttpGet]

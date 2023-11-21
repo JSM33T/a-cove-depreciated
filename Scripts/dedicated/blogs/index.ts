@@ -1,6 +1,6 @@
 ﻿// @ts-nocheck
 //skip ts strict check cz 'vue js'
-
+import { submitMail } from '../../global.js'
 declare const VueRouter: any, axios: any;
 declare const Vue: any;
 
@@ -27,7 +27,7 @@ const CategorisedBlogComponent = {
         }
     },
     mounted() {
-
+        submitMail();
         this.loadDefault("", "");
         window.scrollTo({
             top: 0,
@@ -84,7 +84,7 @@ const CategorisedBlogComponent = {
                                     {{blog.title}}
                                 </a>
                             </h3>
-                            <p class="d-sm-none d-md-block">{{blog.description}}</p><div class="d-flex flex-wrap align-items-center mt-n2"><a class="nav-link text-muted fs-sm fw-normal d-flex align-items-end p-0 mt-2" href="#">{{blog.comments}}<i class="ai-message fs-lg ms-1"></i></a><span class="fs-xs opacity-20 mt-2 mx-3">|</span><span class="fs-sm text-muted mt-2">{{blog.datePosted.substring(0, 7)}}</span><span class="fs-xs opacity-20 mt-2 mx-3">|</span><router-link class="badge text-nav fs-xs border mt-2" :to="'/blogs/category/'+  blog.locator ">{{blog.category}}</router-link></div>
+                            <p class="d-sm-none d-md-block">{{blog.description}}</p><div class="d-flex flex-wrap align-items-center mt-n2"><a class="nav-link text-muted fs-sm fw-normal d-flex align-items-end p-0 mt-2" href="#">{{blog.comments}}<i class="ai-message fs-lg ms-1"></i></a><span class="fs-xs opacity-20 mt-2 mx-3">|</span><span class="fs-sm text-muted mt-2">{{blog.datePosted.substring(0, 7)}}</span><span class="fs-xs opacity-20 mt-2 mx-3">|</span><router-link class="badge text-nav fs-xs border mt-2" :to="'/blogs/browse/category/'+  blog.locator ">{{blog.category}}</router-link></div>
                         </div>
                     </div>
                 </article>
@@ -117,7 +117,7 @@ const HomeComponent = {
                                             {{blog.title}}
                                         </a>
                                     </h3>
-                                    <p class="d-sm-none d-md-block">{{blog.description}}</p><div class="d-flex flex-wrap align-items-center mt-n2"><a class="nav-link text-muted fs-sm fw-normal d-flex align-items-end p-0 mt-2" href="#">{{blog.comments}}<i class="ai-message fs-lg ms-1"></i></a><span class="fs-xs opacity-20 mt-2 mx-3">|</span><span class="fs-sm text-muted mt-2">{{blog.datePosted.substring(0, 7)}}</span><span class="fs-xs opacity-20 mt-2 mx-3">|</span><router-link class="badge text-nav fs-xs border mt-2" :to="'/blogs/category/'+  blog.locator ">{{blog.category}}</router-link></div>
+                                    <p class="d-sm-none d-md-block">{{blog.description}}</p><div class="d-flex flex-wrap align-items-center mt-n2"><a class="nav-link text-muted fs-sm fw-normal d-flex align-items-end p-0 mt-2" href="#">{{blog.comments}}<i class="ai-message fs-lg ms-1"></i></a><span class="fs-xs opacity-20 mt-2 mx-3">|</span><span class="fs-sm text-muted mt-2">{{blog.datePosted.substring(0, 7)}}</span><span class="fs-xs opacity-20 mt-2 mx-3">|</span><router-link class="badge text-nav fs-xs border mt-2" :to="'/blogs/browse/category/'+  blog.locator ">{{blog.category}}</router-link></div>
                                 </div>
                             </div>
                         </article>
@@ -202,10 +202,10 @@ const HomeComponent = {
     }
 };
 const routes = [{
-    path: '/blogs',
+    path: '/blogs/browse',
     component: HomeComponent
 }, {
-    path: '/blogs/:param1/:param2',
+    path: '/blogs/browse/:param1/:param2',
     component: CategorisedBlogComponent,
     props: true
 }];
@@ -232,7 +232,7 @@ const app = Vue.createApp({
                     this.$router.push({ path: '/blogs', query: { search: this.inputValue } });
                     this.titleItem = "searching";
                 } else {
-                    this.$router.push({ path: '/blogs' });
+                    this.$router.push({ path: '/blogs/browse' });
                 }
             });
         },

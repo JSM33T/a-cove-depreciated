@@ -1,23 +1,78 @@
-﻿// main.ts
-import { getData, submitMail } from '../global.js';
+﻿import { Email } from '../Interfaces/email.interface.js';
+import { acInit, acGetData, acPostData, acToast, validateEmail } from '../global.js';
 
-submitMail();
-loadTopBlogs();
+
+const mailForm = document.querySelector('.subscription-form') as HTMLFormElement;
+
+acInit([
+    loadTopBlogs,
+    formSubmitEvent
+])
+
+
+async function formSubmitEvent() {
+    
+
+    mailForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const emailInput = document.getElementById('subscr-email') as HTMLInputElement;
+        const emailData = {
+            email: emailInput.value,
+            origin: "HomePage",
+        };
+
+      await  postEmailToAPI(emailData);
+
+    });
+}
+
+async function postEmailToAPI(emailData: Email) {
+
+    if (!validateEmail(emailData.email)) {
+        acToast("error", "Invalid email")
+        return;
+    }
+    const submitBtn = document.getElementById('submitMail') as HTMLButtonElement;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>&nbsp;loading...';
+    const apiUrl = '/api/mailinglist/subscribe';
+    const resp = await acPostData(apiUrl, emailData);
+    try {
+        acToast(resp.type, resp.data);
+     mailForm.reset();
+    } catch (error: any) {
+        acToast(resp.type, error.data);
+    }
+    finally {
+        submitBtn.textContent = "Subscribe";
+    }
+}
+
+
+
 
 async function loadTopBlogs() {
-
-
-    getData("/api/topblogs/get")
-        .then(async (data) => {
-            console.log('Data received:', data);
-            await constructArticles(data);
-        })
-        .catch((error) => {
-            console.error('Error:', error.message);
-        });
-
-
+    const resp = await acGetData("/api/topblogs/get");
+    try {
+        await constructArticles(resp.data);
+    } catch (error: any) {
+        console.log(error.data);
+    }
 }
+
+
+//async function loadTopBlogs() {
+//    acGetData("/api/topblogs/get")
+//        .then(async (data) => {
+//            console.log('Data received:', data);
+//            await constructArticles(data);
+//        })
+//        .catch((error) => {
+//            console.error('Error:', error.data);
+//        });
+
+
+//}
 
 async function constructArticles(responsedata:any)
 {

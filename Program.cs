@@ -2,20 +2,24 @@ using almondCove.Extensions;
 using almondCove.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Session;
-using Microsoft.Extensions.Logging;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSession(options =>
 {
-    options.Cookie.Name = ".coffeebreak.Session";
+    options.Cookie.Name = ".almondCove.Session";
     options.IdleTimeout = TimeSpan.FromSeconds(3600);
 });
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+//exc services
 builder.Services.AddSingleton<IConfigManager, ConfigManager>();
 builder.Services.AddSingleton<IMailer, Mailer>();
 builder.Services.AddSingleton<ISqlService, SqlService>();
+
+
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
        .AddCookie(options =>
        {
@@ -27,16 +31,13 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 
 Log.Logger = new LoggerConfiguration()
-           .MinimumLevel.Warning()
-           .WriteTo.Console() // Optional: Write to console for testing
-           .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day) // Specify the file path and rolling interval
-           .CreateLogger();
+                .MinimumLevel.Information()
+                .WriteTo.Console() 
+                .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day) 
+                .CreateLogger();
 
 builder.Services.AddLogging(loggingBuilder =>
-{
-    loggingBuilder.AddSerilog(); // Integrate Serilog with ASP.NET Core logging
-});
-
+        loggingBuilder.AddSerilog());
 
 
 var app = builder.Build();

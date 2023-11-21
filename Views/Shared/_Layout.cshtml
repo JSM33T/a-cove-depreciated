@@ -202,7 +202,7 @@
           </div>
         </div>
       </header>
-     
+     <div aria-live="polite" id="toast-container" aria-atomic="true" class="d-flex justify-content-center align-items-center"></div>
     @RenderBody()
     </main>
 
@@ -224,7 +224,7 @@
     <script src="~/lib/axios/dist/axios.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
     <script src="/assets/js/theme.js"></script>
-    <script type="module" src="/assets/js/global.js"></script>
+    <script type="module" src="/assets/js/main.js"></script>
     
   </body>
 </html>

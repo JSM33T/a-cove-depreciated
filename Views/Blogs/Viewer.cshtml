@@ -160,7 +160,7 @@
                     if (role != null && (role == "user" || role == "admin"))
                     {
                         <h2 class="pb-2 pb-lg-3 pb-xl-4">Leave a comment</h2>
-                        <div class="row needs-validation g-4" novalidate>
+                        <form id="comment-form"  class="comment-form row needs-validation g-4" novalidate>
                             <div class="col-12">
                                 <label class="form-label" for="c-comment">Comment</label>
                                 <textarea class="form-control" rows="4" id="blog_comment" placeholder="Type your comment here..."
@@ -171,12 +171,12 @@
                                 <button 
                                     class="btn btn-primary ripple" 
                                     id="commentbutton" 
-                                    type="button" 
+                                    type="submit" 
                                 >
                                     Post Comment
                                 </button>
                             </div>
-                        </div>
+                        </form>
                         <span id="commentstat" hidden></span>
                     }
                     else
@@ -193,7 +193,7 @@
     </section>
 </div>
 <script src="~/lib/axios/dist/axios.min.js"></script>
-<script type="module" src="~/assets/js/dedicated/blogs/blog-viewer.js"></script>
+<script type="module" src="~/assets/js/dedicated/blogs/blog-viewer.js" asp-append-version="true"></script>
 
 
 

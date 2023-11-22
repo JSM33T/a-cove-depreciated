@@ -10,7 +10,6 @@ builder.Services.AddSession(options =>
     options.Cookie.Name = ".almondCove.Session";
     options.IdleTimeout = TimeSpan.FromSeconds(3600);
 });
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 
 //exc services
@@ -25,9 +24,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
        {
            options.Cookie.HttpOnly = true;
            options.Cookie.IsEssential = true;
-           options.ExpireTimeSpan = TimeSpan.FromDays(150);
-           options.SlidingExpiration = true; // Extend the expiration time with each request
-       });
+           options.ExpireTimeSpan = TimeSpan.FromDays(200);
+           options.SlidingExpiration = true;
+       })
+       ;
 
 
 Log.Logger = new LoggerConfiguration()
@@ -42,11 +42,9 @@ builder.Services.AddLogging(loggingBuilder =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 

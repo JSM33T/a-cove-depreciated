@@ -15,11 +15,11 @@ const submitBtn = document.getElementById('submitBtn') as HTMLButtonElement;
 
 
 acInit([
-   setupLoginForm
+ setupLoginForm
 ]);
 
 async function setupLoginForm(){
-    acFormHandler('login-form', submitLoginForm);
+   acFormHandler('login-form', submitLoginForm);
 }
 
 

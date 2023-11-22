@@ -97,10 +97,36 @@ function classesToTags(tag: string, classes: string) {
 
 
 function acInit(functions: (() => void)[]): void {
-    document.addEventListener('DOMContentLoaded', () => {
+    if (document.readyState === "complete") {
         functions.forEach(func => func());
-    });
-}
+    } else {
+        document.addEventListener('DOMContentLoaded', () => {
+            functions.forEach(func => func());
+        });
+    }
+} 
+
+//id
+//function smartLoad(fns) {
+//    // Check if the DOM is already loaded
+//    if (document.readyState === "complete") {
+//        // Execute all functions in the array
+//        for (const fn of fns) {
+//            fn();
+//        }
+//    } else {
+//        // Add an event listener to the DOM ready event
+//        document.addEventListener("DOMContentLoaded", () => {
+//            // Execute all functions in the array
+//            for (const fn of fns) {
+//                fn();
+//            }
+//        });
+//    }
+//}
+
+
+
 
 function acSetEvent(trigger: string, target: (this: HTMLElement, ev: MouseEvent) => any) {
     const commentButton = document.getElementById(trigger);

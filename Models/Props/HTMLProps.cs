@@ -5,7 +5,7 @@
         public HTMLProps()
         {
             DataBsTheme = "";
-            HeaderClass = "navbar navbar-expand-lg fixed-top bg-light";
+            HeaderClass = "navbar mx-md-4 navbar-expand-lg fixed-top bg-light navbar-frost bt-rad-1";
             NavClass = "";
             BodyClass = "";
             IsLoaderActive = "active";

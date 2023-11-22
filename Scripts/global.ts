@@ -2,6 +2,7 @@
 declare const axios: any;
 declare const AxiosResponse: any;
 declare const bootstrap: any;
+const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]') as HTMLInputElement;
 
 ///===================== URL UTILS ====================
 
@@ -28,9 +29,11 @@ function acSanitize(text: string) {
 
 }
 
-async function acPostData(apiUrl, data) {
+
+//===================== GET/POST via. AXIOS ====================
+
+async function acPostData(apiUrl: string, data: any) {
     try {
-        const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]') as HTMLInputElement;
         if (!tokenElement) {
             return { type: 'error', message: 'Anti-forgery token element not found' };
         }
@@ -49,9 +52,8 @@ async function acPostData(apiUrl, data) {
 }
 
 
-async function acGetData(apiUrl) {
+async function acGetData(apiUrl: string) {
     try {
-        const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]') as HTMLInputElement;
         if (!tokenElement) {
             return { type: 'error', message: 'Anti-forgery token element not found' };
         }
@@ -68,44 +70,11 @@ async function acGetData(apiUrl) {
         }
     }
 }
-//async function acGetData(apiUrl: string): Promise<{ success: boolean; data?: any; error?: string }> {
-//    try {
-//        const response = await axios.get(apiUrl);
-//        return { success: true, data: response.data };
-//    } catch (error: any) {
-//        console.error('Error:', error);
-
-//        // Adjust the error handling as needed
-//        const errorMessage = error.response?.data?.message || 'An error occurred';
-//        return { success: false, error: errorMessage };
-//    }
-//}
 
 
-//function getData(apiUrl): Promise<string> {
-//    return new Promise<string>(async (resolve, reject) => {
-//        try {
-//            const token = document.querySelector('input[name="__RequestVerificationToken"]') as HTMLInputElement;
-//            axios.defaults.headers.common['RequestVerificationToken'] = token.value;
-//            const response = await axios.get(apiUrl);
-//            resolve(response.data.toString());
-//        } catch (error: any) {
-//            if (error.response && error.response.data) {
-//                resolve(error.response.data.toString());
-//            } else if (error.request) {
-//                resolve('No response received from the server');
-//            } else {
-//                resolve('Error sending API request');
-//            }
-//        }
-//    });
-//}
+//===================== DOM UTILS ====================
 
-
-
-//===================== HTML UTILS ====================
-
-function classesToTags(tag, classes) {
+function classesToTags(tag: string, classes: string) {
     // Get all elements with the specified tag name
     var elements = document.getElementsByTagName(tag);
 
@@ -120,68 +89,26 @@ function classesToTags(tag, classes) {
                 elements[i].classList.add(classesArray[j]);
             }
         }
-
         console.log("Classes added successfully!");
     } else {
         console.error("No elements with tag '" + tag + "' found.");
     }
 }
 
-//function classesToTags(tag, classes) {
-//    // Get all elements with the specified tag name
-//    var elements = document.getElementsByTagName(tag);
 
-//    // Check if elements were found
-//    if (elements.length > 0) {
-//        // Split the classes string into an array
-//        var classesArray = classes.split('');
-
-//        // Iterate through each element and add the classes
-//        for (var i = 0; i < elements.length; i++) {
-//            for (var j = 0; j < classesArray.length; j++) {
-//                elements[i].classList.add(classesArray[j]);
-//            }
-//        }
-
-//        console.log("Classes added successfully!");
-//    } else {
-//        console.error("No elements with tag '" + tag + "' found.");
-//    }
-//}
-
-
-//===================== XHR VIA AXIOS ====================
-
-
-
-function acSetEvent(trigger, target) {
-    const commentButton = document.getElementById(trigger);
-    if (commentButton) {
-        commentButton.addEventListener('click', target);
-    }
-
-}
-
-// function acInit(functionNames: string[]): void {
-//    document.addEventListener('DOMContentLoaded', () => {
-//        functionNames.forEach(functionName => {
-//            const func = window[functionName];
-//            if (typeof func === 'function') {
-//                const funcSignature = (func as () => void);
-//                funcSignature();
-//            } else {
-//                console.error(`Function ${functionName} is not defined or is not a function.`);
-//            }
-//        });
-//    });
-//}
 function acInit(functions: (() => void)[]): void {
     document.addEventListener('DOMContentLoaded', () => {
         functions.forEach(func => func());
     });
 }
 
+function acSetEvent(trigger: string, target: (this: HTMLElement, ev: MouseEvent) => any) {
+    const commentButton = document.getElementById(trigger);
+    if (commentButton) {
+        commentButton.addEventListener('click', target);
+    }
 
+}
 function acTemplate(templateId: any, data: JSON, divid: string) {
     const templateContainer = document.getElementById(templateId);
     if (templateContainer) {
@@ -193,18 +120,11 @@ function acTemplate(templateId: any, data: JSON, divid: string) {
         // Insert the rendered template into the container
         const target = document.getElementById(divid);
         if (target) { target.innerHTML = renderedTemplate; }
-
     }
     else {
         console.error("template rendering failed")
     }
-
-
-
-    // Replace variables in the template with actual data
-
 }
-
 
 function getQueryParameters() {
     // Get the query string from the URL
@@ -326,21 +246,40 @@ function acQueryParams(key: string, value: string) {
 function acClearParams() {
 }
 
+//==================== form handler ========================
+function acFormHandler(formId: string, submitMethod: (event: Event) => Promise<void>) {
+    const form = document.getElementById(formId) as HTMLFormElement;
+
+    if (form) {
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            await submitMethod(event);
+        });
+    } else {
+        console.error(`Form with ID '${formId}' not found.`);
+    }
+}
+
 
 
 export {
     //ac methods
-    //
-    acInit, acTemplate, acSetEvent,
-    //manage query param states
-    acQueryParams, acClearParams,
-    //getter and poster currently axios
-    acGetData, acPostData,
+    acInit, // stuff to do when the dom loads
+    acTemplate, //use a template,morph it using data
+    acSetEvent, // event handler (ID)
 
-    validateEmail,
-    classesToTags,
-    getQueryParameters,
-    getUrl,
-    acToast,
-    shareIt
+    acQueryParams, // set query params 
+    acClearParams, // clear query params
+    getQueryParameters, //get query param(s)
+    
+    acGetData, //get data axios currently xhr via axios
+    acPostData, //post data currently xhr via axios
+    acFormHandler, //set default submit behaviour to a custom method/function
+
+    validateEmail, // email validation
+    classesToTags, // add classes to all the tags passed as params
+    
+    getUrl, //get current url parameters
+    acToast, // toast ('type','message')
+    shareIt // share logic (ID)
 }

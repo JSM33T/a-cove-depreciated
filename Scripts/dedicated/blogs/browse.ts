@@ -1,6 +1,6 @@
 ﻿// @ts-nocheck
 //skip ts strict check cz 'vue js'
-import {} from '../../global.js'
+import { shareIt } from '../../global.js'
 declare const VueRouter: any, axios: any;
 declare const Vue: any;
 
@@ -8,7 +8,7 @@ const routerViewElement = document.querySelector('router-view');
 const CategorisedBlogComponent = {
     props: ['param1', 'param2'],
     watch: {
-        $route(to, from) {
+        $route(to: { params: { param1: any; param2: any; }; }, from: { params: { param1: any; param2: any; }; }) {
             if (to.params.param1 !== from.params.param1 || to.params.param2 !== from.params.param2) {
                 if (routerViewElement) {
                     routerViewElement.innerHTML = this.blogs;
@@ -155,8 +155,8 @@ const HomeComponent = {
         }
     },
     watch: {
-        '$route.query.search': {
-            handler(newSearchValue, oldSearchValue) {
+        "_$route.query.search": {
+            handler(newSearchValue: string | any[], oldSearchValue: any) {
                 this.$nextTick(async () => {
                     if (typeof newSearchValue === 'string' && newSearchValue.length >= 1) {
                         this.loadSearches(newSearchValue);
@@ -168,7 +168,13 @@ const HomeComponent = {
                 });
             },
             immediate: true
-        }
+        },
+        get "$route.query.search"() {
+            return this["_$route.query.search"];
+        },
+        set "$route.query.search"(value) {
+            this["_$route.query.search"] = value;
+        },
     },
 
     methods: {
@@ -186,7 +192,7 @@ const HomeComponent = {
 
             }
         },
-        async loadSearches(newSearchValue) {
+        async loadSearches(newSearchValue: string) {
             try {
                 this.titleItem = "Searching";
                 const response = await axios.get('/api/blogs/0/search/' + newSearchValue);
@@ -198,8 +204,6 @@ const HomeComponent = {
                 this.isLoading = false;
             }
         }
-
-
     }
 };
 const routes = [{
@@ -224,15 +228,13 @@ const app = Vue.createApp({
         };
     },
     async mounted() {
-        //imported method from global
-        submitMail();
         this.loadCategories();
     },
     methods: {
         async navigateToBlog() {
             this.$nextTick(() => {
                 if (this.inputValue.length >= 1) {
-                    this.$router.push({ path: '/blogs', query: { search: this.inputValue } });
+                    this.$router.push({ path: '/blogs/browse', query: { search: this.inputValue } });
                     this.titleItem = "searching";
                 } else {
                     this.$router.push({ path: '/blogs/browse' });

@@ -121,7 +121,7 @@ namespace almondCove.Api
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message.ToString() + " : in login form,user : " + loginCreds.UserName);
-                return StatusCode(500, "soomething went wrong");
+                return StatusCode(500, "something went wrong");
             }
         }
 

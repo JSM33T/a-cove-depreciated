@@ -1,61 +1,64 @@
 ﻿import { User } from '../../Interfaces/user.interface.js';
-import { acToast, acPostData } from '../../global.js'
-declare const axios: any;
-const chk = document.getElementById('rememberMe') as HTMLInputElement;
-const userName = document.getElementById('userName') as HTMLInputElement;
-const pass = document.getElementById('password') as HTMLInputElement;
+import { acToast, acPostData, acFormHandler, acInit } from '../../global.js';
+
+const userNameInput = document.getElementById('userName') as HTMLInputElement;
+const passwordInput = document.getElementById('password') as HTMLInputElement;
 const submitBtn = document.getElementById('submitBtn') as HTMLButtonElement;
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const form = document.querySelector('.login-form') as HTMLFormElement;
-        form.addEventListener('submit', async function (event) {
-            event.preventDefault();
-            await subMitLoginForm();
-            console.log(chk.value + " & " + userName.value + " & " + pass.value);
-        });
-    });
-
-//    async function subMitLoginForm()
-//    {
-//        if (userName.value.length <= 2) {
-//            await showToast("error", "username too short");
-//        }
-//        else if (pass.value.length == 0) {
-//            await showToast("error", "please enter the password");
-//        }
-//        else {
-//                const apiUrl = '/api/account/login';
-//                const data: User = {
-//                    username: userName.value,
-//                    password: pass.value
-
-//                };
-
-//             await postData((apiUrl, data)
-//                 .then((response) => {
-//                     console.log(response.statuscode);
-//                     if (response.ok == true) {
-//                         showToast('success', 'Handling successful response');
-//                         window.location.href = "/";
-//                     }
-//                     else {
-//                         console.log("something went wrong");
-//                     }
-//                })
-//                .catch((error) => {
-//                    console.error('Handling error:', error.response.data);
-//                });
-//        }
-//}
+// document.addEventListener('DOMContentLoaded', function () {
+//     const form = document.querySelector('.login-form') as HTMLFormElement;
+//     form.addEventListener('submit', async function (event) {
+//         event.preventDefault();
+//         await submitLoginForm();
+//     });
+// });
 
 
-const subMitLoginForm = async () => {
-    const dataToSend = {
-        username: userName.value,
-        password: pass.value,
-    };
+acInit([
+   setupLoginForm
+]);
 
-    const result = await acPostData("/api/login", dataToSend);
-    console.log(result);
-};
+async function setupLoginForm(){
+    acFormHandler('login-form', submitLoginForm);
+}
 
+
+async function submitLoginForm() {
+    const username = userNameInput.value;
+    const password = passwordInput.value;
+
+    if (username.length <= 2) {
+        acToast("error", "Username should be at least 3 characters long.");
+    } else if (password.length < 6) {
+        acToast("error", "Password should be at least 6 characters long.");
+    } else {
+        await postToLoginApi(username, password);
+    }
+}
+
+async function postToLoginApi(username: string, password: string) {
+    const apiUrl = '/api/account/login';
+    const data: { username: string; password: string } = { username, password };
+
+    submitBtn.innerHTML = "Loading...";
+
+    try {
+        const response = await acPostData(apiUrl, data);
+        acToast(response.type, response.data);
+
+        if (response.type === "ok") {
+            submitBtn.innerHTML = "Logging in...";
+            const lastLink: string | null = localStorage.getItem("curr_link");
+
+            if (lastLink) {
+                window.location.href = lastLink;
+            } else {
+                window.location.href = "/";
+            }
+        }
+    } catch (error) {
+        console.error('Error during login:', error);
+    } finally {
+        submitBtn.innerHTML = "Log In";
+    }
+}

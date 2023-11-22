@@ -1,10 +1,9 @@
 ﻿import { acInit} from './global.js'
 declare const axios
 acInit([
-
+    searchEvent,
+    shareEvent
 ]);
-
-
 
 //evebnt to bind the search button with search methods
 function searchEvent() { }
@@ -20,7 +19,7 @@ function livesearch() {
 
     if (ddr.value.length >= 2) {
         axios.get('/api/livesearch/all/' + ddr)
-            .then(response => {
+            .then((response: { data: string | any[]; }) => {
                 console.log(response.data);
                 var sb = "";
                 for (var i = 0; i < response.data.length; i++) {

@@ -48,9 +48,6 @@ async function postEmailToAPI(emailData: Email) {
     }
 }
 
-
-
-
 async function loadTopBlogs() {
     const resp = await acGetData("/api/topblogs/get");
     try {
@@ -70,29 +67,34 @@ async function loadTopBlogs() {
 //        .catch((error) => {
 //            console.error('Error:', error.data);
 //        });
-
-
 //}
 
 async function constructArticles(responsedata:any)
 {
     var articleTags = responsedata.map(post => `
-        <article class="col">
-            <div class="pb-4 pt-2 pt-xl-3 ms-md-3 border-bottom">
-                <h3 class="h4">
-                    <a href="/blog/${post.datePosted.substring(0,4)}/${post.urlHandle}">${post.title}</a>
-                </h3>
-                
-                <p class="mb-4">${post.description}</p>
-                <div class="d-flex align-items-center">
-                    <span class="fs-sm text-body-secondary">${post.dateFormatted}</span>
-                    <span class="fs-xs opacity-20 mx-3">|</span>
-                    <a class="badge text-nav fs-xs border" href="#">${post.category}</a>
-                </div>
+        <article class="swiper-slide swiper-slide-active" role="group" aria-label="1/2" style="width: 416px; margin-right: 24px;">
+            <a href="/blog/${post.datePosted.substring(0,4)}/${post.urlHandle}">
+                <img class="rounded-5" src="content/blogs/2023/${[post.urlHandle]}/assets/cover.jpg" alt="Image">
+            </a>
+            <h3 class="h4 pt-4">
+                <a href="/blog/${post.datePosted.substring(0,4)}/${post.urlHandle}">${post.title}
+                </a>
+            </h3>
+            <p>${post.description}
+            </p>
+            <div class="d-flex flex-wrap align-items-center pt-1 mt-n2">
+                <a class="nav-link text-muted fs-sm fw-normal p-0 mt-2 me-3" href="/blog/${post.datePosted.substring(0,4)}/${post.urlHandle}">
+                    3!
+                    <i class="ai-heart fs-lg ms-1"></i>
+                </a>
+                <a class="nav-link text-muted fs-sm fw-normal d-flex align-items-end p-0 mt-2" href="#">
+                    3!
+                    <i class="ai-message fs-lg ms-1"></i>
+                </a>
+                <span class="fs-xs opacity-20 mt-2 mx-3">|</span><span class="fs-sm text-muted mt-2">${post.datePosted}</span><span class="fs-xs opacity-20 mt-2 mx-3">|</span><a class="badge bg-faded-primary text-primary fs-xs mt-2" href="/blogs/category/binge">Binge</a>
             </div>
         </article>
     `).join('');
-
 
     const artcl = document.getElementById('articlePlaceholder');
     if (artcl) {

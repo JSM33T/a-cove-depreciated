@@ -1,4 +1,4 @@
-﻿(() => {
+﻿((): void => {
     'use strict';
 
     const getStoredTheme = (): string | null => localStorage.getItem('theme');

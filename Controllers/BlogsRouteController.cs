@@ -27,9 +27,14 @@ namespace almondCove.Controllers
             _hostingEnvironment = hostingEnvironment;
             _configManager = configManager;
         }
+        [Route("/blogs")]
+        public IActionResult Index()
+        {
+            return View("Views/Blogs/Index.cshtml");
+        }
 
         [Route("/blogs/browse/{something?}/{anotherthing?}")]
-        public IActionResult Index()
+        public IActionResult Browse()
         {
             return View("Views/Blogs/Browse.cshtml");
         }
@@ -72,7 +77,7 @@ namespace almondCove.Controllers
             return View("Views/Blogs/Viewer.cshtml");
         }
 
-
+        //dedicated methods
         private static string ConvertMarkdownToHtml(string markdownContent)
         {
             // Use Markdig to perform the conversion

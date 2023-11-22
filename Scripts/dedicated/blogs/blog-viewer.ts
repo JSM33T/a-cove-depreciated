@@ -138,7 +138,7 @@ function loadTags() {
     parts.forEach(function (part) {
         var words = part.split(' ');
         for (var i = 0; i < words.length; i++) {
-            tags = tags + `<a class="btn btn-outline-secondary btn-sm rounded-pill mt-2 ms-2" href="/blogs/tag/${words[i]}">${words[i]}</a>`;
+            tags = tags + `<a class="btn btn-outline-secondary btn-sm rounded-pill mt-2 ms-2" href="/blogs/browse/tag/${words[i]}">${words[i]}</a>`;
 
         }
     });

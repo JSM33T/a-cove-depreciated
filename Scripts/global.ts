@@ -287,6 +287,47 @@ function acFormHandler(formId: string, submitMethod: (event: Event) => Promise<v
 }
 
 
+class Url {
+    private urlObject: URL;
+  
+    constructor(url?: string) {
+      const targetUrl = url || window.location.href;
+      this.urlObject = new URL(targetUrl);
+    }
+  
+    get protocol(): string {
+      return this.urlObject.protocol;
+    }
+  
+    get host(): string {
+      return this.urlObject.host;
+    }
+  
+    get hostname(): string {
+      return this.urlObject.hostname;
+    }
+  
+    get port(): string {
+      return this.urlObject.port;
+    }
+  
+    get path(): string {
+      return this.urlObject.pathname;
+    }
+  
+    get query(): string {
+      return this.urlObject.search;
+    }
+  
+    get hash(): string {
+      return this.urlObject.hash;
+    }
+  
+    get fullUrl(): string {
+      return this.urlObject.href;
+    }
+  }
+
 
 export {
     //ac methods
@@ -307,5 +348,6 @@ export {
     
     getUrl, //get current url parameters
     acToast, // toast ('type','message')
-    shareIt // share logic (ID)
+    shareIt, // share logic (ID)
+    Url //url class with methods
 }

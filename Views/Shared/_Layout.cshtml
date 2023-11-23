@@ -51,9 +51,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
 
     <link id="google-font" href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400&display=swap" rel="stylesheet" id="google-font">
-
+    <link rel="manifest" href="/manifest.json">
     <!-- Vendor styles -->
-    
      @await RenderSectionAsync("Styles", required: false)
 
     <!-- Font icons -->
@@ -177,6 +176,25 @@
                 localStorage.setItem("prev_link", localStorage.getItem("curr_link"));
                 localStorage.setItem("curr_link", window.location.pathname);
             }
+
+
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then((registration) => {
+              console.log('Service Worker registered with scope:', registration.scope);
+            })
+            .catch((error) => {
+              console.error('Service Worker registration failed:', error);
+            });
+        }
+      let mode = window.localStorage.getItem('mode'),
+          root = document.getElementsByTagName('html')[0];
+      if (mode !== undefined && mode === 'dark') {
+        root.classList.add('dark-mode');
+      } else {
+        root.classList.remove('dark-mode');
+      }
+
     </script>
   </head>
 
@@ -223,7 +241,7 @@
     <!-- Vendor scripts: JS libraries and plugins -->
     <script src="~/lib/axios/dist/axios.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
-    <script src="/assets/js/theme.js"></script>
+    <script src="/assets/js/theme.min.js"></script>
     <script type="module" src="/assets/js/main.js"></script>
     
   </body>

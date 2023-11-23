@@ -1,0 +1,21 @@
+{
+  "name": "AlmondCove",
+  "short_name": "alCove",
+  "description": "A community webspace for blogs, apps, gallery and much more",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "/assets/app-icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/app-icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#448c74",
+  "background_color": "#ffffff",
+  "display": "standalone"
+}

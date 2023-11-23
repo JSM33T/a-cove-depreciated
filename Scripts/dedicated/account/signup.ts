@@ -1,6 +1,7 @@
 ﻿import { User } from '../../Interfaces/user.interface.js';
 import { acInit, acToast, acPostData, acFormHandler } from '../../global.js';
 declare const bootstrap: { Modal: new (arg0: HTMLElement | null) => any; };
+
 const firstName = document.getElementById('firstName') as HTMLInputElement;
 const lastName = document.getElementById('lastName') as HTMLInputElement;
 const userName = document.getElementById('userName') as HTMLInputElement;
@@ -78,7 +79,6 @@ const verifyDeets = async function () {
                         otpModal!.hide();
                         acToast("success","user verified redirecting to login page...");
                         setTimeout(redirect,2000);
-                        
                 }
                 else{
                         console.log("error",response.data);

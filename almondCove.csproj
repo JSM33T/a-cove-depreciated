@@ -49,6 +49,7 @@
 
   <ItemGroup>
     <Folder Include="Logs\" />
+    <Folder Include="DbSchema\" />
     <Folder Include="wwwroot\content\gallery\2023\garden-state\assets\" />
     <Folder Include="wwwroot\stores\configurations\" />
     <Folder Include="wwwroot\stores\studio\" />
@@ -75,6 +76,9 @@
 
   <ItemGroup>
     <TypeScriptCompile Update="Scripts\dedicated\account\login.ts">
+      <SubType>Code</SubType>
+    </TypeScriptCompile>
+    <TypeScriptCompile Update="Scripts\dedicated\account\recovery.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Update="Scripts\dedicated\account\signup.ts">

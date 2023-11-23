@@ -1,0 +1,30 @@
+﻿@using almondCove.Models.Props;
+
+@{
+    HTMLProps props = new()
+            {
+                DataBsTheme = "",
+                //  HeaderClass = "navbar navbar-expand-lg fixed-top"
+
+            };
+
+    MetaProps meta = new()
+            {
+                Title = "Home",
+            };
+
+    ViewData["HtmlProps"] = props;
+    ViewData["MetaProps"] = meta;
+}
+
+@section Styles{
+    <link href="~/lib/aos/dist/aos.min.css" rel="stylesheet" />
+    <link href="~/lib/swiper/swiper-bundle.min.css" rel="stylesheet" />
+}
+
+@section Scripts{
+    <script src="~/lib/aos/dist/aos.min.js"></script>
+    <script src="~/lib/parallax-js/dist/parallax.min.js"></script>
+    <script src="~/lib/swiper/swiper-bundle.min.js"></script>
+    <script type="module" src="/assets/js/dedicated/personalize.js"></script>
+}

@@ -1,0 +1,11 @@
+{"name": "your-project",
+"version": "1.0.0",
+"main": "index.js",
+"scripts": {
+  "tp" : "tsc",
+  "build": "tsc && copyfiles -u 1 Scripts/**/*.ts wwwroot/assets/js"
+},
+  "devDependencies": {
+    "copyfiles": "^2.4.1"
+  }
+}

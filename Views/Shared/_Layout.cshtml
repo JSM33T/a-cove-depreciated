@@ -1,252 +1,344 @@
 ﻿@using almondCove.Models.Props;
 
 @{
-    var htmlProps = ViewData["HtmlProps"] as HTMLProps;
-    var metaProps = ViewData["MetaProps"] as MetaProps;
+  var htmlProps = ViewData["HtmlProps"] as HTMLProps;
+  var metaProps = ViewData["MetaProps"] as MetaProps;
 }
 @{
-    //set session data to ViewData
-    var mySessionVariable = Context.Session.GetString("username");
-    if (mySessionVariable != null)
-    {
-        ViewData["user_name"] = Context.Session.GetString("username").ToString();
-        ViewData["first_name"] = Context.Session.GetString("first_name").ToString();
-        ViewData["role"] = Context.Session.GetString("role").ToString();
-        ViewData["avatar"] = Context.Session.GetString("avatar").ToString();
-        ViewData["user_id"] = Context.Session.GetString("user_id").ToString();
-        ViewData["fullname"] = Context.Session.GetString("fullname").ToString();
-    }
-    else
-    {
-        ViewData["first_name"] = "guest";
-        ViewData["role"] = "guest";
-        ViewData["avatar"] = "default";
-        ViewData["user_id"] = "0";  
-    }
+  //set session data to ViewData
+  var mySessionVariable = Context.Session.GetString("username");
+  if (mySessionVariable != null)
+  {
+    ViewData["user_name"] = Context.Session.GetString("username").ToString();
+    ViewData["first_name"] = Context.Session.GetString("first_name").ToString();
+    ViewData["role"] = Context.Session.GetString("role").ToString();
+    ViewData["avatar"] = Context.Session.GetString("avatar").ToString();
+    ViewData["user_id"] = Context.Session.GetString("user_id").ToString();
+    ViewData["fullname"] = Context.Session.GetString("fullname").ToString();
+  }
+  else
+  {
+    ViewData["first_name"] = "guest";
+    ViewData["role"] = "guest";
+    ViewData["avatar"] = "default";
+    ViewData["user_id"] = "0";
+  }
 }
 
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="light">
-  <head>
-    <meta charset="utf-8">
 
-    <!-- Viewport -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover">
-    
-    <!-- SEO meta tags -->
-    <title>@metaProps.Title | AlmondCove</title>
-    <meta name="description" content="@metaProps.Description">
-    <meta name="keywords" content="@metaProps.Tags">
-    <meta name="author" content="@metaProps.Author">
+<head>
+  <meta charset="utf-8">
 
-    <!-- Webmanifest + Favicon / App icons -->
-    <link rel="icon" type="image/png" href="/assets/app-icons/icon-32x32.png" sizes="32x32">
-    <link rel="apple-touch-icon" href="/assets/app-icons/icon-180x180.png">
-        
-    <!-- Theme switcher (color modes) -->
-    <script src="/assets/js/theme-switcher.min.js"></script>
+  <!-- Viewport -->
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover">
 
-    <!-- Import Google font (Inter) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+  <!-- SEO meta tags -->
+  <title>@metaProps.Title | AlmondCove</title>
+  <meta name="description" content="@metaProps.Description">
+  <meta name="keywords" content="@metaProps.Tags">
+  <meta name="author" content="@metaProps.Author">
 
-    <link id="google-font" href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400&display=swap" rel="stylesheet" id="google-font">
-    <link rel="manifest" href="/manifest.json">
-    <!-- Vendor styles -->
-     @await RenderSectionAsync("Styles", required: false)
+  <!-- Webmanifest + Favicon / App icons -->
+  <link rel="icon" type="image/png" href="/assets/app-icons/icon-32x32.png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/assets/app-icons/icon-180x180.png">
 
-    <!-- Font icons -->
-    <link rel="stylesheet" href="/assets/icons/around-icons.min.css">
+  <!-- Theme switcher (color modes) -->
+  <script src="/assets/js/theme-switcher.js"></script>
 
-    <!-- Theme styles + Bootstrap -->
-    <link rel="stylesheet" media="screen" href="/assets/css/theme.css">
-    <link href="~/assets/css/almondcove.css" rel="stylesheet" />
+  <!-- Import Google font (Inter) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    @await RenderSectionAsync("Css", required: false)
+  <link id="google-font" href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400&display=swap"
+    rel="stylesheet" id="google-font">
+  <link rel="manifest" href="/manifest.json">
+  <!-- Vendor styles -->
+  @await RenderSectionAsync("Styles", required: false)
 
-    
-     <style>
-      .page-loading {
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        -webkit-transition: all .4s .2s ease-in-out;
-        transition: all .4s .2s ease-in-out;
-        background-color: #fff;
-        opacity: 0;
-        visibility: hidden;
-        z-index: 9999;
+  <!-- Font icons -->
+  <link rel="stylesheet" href="/assets/icons/around-icons.min.css">
+
+  <!-- Theme styles + Bootstrap -->
+  <link rel="stylesheet" media="screen" href="/assets/css/theme.css">
+  <link href="~/assets/css/almondcove.css" rel="stylesheet" />
+
+  @await RenderSectionAsync("Css", required: false)
+
+
+  <style>
+    .page-loading {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      -webkit-transition: all .4s .2s ease-in-out;
+      transition: all .4s .2s ease-in-out;
+      background-color: #fff;
+      opacity: 0;
+      visibility: hidden;
+      z-index: 9999;
+    }
+
+    [data-bs-theme="dark"] .page-loading {
+      background-color: #121519;
+    }
+
+    .page-loading.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .page-loading-inner {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      -webkit-transform: translateY(-50%);
+      transform: translateY(-50%);
+      -webkit-transition: opacity .2s ease-in-out;
+      transition: opacity .2s ease-in-out;
+      opacity: 0;
+    }
+
+    .page-loading.active>.page-loading-inner {
+      opacity: 1;
+    }
+
+    .page-loading-inner>span {
+      display: block;
+      font-family: "Inter", sans-serif;
+      font-size: 1rem;
+      font-weight: normal;
+      color: #6f788b;
+    }
+
+    [data-bs-theme="dark"] .page-loading-inner>span {
+      color: #fff;
+      opacity: .6;
+    }
+
+    .page-spinner {
+      display: inline-block;
+      width: 2.75rem;
+      height: 2.75rem;
+      margin-bottom: .75rem;
+      vertical-align: text-bottom;
+      background-color: #d7dde2;
+      border-radius: 50%;
+      opacity: 0;
+      -webkit-animation: spinner .75s linear infinite;
+      animation: spinner .75s linear infinite;
+    }
+
+    [data-bs-theme="dark"] .page-spinner {
+      background-color: rgba(255, 255, 255, .25);
+    }
+
+    @@-webkit-keyframes spinner {
+      0% {
+        -webkit-transform: scale(0);
+        transform: scale(0);
       }
-      [data-bs-theme="dark"] .page-loading {
-        background-color: #121519;
-      }
-      .page-loading.active {
+
+      50% {
         opacity: 1;
-        visibility: visible;
+        -webkit-transform: none;
+        transform: none;
       }
-      .page-loading-inner {
-        position: absolute;
-        top: 50%;
-        left: 0;
-        width: 100%;
-        text-align: center;
-        -webkit-transform: translateY(-50%);
-        transform: translateY(-50%);
-        -webkit-transition: opacity .2s ease-in-out;
-        transition: opacity .2s ease-in-out;
-        opacity: 0;
+    }
+
+    @@keyframes spinner {
+      0% {
+        -webkit-transform: scale(0);
+        transform: scale(0);
       }
-      .page-loading.active > .page-loading-inner {
+
+      50% {
         opacity: 1;
+        -webkit-transform: none;
+        transform: none;
       }
-      .page-loading-inner > span {
-        display: block;
-        font-family: "Inter", sans-serif;
-        font-size: 1rem;
-        font-weight: normal;
-        color: #6f788b;
+    }
+  </style>
+  <style id="customtheme">
+    :root {
+      --ar-primary: #496797;
+      --ar-primary-rgb: 73, 103, 151;
+      --ar-warning-rgb: #edd250;
+      --ar-warning-rgb: 237, 210, 80;
+      --ar-info-rgb: #3fbaca;
+      --ar-info-rgb: 63, 186, 202;
+      --ar-body-font-family: 'Poppins', sans-serif;
+      --ar-link-color: #496797;
+      --ar-link-hover-color: #304e7e;
+    }
+
+    .btn-primary {
+      --ar-btn-bg: #496797;
+      --ar-btn-border-color: #496797;
+      --ar-btn-hover-bg: #304e7e;
+      --ar-btn-hover-border-color: #304e7e;
+      --ar-btn-active-bg: #304e7e;
+      --ar-btn-active-border-color: #304e7e;
+      --ar-btn-disabled-bg: #496797;
+      --ar-btn-disabled-border-color: #496797;
+    }
+
+    .btn-warning {
+      --ar-btn-bg: #edd250;
+      --ar-btn-border-color: #edd250;
+      --ar-btn-hover-bg: #d4b937;
+      --ar-btn-hover-border-color: #d4b937;
+      --ar-btn-active-bg: #d4b937;
+      --ar-btn-active-border-color: #d4b937;
+      --ar-btn-disabled-bg: #edd250;
+      --ar-btn-disabled-border-color: #edd250;
+    }
+
+    .btn-info {
+      --ar-btn-bg: #3fbaca;
+      --ar-btn-border-color: #3fbaca;
+      --ar-btn-hover-bg: #26a1b1;
+      --ar-btn-hover-border-color: #26a1b1;
+      --ar-btn-active-bg: #26a1b1;
+      --ar-btn-active-border-color: #26a1b1;
+      --ar-btn-disabled-bg: #3fbaca;
+      --ar-btn-disabled-border-color: #3fbaca;
+    }
+
+    .btn-outline-primary {
+      --ar-btn-color: #496797;
+      --ar-btn-border-color: #496797;
+      --ar-btn-hover-bg: #496797;
+      --ar-btn-hover-border-color: #496797;
+      --ar-btn-active-bg: #496797;
+      --ar-btn-active-border-color: #496797;
+      --ar-btn-disabled-color: #496797;
+      --ar-btn-disabled-border-color: #496797;
+    }
+
+    .btn-outline-warning {
+      --ar-btn-color: #edd250;
+      --ar-btn-border-color: #edd250;
+      --ar-btn-hover-bg: #edd250;
+      --ar-btn-hover-border-color: #edd250;
+      --ar-btn-active-bg: #edd250;
+      --ar-btn-active-border-color: #edd250;
+      --ar-btn-disabled-color: #edd250;
+      --ar-btn-disabled-border-color: #edd250;
+    }
+
+    .btn-outline-info {
+      --ar-btn-color: #3fbaca;
+      --ar-btn-border-color: #3fbaca;
+      --ar-btn-hover-bg: #3fbaca;
+      --ar-btn-hover-border-color: #3fbaca;
+      --ar-btn-active-bg: #3fbaca;
+      --ar-btn-active-border-color: #3fbaca;
+      --ar-btn-disabled-color: #3fbaca;
+      --ar-btn-disabled-border-color: #3fbaca;
+    }
+
+    .accordion-button:not(.collapsed)::after {
+      --ar-accordion-btn-active-icon: url("data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='%23496797'%3e%3cpath%20d='M.5%206.3c.6-.6%201.6-.6%202.3%200l9.3%209.3%209.3-9.3c.6-.6%201.6-.6%202.3%200%20.6.6.6%201.6%200%202.3L13.3%2018.8c-.6.6-1.6.6-2.3%200L.8%208.5c-.9-.8-.9-1.6-.3-2.2z'/%3e%3c/svg%3e")
+    }
+  </style>
+
+  <!-- Page loading scripts -->
+
+  <script>
+    (function () {
+      window.onload = function () {
+        const preloader = document.querySelector('.page-loading')
+        preloader.classList.remove('active')
+        setTimeout(function () {
+          preloader.remove()
+        }, 1500)
       }
-      [data-bs-theme="dark"] .page-loading-inner > span {
-        color: #fff;
-        opacity: .6;
-      }
-      .page-spinner {
-        display: inline-block;
-        width: 2.75rem;
-        height: 2.75rem;
-        margin-bottom: .75rem;
-        vertical-align: text-bottom;
-        background-color: #d7dde2; 
-        border-radius: 50%;
-        opacity: 0;
-        -webkit-animation: spinner .75s linear infinite;
-        animation: spinner .75s linear infinite;
-      }
-      [data-bs-theme="dark"] .page-spinner {
-        background-color: rgba(255,255,255,.25);
-      }
-      @@-webkit-keyframes spinner {
-        0% {
-          -webkit-transform: scale(0);
-          transform: scale(0);
-        }
-        50% {
-          opacity: 1;
-          -webkit-transform: none;
-          transform: none;
-        }
-      }
-      @@keyframes spinner {
-        0% {
-          -webkit-transform: scale(0);
-          transform: scale(0);
-        }
-        50% {
-          opacity: 1;
-          -webkit-transform: none;
-          transform: none;
-        }
-      }
-    </style>
-    <style id="customtheme">
-       :root{--ar-primary:#496797;--ar-primary-rgb:73,103,151;--ar-warning-rgb:#edd250;--ar-warning-rgb:237,210,80;--ar-info-rgb:#3fbaca;--ar-info-rgb:63,186,202;--ar-body-font-family:'Poppins',sans-serif;--ar-link-color:#496797;--ar-link-hover-color:#304e7e;}.btn-primary{--ar-btn-bg:#496797;--ar-btn-border-color:#496797;--ar-btn-hover-bg:#304e7e;--ar-btn-hover-border-color:#304e7e;--ar-btn-active-bg:#304e7e;--ar-btn-active-border-color:#304e7e;--ar-btn-disabled-bg:#496797;--ar-btn-disabled-border-color:#496797;}.btn-warning{--ar-btn-bg:#edd250;--ar-btn-border-color:#edd250;--ar-btn-hover-bg:#d4b937;--ar-btn-hover-border-color:#d4b937;--ar-btn-active-bg:#d4b937;--ar-btn-active-border-color:#d4b937;--ar-btn-disabled-bg:#edd250;--ar-btn-disabled-border-color:#edd250;}.btn-info{--ar-btn-bg:#3fbaca;--ar-btn-border-color:#3fbaca;--ar-btn-hover-bg:#26a1b1;--ar-btn-hover-border-color:#26a1b1;--ar-btn-active-bg:#26a1b1;--ar-btn-active-border-color:#26a1b1;--ar-btn-disabled-bg:#3fbaca;--ar-btn-disabled-border-color:#3fbaca;}.btn-outline-primary{--ar-btn-color:#496797;--ar-btn-border-color:#496797;--ar-btn-hover-bg:#496797;--ar-btn-hover-border-color:#496797;--ar-btn-active-bg:#496797;--ar-btn-active-border-color:#496797;--ar-btn-disabled-color:#496797;--ar-btn-disabled-border-color:#496797;}.btn-outline-warning{--ar-btn-color:#edd250;--ar-btn-border-color:#edd250;--ar-btn-hover-bg:#edd250;--ar-btn-hover-border-color:#edd250;--ar-btn-active-bg:#edd250;--ar-btn-active-border-color:#edd250;--ar-btn-disabled-color:#edd250;--ar-btn-disabled-border-color:#edd250;}.btn-outline-info{--ar-btn-color:#3fbaca;--ar-btn-border-color:#3fbaca;--ar-btn-hover-bg:#3fbaca;--ar-btn-hover-border-color:#3fbaca;--ar-btn-active-bg:#3fbaca;--ar-btn-active-border-color:#3fbaca;--ar-btn-disabled-color:#3fbaca;--ar-btn-disabled-border-color:#3fbaca;}.accordion-button:not(.collapsed)::after{--ar-accordion-btn-active-icon:url("data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='%23496797'%3e%3cpath%20d='M.5%206.3c.6-.6%201.6-.6%202.3%200l9.3%209.3%209.3-9.3c.6-.6%201.6-.6%202.3%200%20.6.6.6%201.6%200%202.3L13.3%2018.8c-.6.6-1.6.6-2.3%200L.8%208.5c-.9-.8-.9-1.6-.3-2.2z'/%3e%3c/svg%3e")}
-    </style>
+    })()
 
-    <!-- Page loading scripts -->
-
-    <script>
-      (function () {
-        window.onload = function () {
-          const preloader = document.querySelector('.page-loading')
-          preloader.classList.remove('active')
-          setTimeout(function () {
-            preloader.remove()
-          }, 1500)
-        }
-      })()
-
-            if (localStorage.getItem("curr_link") == null) {
-                localStorage.setItem("curr_link", window.location.pathname);
-            }
-            else {
-                localStorage.setItem("prev_link", localStorage.getItem("curr_link"));
-                localStorage.setItem("curr_link", window.location.pathname);
-            }
+    if (localStorage.getItem("curr_link") == null) {
+      localStorage.setItem("curr_link", window.location.pathname);
+    }
+    else {
+      localStorage.setItem("prev_link", localStorage.getItem("curr_link"));
+      localStorage.setItem("curr_link", window.location.pathname);
+    }
 
 
-        if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.register('/service-worker.js')
-            .then((registration) => {
-              console.log('Service Worker registered with scope:', registration.scope);
-            })
-            .catch((error) => {
-              console.error('Service Worker registration failed:', error);
-            });
-        }
-      let mode = window.localStorage.getItem('mode'),
-          root = document.getElementsByTagName('html')[0];
-      if (mode !== undefined && mode === 'dark') {
-        root.classList.add('dark-mode');
-      } else {
-        root.classList.remove('dark-mode');
-      }
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then((registration) => {
+          console.log('Service Worker registered with scope:', registration.scope);
+        })
+        .catch((error) => {
+          console.error('Service Worker registration failed:', error);
+        });
+    }
+    let mode = window.localStorage.getItem('mode'),
+      root = document.getElementsByTagName('html')[0];
+    if (mode !== undefined && mode === 'dark') {
+      root.classList.add('dark-mode');
+    } else {
+      root.classList.remove('dark-mode');
+    }
 
-    </script>
-  </head>
+  </script>
+</head>
 
-  <!-- Body -->
+<!-- Body -->
 
-  <body class="@htmlProps.BodyClass">
-    <!-- Page loading spinner -->
-    <div class="page-loading active">
-      <div class="page-loading-inner">
-        <div class="page-spinner"></div>
-        <span>Loading...</span>
-      </div>
+<body class="@htmlProps.BodyClass">
+  <!-- Page loading spinner -->
+  <div class="page-loading active">
+    <div class="page-loading-inner">
+      <div class="page-spinner"></div>
+      <span>Loading...</span>
     </div>
+  </div>
 
 
-    <!-- Page wrapper -->
-    @await Html.PartialAsync("Partials/Modals/Default.cshtml")
-    <main class="page-wrapper">
-      <header data-bs-theme="@htmlProps.DataBsTheme">
-        <div class="@htmlProps.HeaderClass">
-          <div class="container">
-                @await Html.PartialAsync("Partials/NavBars/Default") 
-          </div>
+  <!-- Page wrapper -->
+  @await Html.PartialAsync("Partials/Modals/Default.cshtml")
+  <main class="page-wrapper">
+    <header data-bs-theme="@htmlProps.DataBsTheme">
+      <div class="@htmlProps.HeaderClass">
+        <div class="container">
+          @await Html.PartialAsync("Partials/NavBars/Default")
         </div>
-      </header>
-     <div aria-live="polite" id="toast-container" aria-atomic="true" class="d-flex justify-content-center align-items-center"></div>
+      </div>
+    </header>
+    <div aria-live="polite" id="toast-container" aria-atomic="true"
+      class="d-flex justify-content-center align-items-center"></div>
     @RenderBody()
-    </main>
+  </main>
 
 
-    <!-- Footer -->
-   @await Html.PartialAsync("Partials/Footers/Default")
+  <!-- Footer -->
+  @await Html.PartialAsync("Partials/Footers/Default")
+  <!-- Back to top button -->
+  <a class="btn-scroll-top" href="#top" data-scroll aria-label="Scroll back to top">
+    <svg viewBox="0 0 40 40" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="20" cy="20" r="19" fill="none" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10">
+      </circle>
+    </svg>
+    <i class="ai-arrow-up"></i>
+  </a>
 
 
-    <!-- Back to top button -->
-    <a class="btn-scroll-top" href="#top" data-scroll aria-label="Scroll back to top">
-      <svg viewBox="0 0 40 40" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="20" cy="20" r="19" fill="none" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10"></circle>
-      </svg>
-      <i class="ai-arrow-up"></i>
-    </a>
+  <!-- Vendor scripts: JS libraries and plugins -->
+  <script src="~/lib/axios/dist/axios.min.js"></script>
+  @await RenderSectionAsync("Scripts", required: false)
+  <script src="/assets/js/theme.min.js"></script>
+  <script type="module" src="/assets/js/main.js"></script>
 
+</body>
 
-    <!-- Vendor scripts: JS libraries and plugins -->
-    <script src="~/lib/axios/dist/axios.min.js"></script>
-    @await RenderSectionAsync("Scripts", required: false)
-    <script src="/assets/js/theme.min.js"></script>
-    <script type="module" src="/assets/js/main.js"></script>
-    
-  </body>
 </html>
-
-            
-
-    

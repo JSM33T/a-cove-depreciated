@@ -23,6 +23,11 @@ namespace almondCove.Api
 
         public string Otp { get; set; }
     }
+    public class Verify
+    {
+        public string UserName { get; set; }
+        public string OTP { get; set; }
+    }
 
     [Route("api/auth")]
     [ApiController]
@@ -178,7 +183,7 @@ namespace almondCove.Api
                             cmd.Parameters.AddWithValue("@inputemail", userProfile.EMail);
                             var counter = cmd.ExecuteScalar().ToString();
                             if (counter == "0")
-                            {
+                            {   
                                 string secret = StringProcessors.GenerateRandomString(10);
                                 var otp = OTPGenerator.GenerateOTP(secret);
                                 subject = "Verify Your Account | AlmondCove";
@@ -242,9 +247,13 @@ namespace almondCove.Api
                                 
                                 }
                             }
+                            else if(counter == null)
+                            {
+                                return BadRequest("something went wrong");
+                            }
                             else
                             {
-                                    return BadRequest("username/email taken!!");
+                                return BadRequest("username/email taken!!");
                             }
                         }
                         catch (Exception ex)
@@ -260,6 +269,49 @@ namespace almondCove.Api
                     return BadRequest("invalid data");
                 }
             
+            }
+        }
+
+        [HttpPost]
+        [Route("/api/user/verification")]
+        [IgnoreAntiforgeryToken]
+        public async Task<IActionResult> UserVerification([FromBody] Verify verify)
+        {
+            string connectionString = _configManager.GetConnString();
+            using SqlConnection connection = new(connectionString);
+
+            try
+            {
+                await connection.OpenAsync();
+                SqlCommand checkcmd = new("select IsVerified from TblUserProfile where Username ='" + verify.UserName + "' and OTP ='" + verify.OTP + "'", connection);
+                var Stat = await checkcmd.ExecuteScalarAsync();
+                if (Stat != null && Stat is bool statValue)
+                {
+
+                    if (!statValue)
+                    {
+                        SqlCommand activatecmd = new("UPDATE TblUserProfile SET IsVerified = 1 where UserName ='" + verify.UserName + "' ", connection);
+                        await activatecmd.ExecuteNonQueryAsync();
+                        return Ok("User Verified!!");
+                    }
+                    else
+                    {
+                        return BadRequest("User already verified");
+                    }
+
+
+                }
+                else
+                {
+                    return BadRequest("Something Went wrong");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                // Log.Error("Error veryfying user : " + ex.Message.ToString() );
+                return BadRequest("Error veryfying user");
+
             }
         }
     }

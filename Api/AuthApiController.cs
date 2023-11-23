@@ -9,7 +9,6 @@ using System.Data;
 
 namespace almondCove.Api
 {
-
     public class LoginCreds
     {
         [Required]
@@ -20,7 +19,8 @@ namespace almondCove.Api
         [MaxLength(50)]
         [MinLength(6)]
         public string Password { get; set; }
-
+        [Required]
+        [RegularExpression("^[0-9]{6}$", ErrorMessage = "otp 6 digit only numberic constraint")]
         public string Otp { get; set; }
     }
     public class Verify
@@ -49,85 +49,91 @@ namespace almondCove.Api
         [IgnoreAntiforgeryToken]
         public async Task<IActionResult> UserLogin([FromBody] LoginCreds loginCreds)
         {
-
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return BadRequest("Invalid Credentials");
-            }
-            try
-            {
-                using SqlConnection connection = new(_configManager.GetConnString());
-                await connection.OpenAsync();
-                SqlCommand checkcommand = new("select p.*,a.Image " +
-                    "from TblUserProfile p,TblAvatarMaster a " +
-                    "where (p.UserName = @username OR p.email = @username)" +
-                    " and CryptedPassword =@password" +
-                    " and p.IsActive= 1 " +
-                    " and p.IsVerified = 1 " +
-                    " and p.AvatarId = a.Id", connection);
-                checkcommand.Parameters.AddWithValue("@username", loginCreds.UserName.ToLower());
-                checkcommand.Parameters.AddWithValue("@password", EnDcryptor.Encrypt(loginCreds.Password,_configManager.GetCryptKey()));
-                using var reader = await checkcommand.ExecuteReaderAsync();
-                if (reader.Read())
+                try
                 {
-                    var username = reader.GetString(reader.GetOrdinal("UserName"));
-                    var user_id = reader.GetInt32(reader.GetOrdinal("Id"));
-                    var firstname = reader.GetString(reader.GetOrdinal("FirstName"));
-                    var fullname = reader.GetString(reader.GetOrdinal("FirstName")) + " " + reader.GetString(reader.GetOrdinal("LastName"));
-                    var role = reader.GetString(reader.GetOrdinal("Role"));
-                    var avatar = reader.GetString(reader.GetOrdinal("Image"));
-                    var sessionKeyOld = reader.GetString(reader.GetOrdinal("SessionKey"));
-                    //set session
-                    HttpContext.Session.SetString("user_id", user_id.ToString());
-                    HttpContext.Session.SetString("username", username);
-                    HttpContext.Session.SetString("first_name", firstname);
-                    HttpContext.Session.SetString("role", role);
-                    HttpContext.Session.SetString("fullname", fullname);
-                    HttpContext.Session.SetString("avatar", avatar.ToString());
-                    var sessionKeyNew = "";
-
-                    if (sessionKeyOld == null)
+                    using SqlConnection connection = new(_configManager.GetConnString());
+                    await connection.OpenAsync();
+                    SqlCommand checkcommand = new("select p.*,a.Image " +
+                        "from TblUserProfile p,TblAvatarMaster a " +
+                        "where (p.UserName = @username OR p.email = @username)" +
+                        " and CryptedPassword =@password" +
+                        " and p.IsActive= 1 " +
+                        " and p.IsVerified = 1 " +
+                        " and p.AvatarId = a.Id", connection);
+                    checkcommand.Parameters.AddWithValue("@username", loginCreds.UserName.ToLower());
+                    checkcommand.Parameters.AddWithValue("@password", EnDcryptor.Encrypt(loginCreds.Password, _configManager.GetCryptKey()));
+                  //TEST CRYPT KEYS
+                  //_logger.LogCritical( "{cryptkey}" ,EnDcryptor.Encrypt(loginCreds.Password, _configManager.GetCryptKey()));
+                    using var reader = await checkcommand.ExecuteReaderAsync();
+                    if (reader.Read())
                     {
-                        string SessionKey = StringProcessors.GenerateRandomString(20);
+                        var username = reader.GetString(reader.GetOrdinal("UserName"));
+                        var user_id = reader.GetInt32(reader.GetOrdinal("Id"));
+                        var firstname = reader.GetString(reader.GetOrdinal("FirstName"));
+                        var fullname = reader.GetString(reader.GetOrdinal("FirstName")) + " " + reader.GetString(reader.GetOrdinal("LastName"));
+                        var role = reader.GetString(reader.GetOrdinal("Role"));
+                        var avatar = reader.GetString(reader.GetOrdinal("Image"));
+                        //NULL ISSUE - BUG IN V1
+                        // var sessionKeyOld = reader.GetString(reader.GetOrdinal("SessionKey"));
+                        var sessionKeyOrdinal = reader.GetOrdinal("SessionKey");
+                        // Check if the value is DBNull before trying to retrieve it
+                        var sessionKeyOld = reader.IsDBNull(sessionKeyOrdinal) ? null : reader.GetString(reader.GetOrdinal("SessionKey"));
+                        // Now you can use sessionKeyOld without the risk of a NullReferenceException
 
-                        await reader.CloseAsync();
-                        SqlCommand setKey = new()
+                        //set session
+                        HttpContext.Session.SetString("user_id", user_id.ToString());
+                        HttpContext.Session.SetString("username", username);
+                        HttpContext.Session.SetString("first_name", firstname);
+                        HttpContext.Session.SetString("role", role);
+                        HttpContext.Session.SetString("fullname", fullname);
+                        HttpContext.Session.SetString("avatar", avatar.ToString());
+                        var sessionKeyNew = "";
+
+                        if (sessionKeyOld == null)
                         {
-                            CommandText = "UPDATE TblUserProfile SET SessionKey = @sessionkey WHERE Id = @userid",
-                            Connection = connection
-                        };
-                        setKey.Parameters.AddWithValue("@sessionkey", SessionKey);
-                        setKey.Parameters.AddWithValue("@userid", user_id);
-                        await setKey.ExecuteNonQueryAsync();
-                        sessionKeyNew = SessionKey;
+                            string SessionKey = StringProcessors.GenerateRandomString(20);
+
+                            await reader.CloseAsync();
+                            SqlCommand setKey = new()
+                            {
+                                CommandText = "UPDATE TblUserProfile SET SessionKey = @sessionkey WHERE Id = @userid",
+                                Connection = connection
+                            };
+                            setKey.Parameters.AddWithValue("@sessionkey", SessionKey);
+                            setKey.Parameters.AddWithValue("@userid", user_id);
+                            await setKey.ExecuteNonQueryAsync();
+                            sessionKeyNew = SessionKey;
+                        }
+                        else
+                        {
+                            sessionKeyNew = sessionKeyOld;
+                        }
+
+                        Response.Cookies.Append("SessionKey", sessionKeyNew, new CookieOptions
+                        {
+                            Expires = DateTime.Now.AddDays(150)
+                        });
+
+
+                        _logger.LogInformation("{user} logged in on {time}",loginCreds.UserName, DateTime.Now);
+                        return Ok("logging in...");
+
                     }
                     else
                     {
-                        sessionKeyNew = sessionKeyOld;
+                        _logger.LogInformation("invalid creds by username:" + loginCreds.UserName);
+                        return BadRequest("Invalid Credentials");
                     }
-
-                    Response.Cookies.Append("SessionKey", sessionKeyNew, new CookieOptions
-                    {
-                        Expires = DateTime.Now.AddDays(150)
-                    });
-
-
-                    _logger.LogInformation(loginCreds.UserName + " logged in");
-                    // await TeleLog.Logstuff("*" + loginCreds.UserName + "* logged in") ;
-                    return Ok("logging in...");
-
                 }
-                else
+                catch (Exception ex)
                 {
-                    _logger.LogInformation("invalid creds by username:" + loginCreds.UserName);
-                    return BadRequest("Invalid Credentials");
+                    _logger.LogError("Error in login form, message : {exmessage}, user : {user} " ,ex.Message.ToString(), loginCreds.UserName);
+                    return StatusCode(500, "something went wrong");
                 }
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message.ToString() + " : in login form,user : " + loginCreds.UserName);
-                return StatusCode(500, "something went wrong");
-            }
+            return BadRequest("Invalid Credentials");
         }
 
         [HttpPost("/api/account/signup")]
@@ -190,18 +196,11 @@ namespace almondCove.Api
                                 try
                                 {
 
-                                    body = "<!DOCTYPE html><html><head><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Verification</title></head><body style=\"margin:0;padding:0;font-family:Arial,sans-serif;line-height:1.4;color:#111;background-color:#fff\"><div style=\"max-width:600px;margin:0 auto;background-color:#fff;padding:20px;border-radius:5px\"><h1 style=\"color:#111;margin-bottom:20px;font-size:24px\">Complete Signup</h1><p>Hey there,</p><div style=\"text-align:center;margin-bottom:20px\"><img src=\"https://almondCove.in/assets/favicon/apple-touch-icon.png\" width=\"100\" alt=\"Image\" style=\"max-width:100%;height:auto;border-radius:5px\"></div><p>Welcome to the AlmondCove.Your OTP is <h2><b>" + otp + " </b></h2> .You can verify your account from the following button too.</p><p>" +
+                                 body = "<!DOCTYPE html><html><head><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Verification</title></head><body style=\"margin:0;padding:0;font-family:Arial,sans-serif;line-height:1.4;color:#111;background-color:#fff\"><div style=\"max-width:600px;margin:0 auto;background-color:#fff;padding:20px;border-radius:5px\"><h1 style=\"color:#111;margin-bottom:20px;font-size:24px\">Complete Signup</h1><p>Hey there,</p><div style=\"text-align:center;margin-bottom:20px\"><img src=\"https://almondCove.in/assets/favicon/apple-touch-icon.png\" width=\"100\" alt=\"Image\" style=\"max-width:100%;height:auto;border-radius:5px\"></div><p>Welcome to the AlmondCove.Your OTP is <h2><b>" + otp + " </b></h2> .You can verify your account from the following button too.</p><p>" +
                                         "<a href=\"https://almondCove.in/account/verification/" + FilteredUsername + "/" + otp + "\"" +
                                         " style=\"display:inline-block;padding:10px 20px;background-color:#111;color:#fff;text-decoration:none;border-radius:4px\">Verify Email</a></p><p>If you did not sign up for this account, please ignore this email.</p><div style=\"margin-top:20px;text-align:center;font-size:12px;color:#999\"><p>This is an automated email, please do not reply.</p></div></div></body></html>";
 
-                                    //body = "<h1>Hey there,</h1>" +
-                                    //        "<p> This is for the verification of your account @almondCove." +
-                                    //        "" + otp + " is your OTP which is valid for 30 minutes </p>." +
-                                    //        "Or alternatively you can click here to verify directly:" +
-                                    //        "<button type=\"button\" href=\"https://almondCove.in/account/verification/" + FilteredUsername + "/" + otp + "\"><b> VERIFY </b></button>";
-
-                                    //int stat = Mailer.MailSignup(subject, body, userProfile.EMail.ToString());
-                                  bool stat =  _mailer.SendEmailAsync(userProfile.EMail.ToString(), subject, body);
+                                 bool stat =  _mailer.SendEmailAsync(userProfile.EMail.ToString(), subject, body);
 
 
                                     if (stat)
@@ -229,7 +228,7 @@ namespace almondCove.Api
                                         }
                                         catch (Exception exm)
                                         {
-                                            _logger.LogError("Error while user registration: " + exm.Message.ToString());
+                                            _logger.LogError("Exception while user {username} 's registration on {datetime},ex message: {exmessage}",userProfile.UserName,DateTime.Now, exm.Message.ToString());
                                             return BadRequest("something went wrong");
                                            
                                         }
@@ -237,7 +236,8 @@ namespace almondCove.Api
                                     }
                                     else
                                     {
-                                            return BadRequest("unable to send the mail");
+                                        _logger.LogError("unable to send mail to {user} on datetime: {datetime}",userProfile.UserName,DateTime.Now);
+                                        return BadRequest("unable to send the mail");
                                     }
                                 }
                                 catch (Exception ex2)

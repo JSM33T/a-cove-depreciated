@@ -20,6 +20,7 @@
     <None Remove="wwwroot\content\blogs\html\**" />
     <None Remove="wwwroot\content\blogs\markdown\**" />
     <None Remove="wwwroot\lib\vendor\**" />
+    <TypeScriptCompile Remove="node_modules\**" />
     <TypeScriptCompile Remove="wwwroot\content\blogs\html\**" />
     <TypeScriptCompile Remove="wwwroot\content\blogs\markdown\**" />
     <TypeScriptCompile Remove="wwwroot\lib\vendor\**" />

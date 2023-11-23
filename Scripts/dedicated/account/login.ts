@@ -5,15 +5,6 @@ const userNameInput = document.getElementById('userName') as HTMLInputElement;
 const passwordInput = document.getElementById('password') as HTMLInputElement;
 const submitBtn = document.getElementById('submitBtn') as HTMLButtonElement;
 
-// document.addEventListener('DOMContentLoaded', function () {
-//     const form = document.querySelector('.login-form') as HTMLFormElement;
-//     form.addEventListener('submit', async function (event) {
-//         event.preventDefault();
-//         await submitLoginForm();
-//     });
-// });
-
-
 acInit([
  setupLoginForm
 ]);
@@ -38,7 +29,10 @@ async function submitLoginForm() {
 
 async function postToLoginApi(username: string, password: string) {
     const apiUrl = '/api/account/login';
-    const data: { username: string; password: string } = { username, password };
+    const data: { username: string; password: string } = {
+        username,
+        password
+    };
 
     submitBtn.innerHTML = "Loading...";
 
@@ -58,6 +52,7 @@ async function postToLoginApi(username: string, password: string) {
         }
     } catch (error) {
         console.error('Error during login:', error);
+        acToast('error', 'Something went wrong');
     } finally {
         submitBtn.innerHTML = "Log In";
     }

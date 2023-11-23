@@ -8,7 +8,7 @@ const routerViewElement = document.querySelector('router-view');
 const CategorisedBlogComponent = {
     props: ['param1', 'param2'],
     watch: {
-        $route(to, from) {
+        $route(to: { params: { param1: any; param2: any; }; }, from: { params: { param1: any; param2: any; }; }) {
             if (to.params.param1 !== from.params.param1 || to.params.param2 !== from.params.param2) {
                 if (routerViewElement) {
                     routerViewElement.innerHTML = this.blogs;

@@ -1,58 +1,96 @@
-﻿// import { User } from '../../Interfaces/user.interface.js';
-// import { acToast, acPostData } from '../../global.js';
+﻿import { User } from '../../Interfaces/user.interface.js';
+import { acInit, acToast, acPostData, acFormHandler } from '../../global.js';
+declare const bootstrap: { Modal: new (arg0: HTMLElement | null) => any; };
+const firstName = document.getElementById('firstName') as HTMLInputElement;
+const lastName = document.getElementById('lastName') as HTMLInputElement;
+const userName = document.getElementById('userName') as HTMLInputElement;
+const emailId = document.getElementById('emailId') as HTMLInputElement;
+const pWord = document.getElementById('pWord') as HTMLInputElement;
+const pWordConfirm = document.getElementById('pWordConfirm') as HTMLInputElement;
+const signupBtn = document.getElementById('submitBtn') as HTMLButtonElement;
 
-// const userNameInput = document.getElementById('userName') as HTMLInputElement;
-// const firstName = document.getElementById('userName') as HTMLInputElement;
-// const lastName = document.getElementById('userName') as HTMLInputElement;
-// const eMail = document.getElementById('userName') as HTMLInputElement;
-// const passWord = document.getElementById('password') as HTMLInputElement;
-// const passWordConfirm = document.getElementById('password') as HTMLInputElement;
-// const signupBtn = document.getElementById('submitBtn') as HTMLButtonElement;
+const otpModal = new bootstrap.Modal(document.getElementById('otpMdl'));
+const otpSubmit = document.getElementById("submitOtp") as HTMLButtonElement;
+const otpVal = document.getElementById("otpVal") as HTMLInputElement; 
 
-// document.addEventListener('DOMContentLoaded', function () {
-//     const form = document.querySelector('.login-form') as HTMLFormElement;
-//     form.addEventListener('submit', async function (event) {
-//         event.preventDefault();
-//         await submitLoginForm();
-//     });
-// });
+acInit([
+        () => acFormHandler('signup-form', submitLoginForm),
+        () => acFormHandler('otp-form', verifyDeets)
+]);
 
-// async function submitLoginForm() {
-//     const username = userNameInput.value;
-//     const password = passwordInput.value;
+const submitLoginForm = async function () {
+        const signupdata = {
+                firstName: firstName.value,
+                lastName: lastName.value,
+                userName: userName.value,
+                eMail: emailId.value,
+                password: pWord.value,
+                confirmPassword: pWordConfirm.value
+        }
 
-//     if (username.length <= 2) {
-//         acToast("error", "Username should be at least 3 characters long.");
-//     } else if (password.length < 6) {
-//         acToast("error", "Password should be at least 6 characters long.");
-//     } else {
-//         await postToLoginApi(username, password);
-//     }
-// }
+        if (firstName.value.length <= 1) {
+                acToast("error", "Username too short");
+        } else if (userName.value.length < 4) {
+                acToast("error", "Username too short");
+        } else if (pWord.value.length <= 6) {
+                acToast('error', 'password should be atleast 6 characters long')
+        } else if (pWordConfirm.value != pWord.value) {
+                acToast('error', 'passwords dont match');
+        } else {
+                postToSignUpApi(signupdata);
+        }
+};
 
-// async function postToLoginApi(username: string, password: string) {
-//     const apiUrl = '/api/account/login';
-//     const data: { username: string; password: string } = { username, password };
+async function postToSignUpApi(signupdata: any) {
+        const apiUrl = '/api/account/signup';
+        signupBtn.innerHTML = "Loading...";
 
-//     signupBtn.innerHTML = "Loading...";
+        try {
+                const response = await acPostData(apiUrl, signupdata);
+                acToast(response.type, response.data);
+                console.log(response);
+                if (response.type === "ok") {
+                        signupBtn.innerHTML = "Logging in...";
+                        otpModal!.show();
+                }
+        } catch (error) {
+                console.error('Error during login:', error);
+        } finally {
+                signupBtn.innerHTML = "Log In";
+        }
+};
 
-//     try {
-//         const response = await acPostData(apiUrl, data);
-//         acToast(response.type, response.data);
+const verifyDeets = async function () {
 
-//         if (response.type === "ok") {
-//                 signupBtn.innerHTML = "Logging in...";
-//             const lastLink: string | null = localStorage.getItem("curr_link");
+        otpSubmit.innerHTML = "loading...";
+        console.log(otpVal.value);
+        console.log(userName.value);
 
-//             if (lastLink) {
-//                 window.location.href = lastLink;
-//             } else {
-//                 window.location.href = "/";
-//             }
-//         }
-//     } catch (error) {
-//         console.error('Error during login:', error);
-//     } finally {
-//         signupBtn.innerHTML = "Log In";
-//     }
-// }
+        try {
+                const dt = {
+                        OTP : otpVal.value.trim(),
+                        UserName : userName.value.trim()
+                }
+                const response = await acPostData("/api/user/verification",dt);
+                console.log(dt);
+                console.log(response);
+                if (response.type === "ok") {
+                        otpModal!.hide();
+                        acToast("success","user verified redirecting to login page...");
+                        setTimeout(redirect,2000);
+                        
+                }
+                else{
+                        console.log("error",response.data);
+                }
+        } catch (error) {
+                console.error('Error during login:', error);
+                acToast('error','something went wrong');
+        } finally {
+                otpSubmit.innerHTML = "Verify";
+        }
+};
+
+const redirect = () => {
+        window.location.href = "/";
+      };

@@ -31,8 +31,34 @@
 }
 
 @section Scripts{
-    <script type="module" src="/assets/js/dedicated/account/login.js"></script>
+    <script type="module" src="/assets/js/dedicated/account/signup.js" asp-append-version="true"></script>
 }
+
+
+
+
+<div class="modal fade" id="otpMdl" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <form id="otp-form">
+          <div class="modal-header">
+            <h4 class="modal-title">OTP</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+         
+            <p>Please enter the otp sent to your email id</p>
+            <input class="form-control" id="otpVal" value="" placeholder="otp here" required/>
+          </div>
+          <div class="modal-footer flex-column flex-sm-row">
+           
+            <button type="submit" id="submitOtp" class="btn btn-primary w-100 w-sm-auto ms-sm-3">Verify</button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 
 <div class="d-lg-flex position-relative h-100">
 
@@ -46,26 +72,33 @@
           <div class="w-100 mt-auto" style="max-width: 526px;">
             <h1>No account? Sign up</h1>
             <p class="pb-3 mb-3 mb-lg-4">Have an account already?&nbsp;&nbsp;<a href="account-signin.html">Sign in here!</a></p>
-            <form class="needs-validation" novalidate>
+            <form class="needs-validation" id="signup-form" novalidate>
+                @Html.AntiForgeryToken()
               <div class="row row-cols-1 row-cols-sm-2">
                 <div class="col mb-4">
-                  <input class="form-control form-control-lg" type="text" placeholder="Your name" required>
+                  <input class="form-control form-control-lg" id="firstName" type="text" placeholder="First Name" required>
                 </div>
                 <div class="col mb-4">
-                  <input class="form-control form-control-lg" type="email" placeholder="Email address" required>
+                  <input class="form-control form-control-lg" id="lastName" type="text" placeholder="Last Name">
                 </div>
               </div>
+                <div class="col mb-4">
+                    <input class="form-control form-control-lg" id="emailId" type="email" placeholder="Email id" required>
+                </div>
+                <div class="col mb-4">
+                    <input class="form-control form-control-lg" id="userName" type="text" placeholder="Preferred Username" required>
+                </div>
               <div class="password-toggle mb-4">
-                <input class="form-control form-control-lg" type="password" placeholder="Password" required>
+                <input class="form-control form-control-lg" id="pWord" type="password" placeholder="Password" required>
                 <label class="password-toggle-btn" aria-label="Show/hide password">
-                  <input class="password-toggle-check" type="checkbox">
+                        <input class="password-toggle-check" type="checkbox" tabindex="-1>
                   <span class="password-toggle-indicator"></span>
                 </label>
               </div>
               <div class="password-toggle mb-4">
-                <input class="form-control form-control-lg" type="password" placeholder="Confirm password" required>
+                    <input class="form-control form-control-lg" id="pWordConfirm" type="password" placeholder="Confirm password" required>
                 <label class="password-toggle-btn" aria-label="Show/hide password">
-                  <input class="password-toggle-check" type="checkbox">
+                  <input class="password-toggle-check" type="checkbox" tabindex="-1">
                   <span class="password-toggle-indicator"></span>
                 </label>
               </div>
@@ -75,7 +108,7 @@
                   <label class="form-check-label ms-1" for="terms">I agree to <a href="#">Terms &amp; Conditions</a></label>
                 </div>
               </div>
-              <button class="btn btn-lg btn-primary w-100 mb-4" type="submit">Sign up</button>
+                <button class="btn btn-lg btn-primary w-100 mb-4" id="submitBtn" type="submit">Sign up</button>
 
               <!-- Sign in with social account -->
               <h2 class="h6 text-center pt-3 pt-lg-4 mb-4">Or sign in with your social account</h2>
@@ -100,7 +133,10 @@
           <p class="nav w-100 fs-sm pt-5 mt-auto mb-5" style="max-width: 526px;"><span class="text-body-secondary">&copy; All rights reserved. Made by</span><a class="nav-link d-inline-block p-0 ms-1" href="https://createx.studio/" target="_blank" rel="noopener">Createx Studio</a></p>
         </div>
 
-
         <!-- Cover image -->
         <div class="w-50 bg-size-cover bg-repeat-0 bg-position-center" style="background-image: url(/assets/images/covers/login.jpg);"></div>
       </div>
+
+          <script>
+           
+              </script>

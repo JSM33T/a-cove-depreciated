@@ -6,13 +6,8 @@ const passwordInput = document.getElementById('password') as HTMLInputElement;
 const submitBtn = document.getElementById('submitBtn') as HTMLButtonElement;
 
 acInit([
- setupLoginForm
+    () => acFormHandler('login-form', submitLoginForm)
 ]);
-
-async function setupLoginForm(){
-   acFormHandler('login-form', submitLoginForm);
-}
-
 
 async function submitLoginForm() {
     const username = userNameInput.value;
@@ -29,26 +24,28 @@ async function submitLoginForm() {
 
 async function postToLoginApi(username: string, password: string) {
     const apiUrl = '/api/account/login';
+    
     const data: { username: string; password: string } = {
         username,
         password
     };
-
     submitBtn.innerHTML = "Loading...";
 
     try {
         const response = await acPostData(apiUrl, data);
         acToast(response.type, response.data);
-
         if (response.type === "ok") {
             submitBtn.innerHTML = "Logging in...";
             const lastLink: string | null = localStorage.getItem("curr_link");
-
             if (lastLink) {
                 window.location.href = lastLink;
-            } else {
+            }
+            else {
                 window.location.href = "/";
             }
+        }
+        else {
+            acToast('error',response.data);
         }
     } catch (error) {
         console.error('Error during login:', error);

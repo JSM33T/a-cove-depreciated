@@ -13,6 +13,7 @@ builder.Services.AddSession(options =>
 builder.Services.AddControllersWithViews();
 
 //exc services
+
 builder.Services.AddSingleton<IConfigManager, ConfigManager>();
 builder.Services.AddSingleton<IMailer, Mailer>();
 builder.Services.AddSingleton<ISqlService, SqlService>();
@@ -32,9 +33,17 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Information()
-                .WriteTo.Console() 
-                .WriteTo.File("Logs/log.txt", rollingInterval: RollingInterval.Day) 
+                //.WriteTo.Async(a =>
+                //    {
+                //        a.File("Logs/log.txt", rollingInterval: RollingInterval.Day);
+                //    })
+                //.WriteTo.Async(a =>
+                //    {
+                //        a.Console();
+                //    })
+                .WriteTo.Console()
                 .CreateLogger();
+
 
 builder.Services.AddLogging(loggingBuilder =>
         loggingBuilder.AddSerilog());

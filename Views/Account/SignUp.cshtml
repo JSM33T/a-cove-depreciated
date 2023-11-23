@@ -33,9 +33,6 @@
   <script type="module" src="/assets/js/dedicated/account/signup.js" asp-append-version="true"></script>
 }
 
-
-
-
 <div class="modal fade" id="otpMdl" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-dialog-scrollable" role="document">
     <div class="modal-content">
@@ -45,12 +42,10 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-
           <p>Please enter the otp sent to your email id</p>
           <input class="form-control" id="otpVal" value="" placeholder="otp here" required />
         </div>
         <div class="modal-footer flex-column flex-sm-row">
-
           <button type="submit" id="submitOtp" class="btn btn-primary w-100 w-sm-auto ms-sm-3">Verify</button>
         </div>
       </form>
@@ -88,14 +83,14 @@
           <input class="form-control form-control-lg" id="userName" type="text" placeholder="Preferred Username"
             required>
         </div>
-        <div class="password-toggle mb-4">
+        <div class="col password-toggle mb-4">
           <input class="form-control form-control-lg" id="pWord" type="password" placeholder="Password" required>
           <label class="password-toggle-btn" aria-label="Show/hide password">
             <input class="password-toggle-check" type="checkbox" tabindex="-1>
                   <span class=" password-toggle-indicator"></span>
           </label>
         </div>
-        <div class="password-toggle mb-4">
+        <div class="col password-toggle mb-4">
           <input class="form-control form-control-lg" id="pWordConfirm" type="password" placeholder="Confirm password"
             required>
           <label class="password-toggle-btn" aria-label="Show/hide password">
@@ -110,9 +105,8 @@
           </div>
         </div>
         <button class="btn btn-lg btn-primary w-100 mb-4" id="submitBtn" type="submit">Sign up</button>
-
         <!-- Sign in with social account -->
-        <h2 class="h6 text-center pt-3 pt-lg-4 mb-4">Or sign in with your social account</h2>
+@*         <h2 class="h6 text-center pt-3 pt-lg-4 mb-4">Or sign in with your social account</h2>
         <div class="row row-cols-1 row-cols-sm-2 gy-3">
           <div class="col">
             <a class="btn btn-icon btn-outline-secondary btn-google btn-lg w-100" href="#">
@@ -126,14 +120,14 @@
               Facebook
             </a>
           </div>
-        </div>
+        </div> *@
       </form>
     </div>
 
     <!-- Copyright -->
-    <p class="nav w-100 fs-sm pt-5 mt-auto mb-5" style="max-width: 526px;"><span class="text-body-secondary">&copy; All
-        rights reserved. Made by</span><a class="nav-link d-inline-block p-0 ms-1" href="https://createx.studio/"
-        target="_blank" rel="noopener">Createx Studio</a></p>
+    <p class="nav w-100 fs-sm pt-5 mt-auto mb-5" style="max-width: 526px;"><span class="text-body-secondary">Made with love</span><a class="nav-link d-inline-block p-0 ms-1" href="https://createx.studio/"
+        target="_blank" rel="noopener">AlmondCove</a>
+    </p>
   </div>
 
   <!-- Cover image -->

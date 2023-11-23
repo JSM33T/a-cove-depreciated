@@ -2,7 +2,7 @@
 "version": "1.0.0",
   "scripts": {
     "build": "tsc && copyfiles -u 1 Scripts/**/*.ts wwwroot/assets/js",
-    "tp": "tsc"
+    "transpile": "tsc"
   },
   "devDependencies": {
     "copyfiles": "^2.4.1"

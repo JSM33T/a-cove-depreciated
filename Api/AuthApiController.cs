@@ -19,8 +19,6 @@ namespace almondCove.Api
         [MaxLength(50)]
         [MinLength(6)]
         public string Password { get; set; }
-        [Required]
-        [RegularExpression("^[0-9]{6}$", ErrorMessage = "otp 6 digit only numberic constraint")]
         public string Otp { get; set; }
     }
     public class Verify
@@ -42,7 +40,6 @@ namespace almondCove.Api
             _configManager = configManager;
             _logger = logger;
             _mailer = mailer;
-
         }
 
         [HttpPost("/api/account/login")]

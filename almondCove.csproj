@@ -40,6 +40,7 @@
     </PackageReference>
     <PackageReference Include="Serilog" Version="3.1.1" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
+    <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="5.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
   </ItemGroup>
@@ -50,7 +51,6 @@
 
   <ItemGroup>
     <Folder Include="Logs\" />
-    <Folder Include="DbSchema\" />
     <Folder Include="wwwroot\content\gallery\2023\garden-state\assets\" />
     <Folder Include="wwwroot\stores\configurations\" />
     <Folder Include="wwwroot\stores\studio\" />

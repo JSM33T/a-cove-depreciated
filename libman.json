@@ -116,6 +116,21 @@
         "dist/aos.min.css",
         "dist/aos.min.js"
       ]
+    },
+    {
+      "library": "lit-html@3.1.0",
+      "destination": "wwwroot/lib/lit-html/",
+      "files": [
+        "lit-html.min.js"
+      ]
+    },
+    {
+      "library": "lit-element@4.0.2",
+      "destination": "wwwroot/lib/lit-element/",
+      "files": [
+        "lit-element.min.js",
+        "lit-element.js.map"
+      ]
     }
   ]
 }

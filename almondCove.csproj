@@ -8,18 +8,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Build\**" />
     <Compile Remove="wwwroot\content\blogs\html\**" />
     <Compile Remove="wwwroot\content\blogs\markdown\**" />
     <Compile Remove="wwwroot\lib\vendor\**" />
+    <Content Remove="Build\**" />
     <Content Remove="wwwroot\content\blogs\html\**" />
     <Content Remove="wwwroot\content\blogs\markdown\**" />
     <Content Remove="wwwroot\lib\vendor\**" />
+    <EmbeddedResource Remove="Build\**" />
     <EmbeddedResource Remove="wwwroot\content\blogs\html\**" />
     <EmbeddedResource Remove="wwwroot\content\blogs\markdown\**" />
     <EmbeddedResource Remove="wwwroot\lib\vendor\**" />
+    <None Remove="Build\**" />
     <None Remove="wwwroot\content\blogs\html\**" />
     <None Remove="wwwroot\content\blogs\markdown\**" />
     <None Remove="wwwroot\lib\vendor\**" />
+    <TypeScriptCompile Remove="Build\**" />
     <TypeScriptCompile Remove="node_modules\**" />
     <TypeScriptCompile Remove="wwwroot\content\blogs\html\**" />
     <TypeScriptCompile Remove="wwwroot\content\blogs\markdown\**" />

@@ -1,8 +1,10 @@
 {"name": "almondcove",
 "version": "1.0.0",
   "scripts": {
-    "build": "tsc && copyfiles -u 1 Scripts/**/*.ts wwwroot/assets/js",
-    "transpile": "tsc"
+    "tsserve": "tsc",
+    "serve": "dotnet watch",
+    "arrangets": "tsc && copyfiles -u 1 Scripts/**/*.ts wwwroot/assets/js",
+    "publish64": "dotnet publish -c Release -r win-x64 --self-contained false"
   },
   "devDependencies": {
     "copyfiles": "^2.4.1"

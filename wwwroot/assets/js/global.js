@@ -7,6 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+import axios from '../wwwroot/lib/axios/dist/esm/axios.js';
 const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]');
 function getUrl(url) {
     let targetUrl = url || window.location.href;

@@ -295,8 +295,6 @@ namespace almondCove.Api
                     {
                         return BadRequest("User already verified");
                     }
-
-
                 }
                 else
                 {

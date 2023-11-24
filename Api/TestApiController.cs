@@ -7,5 +7,9 @@ namespace almondCove.Api
     [ApiController]
     public class TestApiController : ControllerBase
     {
+        public IActionResult Something()
+        {
+            return Ok();
+        }
     }
 }

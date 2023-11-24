@@ -33,15 +33,14 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Information()
-                //.WriteTo.Async(a =>
-                //    {
-                //        a.File("Logs/log.txt", rollingInterval: RollingInterval.Day);
-                //    })
-                //.WriteTo.Async(a =>
-                //    {
-                //        a.Console();
-                //    })
-                .WriteTo.Console()
+                .WriteTo.Async(a =>
+                    {
+                        a.File("Logs/log.txt", rollingInterval: RollingInterval.Day);
+                    })
+                .WriteTo.Async(a =>
+                    {
+                        a.Console();
+                    })
                 .CreateLogger();
 
 

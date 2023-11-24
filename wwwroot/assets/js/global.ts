@@ -1,7 +1,6 @@
 ﻿import { Email } from './Interfaces/email.interface';
 
-import axios, { AxiosResponse, AxiosError } from '../wwwroot/lib/axios/dist/esm/axios.js';
-declare const bootstrap: any;
+declare const bootstrap: any,axios:any;
 const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]') as HTMLInputElement;
 
 ///===================== URL UTILS ====================

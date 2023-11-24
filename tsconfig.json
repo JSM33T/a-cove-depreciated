@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
-    "declaration": true,
-    "declarationDir": "wwwroot/assets/js",
+    "declaration": false,
     "module": "ES6",
     "noEmitOnError": true,
     "noImplicitAny": false,
@@ -12,7 +11,7 @@
     "target": "ES6"
   },
   "include": [
-    "Scripts/**/*"
+    "wwwroot/assets/js/**/*"
   ],
   "exclude": [
     "node_modules",

@@ -1,6 +1,7 @@
 ﻿       <!-- Navbar brand (Logo) -->
 @{
     var Avatar = "/assets/images/avatars/default/" + ViewData["avatar"] + ".png";
+    var UserName = Context.Session.GetString("username");
 }
             <a class="navbar-brand pe-sm-3" href="/">
               <span class="text-primary flex-shrink-0 me-2">
@@ -15,16 +16,15 @@
             </a>
 
     <!-- Theme switcher -->
-            <div class="form-check form-switch mode-switch order-lg-2 me-3 me-lg-4 ms-auto" data-bs-toggle="mode">
-                <input class="form-check-input" type="checkbox" id="theme-mode">
-                <label class="form-check-label" for="theme-mode">
-                    <i class="ai-sun fs-lg"></i>
-                </label>
-                <label class="form-check-label" for="theme-mode">
-                    <i class="ai-moon fs-lg"></i>
-                </label>
-            </div>
-
+        <div class="form-check form-switch mode-switch order-lg-2 me-3 me-lg-4 ms-auto" data-bs-toggle="mode">
+            <input class="form-check-input" type="checkbox" id="theme-mode">
+            <label class="form-check-label" for="theme-mode">
+                <i class="ai-sun fs-lg"></i>
+            </label>
+            <label class="form-check-label" for="theme-mode">
+                <i class="ai-moon fs-lg"></i>
+            </label>
+        </div>
     <!-- User signed in state. Account dropdown on screens > 576px -->
         <div class="dropdown nav d-none d-sm-block order-lg-3">
             <a class="nav-link d-flex align-items-center p-0" href="#" data-bs-toggle="dropdown" aria-expanded="false">
@@ -36,32 +36,36 @@
             </a>
             <div class="dropdown-menu dropdown-menu-end my-1">
                 <h6 class="dropdown-header fs-xs fw-medium text-body-secondary text-uppercase pb-1">Account</h6>
-                <a class="dropdown-item" href="/account/login">
-                    <i class="ai-user-check fs-lg opacity-70 me-2"></i>
-                    Sign In / Up
-                </a>
-                <a class="dropdown-item" href="/profile">
-                    <i class="ai-logout fs-lg opacity-70 me-2"></i>
-                    Profile
-                </a>
-                <a class="dropdown-item" href="account-signin.html">
-                    <i class="ai-logout fs-lg opacity-70 me-2"></i>
-                    Sign out
-                </a>
-                <div class="dropdown-divider"></div>
-                <h6 class="dropdown-header fs-xs fw-medium text-body-secondary text-uppercase pb-1">Settings</h6>
-                <a class="dropdown-item" href="account-orders.html">
-                    <i class="ai-settings fs-lg opacity-70 me-2"></i>
-                    Preferences
-                </a>
-                <a class="dropdown-item" href="account-earnings.html">
-                    <i class="ai-activity fs-lg opacity-70 me-2"></i>
-                    Activities
-                </a>
-                <a class="dropdown-item" href="account-favorites.html">
-                    <i class="ai-heart fs-lg opacity-70 me-2"></i>
-                    Favorites
-                </a>
+
+                @{
+                    if (UserName != null)
+                    {
+                        <a class="dropdown-item" href="/profile">
+                            <i class="ai-logout fs-lg opacity-70 me-2"></i>
+                            Profile
+                        </a>
+                        <a class="dropdown-item" href="javascriptVoid(0)" data-bs-toggle="modal" data-bs-target="#modalLogout">
+                        <i class="ai-logout fs-lg opacity-70 me-2"></i>
+                            Log Out
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="dropdown-item" href="/account/login">
+                            <i class="ai-user-check fs-lg opacity-70 me-2"></i>
+                            Sign In / Up
+                        </a>
+                    }
+                }
+                <h6 class="dropdown-header fs-xs fw-medium text-body-secondary text-uppercase pb-1">Account</h6>
+                    <a class="dropdown-item" href="/account/login">
+                        <i class="ai-user-check fs-lg opacity-70 me-2"></i>
+                        Theming
+                    </a>
+                    <a class="dropdown-item" href="/account/login">
+                        <i class="ai-user-check fs-lg opacity-70 me-2"></i>
+                        Preferences
+                    </a>
                 
                 
             </div>
@@ -75,8 +79,11 @@
              <!-- Navbar collapse (Main navigation) -->        
           <nav class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav navbar-nav-scroll me-auto" style="--ar-scroll-height: 520px;">
+              <li class="nav-item">
+                <a class="nav-link" href="/">Home</a>
+              </li>
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Landings</a>
+                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Topics</a>
                 <div class="dropdown-menu overflow-hidden p-0">
                   <div class="d-lg-flex">
                     <div class="mega-dropdown-column pt-1 pt-lg-3 pb-lg-4">
@@ -86,92 +93,28 @@
                           <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 rounded-3 rounded-start-0" style="background-image: url(assets/img/megamenu/landings.jpg);"></span>
                         </li>
                         <li>
-                          <a class="dropdown-item" href="/blogs">Blogs</a>
+                          <a class="dropdown-item disabled" href="/blogs">Blogs</a>
                           <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/mobile-app.jpg);"></span>
                         </li>
                         <li>
-                          <a class="dropdown-item" href="/studio">Product Landing</a>
+                          <a class="dropdown-item disabled" href="/studio">Product Landing</a>
                           <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/product-landing.jpg);"></span>
-                        </li>
-                        <li>
-                          <a class="dropdown-item" href="/apps">Apps</a>
-                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/saas-1.jpg);"></span>
-                        </li>
-                        <li>
-                          <a class="dropdown-item" href="/resources">Resources</a>
-                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/saas-2.jpg);"></span>
-                        </li>
-                        <li>
-                          <a class="dropdown-item" href="">SaaS v.3</a>
-                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/saas-3.jpg);"></span>
-                        </li>
-                        <li>
-                          <a class="dropdown-item" href="landing-saas-v4.html">
-                            SaaS v.4
-                            <span class="text-danger fs-xs ms-2">New</span>
-                          </a>
-                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/saas-4.jpg);"></span>
-                        </li>
-                        <li>
-                          <a class="dropdown-item" href="landing-shop-v1.html">Shop Homepage v.1</a>
-                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/shop-homepage-1.jpg);"></span>
-                        </li>
-                        <li>
-                          <a class="dropdown-item" href="landing-shop-v2.html">
-                            Shop Homepage v.2
-                            <span class="text-danger fs-xs ms-2">New</span>
-                          </a>
-                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/shop-homepage-2.jpg);"></span>
-                        </li>
-                        <li>
-                          <a class="dropdown-item" href="landing-marketing-agency.html">Marketing Agency</a>
-                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/marketing-agency.jpg);"></span>
                         </li>
                       </ul>
                     </div>
                     <div class="mega-dropdown-column pb-2 pt-lg-3 pb-lg-4">
                       <ul class="list-unstyled mb-0">
                         <li>
-                          <a class="dropdown-item" href="landing-creative-agency.html">Creative Agency</a>
+                          <a class="dropdown-item disabled" href="landing-creative-agency.html">Creative Agency</a>
                           <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/creative-agency.jpg);"></span>
                         </li>
                         <li>
-                          <a class="dropdown-item" href="landing-conference.html">Conference (Event)</a>
+                          <a class="dropdown-item disabled" href="landing-conference.html">Conference (Event)</a>
                           <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/conference.jpg);"></span>
                         </li>
+                       
                         <li>
-                          <a class="dropdown-item" href="landing-web-studio.html">Web Studio</a>
-                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/web-studio.jpg);"></span>
-                        </li>
-                        <li>
-                          <a class="dropdown-item" href="landing-corporate.html">Corporate</a>
-                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/corporate.jpg);"></span>
-                        </li>
-                        <li>
-                          <a class="dropdown-item" href="landing-insurance.html">
-                            Insurance Company
-                            <span class="text-danger fs-xs ms-2">New</span>
-                          </a>
-                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/insurance.jpg);"></span>
-                        </li>
-                        <li>
-                          <a class="dropdown-item" href="landing-business-consulting.html">Business Consulting</a>
-                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/business-consulting.jpg);"></span>
-                        </li>
-                        <li>
-                          <a class="dropdown-item" href="landing-coworking-space.html">Coworking Space</a>
-                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/coworking.jpg);"></span>
-                        </li>
-                        <li>
-                          <a class="dropdown-item" href="landing-yoga-studio.html">Yoga Studio</a>
-                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/yoga-studio.jpg);"></span>
-                        </li>
-                        <li>
-                          <a class="dropdown-item" href="landing-influencer.html">Influencer</a>
-                          <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/influencer.jpg);"></span>
-                        </li>
-                        <li>
-                          <a class="dropdown-item" href="landing-blog.html">Blog Homepage</a>
+                          <a class="dropdown-item disabled" href="/">Blog Showcase</a>
                           <span class="mega-dropdown-column position-absolute top-0 end-0 h-100 bg-size-cover bg-repeat-0 z-2 opacity-0" style="background-image: url(assets/img/megamenu/blog-homepage.jpg);"></span>
                         </li>
                       </ul>
@@ -186,91 +129,41 @@
                   <li class="dropdown">
                     <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Blogs</a>
                     <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="/blogs">Showcase</a></li>
+                      <li><a class="dropdown-item disabled" href="/blogs">Showcase</a></li>
                       <li><a class="dropdown-item" href="/blogs/browse">Browse</a></li>
                     </ul>
                   </li>
                   <li class="dropdown">
-                    <a class="dropdown-item dropdown-toggle" href="/studio" data-bs-toggle="dropdown" aria-expanded="false">Studio</a>
+                    <a class="dropdown-item dropdown-toggle disabled" href="/music" data-bs-toggle="dropdown" aria-expanded="false">Music</a>
                     <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="shop-catalog.html">Showcase</a></li>
-                      <li><a class="dropdown-item" href="shop-single.html">Music</a></li>
-                      <li><a class="dropdown-item" href="shop-checkout.html">Singles</a></li>
-                      <li><a class="dropdown-item" href="shop-checkout.html">Albums</a></li>
-                      <li><a class="dropdown-item" href="shop-checkout.html">Features</a></li>
+                      <li><a class="dropdown-item disabled" href="">Showcase</a></li>
+                      <li><a class="dropdown-item disabled" href="">Music</a></li>
+                      <li><a class="dropdown-item disabled" href="">Singles</a></li>
+                      <li><a class="dropdown-item disabled" href="">Albums</a></li>
+                      <li><a class="dropdown-item disabled" href="">Features</a></li>
                     </ul>
                   </li>
                   <li class="dropdown">
-                    <a class="dropdown-item dropdown-toggle" href="/resources" data-bs-toggle="dropdown" aria-expanded="false">Resources</a>
+                    <a class="dropdown-item dropdown-toggle disabled" href="/studio" data-bs-toggle="dropdown" aria-expanded="false">Studio</a>
                     <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="blog-grid-sidebar.html">Graphics</a></li>
-                      <li><a class="dropdown-item" href="blog-grid.html">Lightroom Presets</a></li>
-                      <li><a class="dropdown-item" href="blog-list-sidebar.html">Sample Packs</a></li>
-                      <li><a class="dropdown-item" href="blog-list.html">Wallpapers</a></li>
+                      <li><a class="dropdown-item disabled" href="#">Graphics</a></li>
+                      <li><a class="dropdown-item disabled" href="#">Lightroom Presets</a></li>
+                      <li><a class="dropdown-item disabled" href="#">Sample Packs</a></li>
+                      <li><a class="dropdown-item disabled" href="#">Wallpapers</a></li>
                     </ul>
                   </li>
                   <li class="dropdown">
-                    <a class="dropdown-item dropdown-toggle" href="/docs" data-bs-toggle="dropdown" aria-expanded="false">About</a>
+                    <a class="dropdown-item dropdown-toggle disabled" href="/apps" data-bs-toggle="dropdown" aria-expanded="false">Apps</a>
                     <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="about-agency.html">About - Agency</a></li>
-                      <li><a class="dropdown-item" href="about-product.html">About - Product</a></li>
-                    </ul>
-                  </li>
-                  <li class="dropdown">
-                    <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Services</a>
-                    <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="services-v1.html">Services v.1</a></li>
-                      <li><a class="dropdown-item" href="services-v2.html">Services v.2</a></li>
-                      <li><a class="dropdown-item" href="services-v3.html">Services v.3</a></li>
-                    </ul>
-                  </li>
-                  <li><a class="dropdown-item" href="pricing.html">Pricing</a></li>
-                  <li class="dropdown">
-                    <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Contacts</a>
-                    <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="contacts-v1.html">Contacts v.1</a></li>
-                      <li><a class="dropdown-item" href="contacts-v2.html">Contacts v.2</a></li>
-                      <li><a class="dropdown-item" href="contacts-v3.html">Contacts v.3</a></li>
-                    </ul>
-                  </li>
-                  <li class="dropdown">
-                    <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Specialty Pages</a>
-                    <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="coming-soon-v1.html">Coming Soon v.1</a></li>
-                      <li><a class="dropdown-item" href="coming-soon-v2.html">Coming Soon v.2</a></li>
-                      <li><a class="dropdown-item" href="404-v1.html">404 Error v.1</a></li>
-                      <li><a class="dropdown-item" href="404-v2.html">404 Error v.2</a></li>
-                      <li><a class="dropdown-item" href="404-v3.html">404 Error v.3</a></li>
+                      <li><a class="dropdown-item disabled" href="#">Scrapers</a></li>
+                      <li><a class="dropdown-item disabled" href="#">Downloaders</a></li>
+                      <li><a class="dropdown-item disabled" href="#">HTML Utilities</a></li>
                     </ul>
                   </li>
                 </ul>
               </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle active" href="#" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">Account</a>
-                <ul class="dropdown-menu">
-                  <li class="dropdown">
-                    <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Auth pages</a>
-                    <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="account-signin.html">Sign In</a></li>
-                      <li><a class="dropdown-item" href="account-signup.html">Sign Up</a></li>
-                      <li><a class="dropdown-item" href="account-signinup.html">Sign In / Up</a></li>
-                      <li><a class="dropdown-item" href="account-password-recovery.html">Password Recovery</a></li>
-                    </ul>
-                  </li>
-                  <li><a class="dropdown-item" href="account-overview.html">Overview</a></li>
-                  <li><a class="dropdown-item" href="account-settings.html">Settings</a></li>
-                  <li><a class="dropdown-item" href="account-billing.html">Billing</a></li>
-                  <li><a class="dropdown-item" href="account-orders.html">Orders</a></li>
-                  <li><a class="dropdown-item" href="account-earnings.html">Earnings</a></li>
-                  <li><a class="dropdown-item" href="account-chat.html">Chat (Messages)</a></li>
-                  <li><a class="dropdown-item" href="account-favorites.html">Favorites (Wishlist)</a></li>
-                </ul>
-              </li>
               <li class="nav-item">
-                <a class="nav-link" href="components/typography.html">UI Kit</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="docs/getting-started.html">Docs</a>
+                <a class="nav-link" href="/about">About</a>
               </li>
 
               <!-- User signed in state. Account dropdown on screens > 576px -->
@@ -283,23 +176,11 @@
                   </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end my-1" >
-                    <h6 class="dropdown-header fs-xs fw-medium text-muted text-uppercase pb-1">@ViewData["role"]</h6>
-                    @if (ViewData["role"]?.ToString() == "guest")
-                    {
-                        <a class="dropdown-item next-link" href="/account/login"><i class="ai-user-check fs-lg opacity-70 me-2"></i>Log In</a>
-                    }
-                    @if (ViewData["role"]?.ToString() == "admin")
-                    {
-                        <a class="dropdown-item next-link" href="/admin"><i class="ai-settings fs-lg opacity-70 me-2"></i>Admin Panel</a>
-                    }
-
-                    @if (ViewData["role"]?.ToString() == "admin" || ViewData["role"]?.ToString() == "user")
-                    {
-                        <div class="dropdown-divider"></div>
                         <h6 class="dropdown-header fs-xs fw-medium text-muted text-uppercase pb-1">Account</h6>
                         <a class="dropdown-item next-link" href="/profile/"><i class="ai-user-check fs-lg opacity-70 me-2"></i>Profile</a>
                         <a class="dropdown-item" href="javascriptVoid(0)" data-bs-toggle="modal" data-bs-target="#modalLogout"><i class="ai-logout fs-lg opacity-70 me-2"></i>Log Out</a>
-                    }
+                       @* <h6 class="dropdown-header fs-xs fw-medium text-muted text-uppercase pb-1">Settings</h6>
+                        <div class="dropdown-divider"></div> *@
                 </div>
               </li>
             </ul>

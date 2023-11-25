@@ -50,4 +50,3 @@
         });
     });
 })();
-//# sourceMappingURL=theme-switcher.js.map

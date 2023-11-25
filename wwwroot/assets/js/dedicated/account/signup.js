@@ -105,4 +105,3 @@ const verifyDeets = function () {
 const redirect = () => {
     window.location.href = "/";
 };
-//# sourceMappingURL=signup.js.map

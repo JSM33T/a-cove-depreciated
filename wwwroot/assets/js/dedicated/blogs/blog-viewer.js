@@ -11,23 +11,65 @@ import { acToast, acInit, classesToTags, acPostData, acFormHandler, acGetData } 
 const tokenele = document.querySelector('input[name="__RequestVerificationToken"]');
 const gl_slug = document.getElementById("ip_slug");
 const gl_tag = document.getElementById("ip_tags");
+const likeStat = document.getElementById("likesStat");
+const commentStat = document.getElementById("commentStat");
+const likeIcon = document.getElementById("likeIcon");
+const likeBtn = document.getElementById("likeBtn");
 const token = tokenele.value;
 const global_slug = gl_slug.value;
 const global_tags = gl_tag.value;
 acInit([
     loadTags,
     loadAuthors,
+    loadLikes,
+    isLiked,
+    () => likeBtn.addEventListener('click', addLike),
     () => classesToTags('img', 'rounded-3'),
-    () => acFormHandler('comment-form', addComment),
+    () => acFormHandler('comment-form', addComment)
 ]);
+function isLiked() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const data = {
+            slug: global_slug
+        };
+        const isliked = yield acPostData('/api/blog/likestat', data);
+        const isBlogLiked = isliked.data;
+        if (isliked.type == "ok") {
+            if (isBlogLiked == true) {
+                likeIcon.classList.remove("ai-heart");
+                likeIcon.classList.add("ai-heart-filled");
+            }
+            else {
+                likeIcon.classList.remove("ai-heart-filled");
+                likeIcon.classList.add("ai-heart");
+            }
+        }
+        else {
+            console.log("notliked + error");
+        }
+    });
+}
 function loadLikes() {
-    const likes = document.getElementById("likes");
-    axios.get('/api/blog/' + global_slug + '/likes')
-        .then(response => {
-        likes.innerHTML = response.data;
-    })
-        .catch(error => {
-        likes.innerHTML = "0";
+    return __awaiter(this, void 0, void 0, function* () {
+        const likes = yield acGetData('/api/blog/' + global_slug + '/likes');
+        console.log(likes);
+        if (likes.type == "ok") {
+            likeStat.innerHTML = likes.data;
+        }
+        else {
+            likeStat.innerHTML = "0";
+        }
+    });
+}
+function addLike() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const likedata = {
+            Slug: global_slug,
+        };
+        const resp = yield acPostData('/api/blog/addlike', likedata);
+        console.log(resp);
+        loadLikes();
+        isLiked();
     });
 }
 function loadAuthors() {
@@ -109,4 +151,3 @@ function loadTags() {
 function injectClasses() {
     classesToTags('img', 'rounded-3');
 }
-//# sourceMappingURL=blog-viewer.js.map

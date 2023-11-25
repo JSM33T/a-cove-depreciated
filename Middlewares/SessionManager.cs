@@ -8,13 +8,14 @@ namespace almondCove.Middlewares
     {
         private readonly RequestDelegate _next;
         private readonly IConfigManager _configManager;
-        private readonly ILogger<SessionManager> _logger;
+        //private readonly ILogger<SessionManager> _logger;
 
-        public SessionManager(RequestDelegate next,IConfigManager configManager,ILogger<SessionManager> logger )
+        //public SessionManager(RequestDelegate next,IConfigManager configManager,ILogger<SessionManager> logger )
+        public SessionManager(RequestDelegate next, IConfigManager configManager)
         {
             _next = next;
             _configManager = configManager;
-            _logger = logger;
+          //  _logger = logger;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -51,7 +52,6 @@ namespace almondCove.Middlewares
                         context.Session.SetString("avatar", avatar.ToString());
                     }
                 }
-
             }
             else
             {

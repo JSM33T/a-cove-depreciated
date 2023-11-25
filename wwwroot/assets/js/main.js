@@ -40,4 +40,3 @@ function livesearch() {
         searchStat.innerHTML = 'Search';
     }
 }
-//# sourceMappingURL=main.js.map

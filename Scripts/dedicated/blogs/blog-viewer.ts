@@ -1,12 +1,19 @@
-﻿import { acToast,acInit  ,classesToTags, acPostData, acFormHandler, acGetData} from '../../global.js'
-declare const axios: { get: (arg0: string) => Promise<any>; };
+﻿import { acToast, acInit ,classesToTags, acPostData, acFormHandler, acGetData} from '../../global.js'
 
-
-const tokenele = document.querySelector('input[name="__RequestVerificationToken"]') as HTMLInputElement;
 const gl_slug = document.getElementById("ip_slug") as HTMLInputElement;
 const gl_tag = document.getElementById("ip_tags") as HTMLInputElement;
 
-const token = tokenele.value;
+const likeStat = document.getElementById("likesStat") as HTMLElement;
+const commentStat = document.getElementById("commentStat") as HTMLElement;
+const likeIcon = document.getElementById("likeIcon") as HTMLElement;
+const likeBtn = document.getElementById("likeBtn") as HTMLButtonElement;
+
+//comment props
+//reply props
+//delete props
+
+
+
 const global_slug = gl_slug.value;
 const global_tags = gl_tag.value;
 
@@ -14,89 +21,72 @@ const global_tags = gl_tag.value;
 acInit([
     loadTags,
     loadAuthors,
-    //add desired classes to markdown
+    loadLikes,
+    isLiked,
+    () =>  likeBtn.addEventListener('click', addLike),
     () => classesToTags('img', 'rounded-3'),
-    //assign addcomment method as default submit action of comment form
-    () => acFormHandler('comment-form', addComment),
+    () => acFormHandler('comment-form', addComment)
 ]);
  
 
-//function isLiked() {
+//check if the article is likes or not and append <i> tag's class
+async function isLiked() {
 
-//    //check if its likes by the logged in user
-//    const data = {
-//        slug: global_slug
-//    };
-//    axios.post('/api/blog/likestat', data, token)
-//        .then(response => {
-//            const isBlogLiked = response.data;
-//            if (isBlogLiked == true) {
-//                cls.value = "-filled";
-//            }
-//            else {
-//                cls.value = "";
-//            }
-//        })
-//        .catch(error => {
-//            console.log(error.response);
-//        });
-//}
+   //check if its likes by the logged in user
+   const data = {
+       slug: global_slug
+   };
 
-function loadLikes() {
-    const likes = document.getElementById("likes") as HTMLElement;
-    //get no of likes
-    axios.get('/api/blog/' + global_slug + '/likes')
-        .then(response => {
-            likes.innerHTML = response.data;
-        })
-        .catch(error => {
-            likes.innerHTML = "0";
-        });
+const isliked = await acPostData('/api/blog/likestat',data)
+    const isBlogLiked = isliked.data;
+    if(isliked.type == "ok")
+    {
+        if (isBlogLiked == true) {
+            likeIcon.classList.remove("ai-heart");
+            likeIcon.classList.add("ai-heart-filled");
+        }
+        else {
+            likeIcon.classList.remove("ai-heart-filled");
+            likeIcon.classList.add("ai-heart");
+        }
+    }
+    else{
+        console.log("notliked + error");
+    }
+          
 }
 
-//function addLike() {
+//load no of liekes
+async function loadLikes() {
+    //get no of likes
 
-//    //add a like
-//    if (cls.value == "") {
-//        cls.value = "-filled";
-//    }
-//    else {
-//        cls.value = "";
-//    }
-//    const likedata = {
-//        Slug: global_slug,
-//    }
-//    axios.post('/api/blog/addlike', likedata)
-//        .then(response => {
-//            console.log(response.data);
-//            loadLikes();
-//            isLiked();
+    const likes = await acGetData('/api/blog/' + global_slug + '/likes');
+    console.log(likes);
 
-//        })
-//        .catch(error => {
-//            cls.value = "";
-//        });
-//}
+    if(likes.type == "ok"){
+        likeStat.innerHTML = likes.data;
+    }
+    else{
+        likeStat.innerHTML = "0";
+    }
 
-// function loadAuthors() {
-//     axios.get('/api/blog/' + global_slug + '/authors')
-//         .then(response => {
-//             const data = response.data;
-//             var authorsdat = "";
-//             var authorsdat = "";
-//             if (data.length != 0) {
-//                 for (var i = 0; i < data.length; i++) {
-//                     authorsdat = authorsdat + '<a href="/author/' + data[i].userName + '" class="no-decor">' + data[i].firstName + ' ' + data[i].lastName + '</a>, ';
-//                 }
-//                 document.getElementById('authorsPlaceholder')!.innerHTML = authorsdat.slice(0, authorsdat.lastIndexOf(',')) + authorsdat.slice(authorsdat.lastIndexOf(',') + 1);
-//             }
-//         })
-//         .catch(error => {
-//             console.error('Error:', error);
-//             document.getElementById('authorsPlaceholder')!.innerHTML = "unable to fetch authors' data";
-//         });
-// }
+           
+ 
+}
 
+//add/remove like
+async function addLike() {
+    const likedata = {
+        Slug: global_slug,
+    }
+    const resp = await acPostData('/api/blog/addlike', likedata);
+    console.log(resp);
+
+    loadLikes();
+    isLiked();
+}
+
+//split and arrange authors from blog-model's author property
 async function loadAuthors() {
     const apiUrl = '/api/blog/' + global_slug + '/authors';
 
@@ -115,15 +105,15 @@ async function loadAuthors() {
             }
         } else {
             console.error('Error:', response.data);
-            document.getElementById('authorsPlaceholder')!.innerHTML = "Unable to fetch authors' data";
+            document.getElementById('authorsPlaceholder')!.innerHTML = "--";
         }
     } catch (error) {
         console.error('Error:', error);
-        document.getElementById('authorsPlaceholder')!.innerHTML = "Something went wrong while fetching authors' data";
+        document.getElementById('authorsPlaceholder')!.innerHTML = "--";
     }
 }
 
-
+//add comment and refresh comment span
 async function addComment() {
    const blgcmnt = document.getElementById('blog_comment') as HTMLInputElement;
    if (blgcmnt.value.length < 2) {
@@ -185,11 +175,13 @@ async function addComment() {
    }
 }
 
+//load comment span
 async function loadComments(){
     console.log("comment load function called")
     acToast('check','comment added ig check db');
 }
 
+//load tags related to slug
 function loadTags() {
     var input = global_tags;
     var parts = input.split(',');
@@ -204,7 +196,3 @@ function loadTags() {
     document.getElementById('tagsPlaceholder')!.innerHTML = tags;
 }
 
-function injectClasses()
-{
-    classesToTags('img', 'rounded-3');
-}

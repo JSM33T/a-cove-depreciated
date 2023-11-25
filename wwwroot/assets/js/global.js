@@ -226,4 +226,3 @@ class Url {
     }
 }
 export { acInit, acTemplate, acSetEvent, acQueryParams, acClearParams, getQueryParameters, acGetData, acPostData, acFormHandler, validateEmail, classesToTags, getUrl, acToast, shareIt, Url };
-//# sourceMappingURL=global.js.map

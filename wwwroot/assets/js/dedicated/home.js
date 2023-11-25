@@ -93,4 +93,3 @@ function constructArticles(responsedata) {
         }
     });
 }
-//# sourceMappingURL=home.js.map

@@ -3,6 +3,7 @@ using almondCove.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Session;
 using Serilog;
+using WebMarkupMin.AspNetCore7;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSession(options =>
@@ -19,6 +20,24 @@ builder.Services.AddSingleton<IMailer, Mailer>();
 builder.Services.AddSingleton<ISqlService, SqlService>();
 
 
+//builder.Services.AddWebMarkupMin(options =>
+//{
+//    options.AllowMinificationInDevelopmentEnvironment = true;
+//    options.AllowCompressionInDevelopmentEnvironment = true;
+//})
+//.AddHtmlMinification(options =>
+//{
+//    options.MinificationSettings.RemoveRedundantAttributes = true;
+//    options.MinificationSettings.RemoveHttpProtocolFromAttributes = true;
+//    options.MinificationSettings.RemoveHttpsProtocolFromAttributes = true;
+//    options.MinificationSettings.PreserveNewLines = false;
+//    options.MinificationSettings.MinifyEmbeddedCssCode = true;
+//    options.MinificationSettings.RemoveHtmlComments = true;
+//    options.MinificationSettings.RemoveHtmlCommentsFromScriptsAndStyles = true;
+//    options.MinificationSettings.MinifyEmbeddedJsCode = true;
+//})
+//.AddXmlMinification()
+//.AddHttpCompression();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
        .AddCookie(options =>
@@ -32,7 +51,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 
 Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Information()
+                .MinimumLevel.Warning()
                 .WriteTo.Async(a =>
                     {
                         a.File("Logs/log.txt", rollingInterval: RollingInterval.Day);
@@ -57,6 +76,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<SessionMiddleware>();
+//app.UseWebMarkupMin();
 app.UseSession();
 app.UseHttpsRedirection();
 app.UseStaticFiles();

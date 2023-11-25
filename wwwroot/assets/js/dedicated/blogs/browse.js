@@ -278,4 +278,3 @@ const app = Vue.createApp({
 app.use(router);
 app.mount('#app');
 export {};
-//# sourceMappingURL=browse.js.map

@@ -467,7 +467,8 @@ namespace almondCove.Api
             }
             catch (Exception ex)
             {
-                // Log.Error("Error saving OTP to the database: " + ex.Message);
+                //static hence , look into it later
+               //_logger.LogError("Error saving OTP to the database: " + ex.Message);
                 return false;
             }
         }

@@ -16,6 +16,13 @@
     ViewData["HtmlProps"] = props;
     ViewData["MetaProps"] = meta;
 }
+
+
+@section Scripts{
+    <script src="~/assets/js/dedicated/profile/dashboard.js" type="module"></script>
+}
+
+@Html.AntiForgeryToken()
  <!-- Page container -->
       <div class="container py-5 mt-4 mt-lg-5 mb-lg-4 my-xl-5">
         <div class="row pt-sm-2 pt-lg-0">
@@ -34,24 +41,23 @@
                 <div class="d-flex align-items-center mt-sm-n1 pb-4 mb-0 mb-lg-1 mb-xl-3">
                   <i class="ai-user text-primary lead pe-1 me-2"></i>
                   <h2 class="h4 mb-0">Basic info</h2>
-                  <a class="btn btn-sm btn-secondary ms-auto" href="account-settings.html">
+                  <a class="btn btn-sm btn-secondary ms-auto" href="/profile/edit">
                     <i class="ai-edit ms-n1 me-2"></i>
                     Edit info
                   </a>
                 </div>
                 <div class="d-md-flex align-items-center">
                   <div class="d-sm-flex align-items-center">
-                    <div class="rounded-circle bg-size-cover bg-position-center flex-shrink-0" style="width: 80px; height: 80px; background-image: url(assets/img/avatar/02.jpg);"></div>
+                    <div id="avatarPlaceHolder" class="rounded-circle bg-size-cover bg-position-center flex-shrink-0" style="width: 80px; height: 80px; background-image: url(assets/img/avatar/02.jpg);"></div>
                     <div class="pt-3 pt-sm-0 ps-sm-3">
-                      <h3 class="h5 mb-2">Isabella Bocouse<i class="ai-circle-check-filled fs-base text-success ms-2"></i></h3>
+                      <h3 class="h5 mb-2"><span id="fullName"></span></h3>
                       <div class="text-body-secondary fw-medium d-flex flex-wrap flex-sm-nowrap align-iteems-center">
                         <div class="d-flex align-items-center me-3">
-                          <i class="ai-mail me-1"></i>
-                          email@example.com
+                          <span id="userName"></span>
                         </div>
                         <div class="d-flex align-items-center text-nowrap">
-                          <i class="ai-map-pin me-1"></i>
-                          USA, $
+                          <i class="ai-person me-1"></i>
+                          @Context.Session.GetString("role")
                         </div>
                       </div>
                     </div>
@@ -71,8 +77,8 @@
                     <table class="table mb-0">
                       <tbody>
                         <tr>
-                          <td class="border-0 text-body-secondary py-1 px-0">Phone</td>
-                          <td class="border-0 text-dark fw-medium py-1 ps-3">+1 234 567 890</td>
+                          <td class="border-0 text-body-secondary py-1 px-0">Email</td>
+                          <td class="border-0 text-dark fw-medium py-1 ps-3"> <span id="emailId"></span></td>
                         </tr>
                         <tr>
                           <td class="border-0 text-body-secondary py-1 px-0">Language</td>
@@ -80,11 +86,11 @@
                         </tr>
                         <tr>
                           <td class="border-0 text-body-secondary py-1 px-0">Gender</td>
-                          <td class="border-0 text-dark fw-medium py-1 ps-3">Female</td>
+                          <td class="border-0 text-dark fw-medium py-1 ps-3"><span id="gender"></span></td>
                         </tr>
                         <tr>
-                          <td class="border-0 text-body-secondary py-1 px-0">Communication</td>
-                          <td class="border-0 text-dark fw-medium py-1 ps-3">Mobile, email</td>
+                          <td class="border-0 text-body-secondary py-1 px-0">Bio</td>
+                          <td class="border-0 text-dark fw-medium py-1 ps-3"><span id="bio"></span></td>
                         </tr>
                       </tbody>
                     </table>
@@ -92,8 +98,9 @@
                   <div class="col-md-6 d-md-flex justify-content-end">
                     <div class="w-100 border rounded-3 p-4" style="max-width: 212px;">
                       <img class="d-block mb-2" src="assets/img/account/gift-icon.svg" width="24" alt="Gift icon">
-                      <h4 class="h5 lh-base mb-0">123 bonuses</h4>
-                      <p class="fs-sm text-body-secondary mb-0">1 bonus = $1</p>
+                      <p class="fs-sm text-body-secondary mb-0">Date Joined:</p>
+                      <h4 class="h5 lh-base mb-0"><span id="dateJoined"></span></h4>
+                      
                     </div>
                   </div>
                 </div>

@@ -27,7 +27,7 @@ Gong Yoo, Dong Wook Lee, Kim Go-eun, Yoo In-na
 
 IMDB : 8.6 / 10
 
-<div class="card border-0 bg-secondary mb-3">
+<div class="card border-0 bg-gray mb-3">
     <div class="card-body">
         <figure>
             <blockquote class="blockquote">
@@ -67,7 +67,7 @@ Jun Ji-hyun, Lee Min-ho, Shin Won-ho, Shin Hye-sun
 
 IMDB : 8.1 / 10
 
-<div class="card border-0 bg-secondary mb-3">
+<div class="card border-0 bg-gray mb-3">
     <div class="card-body">
         <figure>
             <blockquote class="blockquote">
@@ -108,7 +108,7 @@ Song Joong-ki, Jeon Yeo-been
 IMDB : 8.4 / 10
 
 
-<div class="card border-0 bg-secondary mb-3">
+<div class="card border-0 bg-gray mb-3">
     <div class="card-body">
         <figure>
             <blockquote class="blockquote">
@@ -150,7 +150,7 @@ Hyun Bin, Son Ye-jin
 IMDB : 8.7 / 10
 
 
-<div class="card border-0 bg-secondary mb-3">
+<div class="card border-0 bg-gray mb-3">
     <div class="card-body">
         <figure>
             <blockquote class="blockquote">
@@ -195,7 +195,7 @@ Seo Yea-ji,Kim Soo-hyun, Oh Jung-se
 IMDB : 8.4 / 10
 
 
-<div class="card border-0 bg-secondary mb-3">
+<div class="card border-0 bg-gray mb-3">
     <div class="card-body">
         <figure>
             <blockquote class="blockquote">

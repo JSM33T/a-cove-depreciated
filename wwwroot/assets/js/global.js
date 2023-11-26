@@ -136,6 +136,33 @@ function getQueryParameters() {
     }
     return params;
 }
+function prettifyDate(inputDate) {
+    const dateParts = inputDate.split('-');
+    const year = parseInt(dateParts[0]);
+    const month = parseInt(dateParts[1]);
+    const day = parseInt(dateParts[2]);
+    const inputDateTime = new Date(year, month - 1, day);
+    const currentDate = new Date();
+    const currentDateTime = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+    const timeDifference = currentDateTime.getTime() - inputDateTime.getTime();
+    const dayDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    if (dayDifference === 0) {
+        return 'Today';
+    }
+    else if (dayDifference === 1) {
+        return 'Yesterday';
+    }
+    else if (dayDifference <= 7) {
+        return 'This week';
+    }
+    else if (dayDifference <= 30) {
+        return `${dayDifference} days ago`;
+    }
+    else {
+        const options = { day: 'numeric', month: 'long', year: 'numeric' };
+        return inputDateTime.toLocaleDateString('en-US', options);
+    }
+}
 function acToast(type, message) {
     let toastContainer = document.getElementById('toast-container');
     const toastElement = document.createElement('div');
@@ -224,4 +251,4 @@ class Url {
         return this.urlObject.href;
     }
 }
-export { acInit, acTemplate, acSetEvent, acQueryParams, acClearParams, getQueryParameters, acGetData, acPostData, acFormHandler, validateEmail, classesToTags, getUrl, acToast, shareIt, Url };
+export { acInit, acTemplate, acSetEvent, acQueryParams, acClearParams, getQueryParameters, acGetData, acPostData, acFormHandler, validateEmail, classesToTags, prettifyDate, getUrl, acToast, shareIt, Url };

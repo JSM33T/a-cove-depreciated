@@ -20,24 +20,24 @@ builder.Services.AddSingleton<IMailer, Mailer>();
 builder.Services.AddSingleton<ISqlService, SqlService>();
 
 
-//builder.Services.AddWebMarkupMin(options =>
-//{
-//    options.AllowMinificationInDevelopmentEnvironment = true;
-//    options.AllowCompressionInDevelopmentEnvironment = true;
-//})
-//.AddHtmlMinification(options =>
-//{
-//    options.MinificationSettings.RemoveRedundantAttributes = true;
-//    options.MinificationSettings.RemoveHttpProtocolFromAttributes = true;
-//    options.MinificationSettings.RemoveHttpsProtocolFromAttributes = true;
-//    options.MinificationSettings.PreserveNewLines = false;
-//    options.MinificationSettings.MinifyEmbeddedCssCode = true;
-//    options.MinificationSettings.RemoveHtmlComments = true;
-//    options.MinificationSettings.RemoveHtmlCommentsFromScriptsAndStyles = true;
-//    options.MinificationSettings.MinifyEmbeddedJsCode = true;
-//})
-//.AddXmlMinification()
-//.AddHttpCompression();
+builder.Services.AddWebMarkupMin(options =>
+{
+    options.AllowMinificationInDevelopmentEnvironment = false;
+    options.AllowCompressionInDevelopmentEnvironment = false;
+})
+.AddHtmlMinification(options =>
+{
+    options.MinificationSettings.RemoveRedundantAttributes = true;
+    options.MinificationSettings.RemoveHttpProtocolFromAttributes = true;
+    options.MinificationSettings.RemoveHttpsProtocolFromAttributes = true;
+    options.MinificationSettings.PreserveNewLines = true;
+    options.MinificationSettings.MinifyEmbeddedCssCode = true;
+    options.MinificationSettings.RemoveHtmlComments = true;
+    options.MinificationSettings.RemoveHtmlCommentsFromScriptsAndStyles = true;
+    options.MinificationSettings.MinifyEmbeddedJsCode = true;
+})
+.AddXmlMinification()
+.AddHttpCompression();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
        .AddCookie(options =>
@@ -51,7 +51,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 
 Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Warning()
+                .MinimumLevel.Information()
                 .WriteTo.Async(a =>
                     {
                         a.File("Logs/log.txt", rollingInterval: RollingInterval.Day);
@@ -80,9 +80,7 @@ app.UseMiddleware<SessionMiddleware>();
 app.UseSession();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseAuthorization();
 app.UseCookieCheckMiddleware();
 app.MapControllerRoute(

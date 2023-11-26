@@ -24,6 +24,12 @@ namespace almondCove.Controllers
             return View("Views/Account/SignUp.cshtml");
         }
 
+        [Route("/account/recover-account")]
+        public IActionResult AccountRecovery()
+        {
+            return View("Views/Account/AccountRecovery.cshtml");
+        }
+
         [Route("/account/logout")]
         public void LogOut()
         {

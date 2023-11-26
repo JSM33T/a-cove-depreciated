@@ -27,6 +27,12 @@ namespace almondCove.Api
         public string OTP { get; set; }
     }
 
+    public class Recovery
+    {
+        [Required]
+        public string UserName { get; set; }
+    }
+
     [Route("api/auth")]
     [ApiController]
     public class AuthApiController : ControllerBase
@@ -269,26 +275,71 @@ namespace almondCove.Api
             }
         }
 
+        //[HttpPost]
+        //[Route("/api/user/verification")]
+        //[IgnoreAntiforgeryToken]
+        //public async Task<IActionResult> UserVerification([FromBody] Verify verify)
+        //{
+        //    string connectionString = _configManager.GetConnString();
+        //    using SqlConnection connection = new(connectionString);
+
+        //    try
+        //    {
+        //        await connection.OpenAsync();
+        //        SqlCommand checkcmd = new("select IsVerified from TblUserProfile where Username ='" + verify.UserName + "' and OTP ='" + verify.OTP + "'", connection);
+        //        var Stat = await checkcmd.ExecuteScalarAsync();
+        //        if (Stat != null && Stat is bool statValue)
+        //        {
+
+        //            if (!statValue)
+        //            {
+        //                SqlCommand activatecmd = new("UPDATE TblUserProfile SET IsVerified = 1 where UserName ='" + verify.UserName + "' ", connection);
+        //                await activatecmd.ExecuteNonQueryAsync();
+        //                return Ok("User Verified!!");
+        //            }
+        //            else
+        //            {
+        //                return BadRequest("User already verified");
+        //            }
+        //        }
+        //        else
+        //        {
+        //            return BadRequest("Something Went wrong");
+        //        }
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Log.Error("Error veryfying user : " + ex.Message.ToString() );
+        //        return BadRequest("Error veryfying user");
+
+        //    }
+        //}
+
         [HttpPost]
         [Route("/api/user/verification")]
         [IgnoreAntiforgeryToken]
         public async Task<IActionResult> UserVerification([FromBody] Verify verify)
         {
-            string connectionString = _configManager.GetConnString();
-            using SqlConnection connection = new(connectionString);
-
             try
             {
+                using SqlConnection connection = new(_configManager.GetConnString());
                 await connection.OpenAsync();
-                SqlCommand checkcmd = new("select IsVerified from TblUserProfile where Username ='" + verify.UserName + "' and OTP ='" + verify.OTP + "'", connection);
-                var Stat = await checkcmd.ExecuteScalarAsync();
-                if (Stat != null && Stat is bool statValue)
-                {
 
-                    if (!statValue)
+                SqlCommand checkCmd = new("SELECT IsVerified FROM TblUserProfile WHERE Username = @Username AND OTP = @OTP", connection);
+                checkCmd.Parameters.AddWithValue("@Username", verify.UserName);
+                checkCmd.Parameters.AddWithValue("@OTP", verify.OTP);
+
+                var isVerified = await checkCmd.ExecuteScalarAsync() as bool?;
+
+                if (isVerified.HasValue)
+                {
+                    if (!isVerified.Value)
                     {
-                        SqlCommand activatecmd = new("UPDATE TblUserProfile SET IsVerified = 1 where UserName ='" + verify.UserName + "' ", connection);
-                        await activatecmd.ExecuteNonQueryAsync();
+                        SqlCommand activateCmd = new("UPDATE TblUserProfile SET IsVerified = 1 WHERE UserName = @Username", connection);
+                        activateCmd.Parameters.AddWithValue("@Username", verify.UserName);
+
+                        await activateCmd.ExecuteNonQueryAsync();
                         return Ok("User Verified!!");
                     }
                     else
@@ -298,16 +349,192 @@ namespace almondCove.Api
                 }
                 else
                 {
-                    return BadRequest("Something Went wrong");
+                    return BadRequest("Invalid Username or OTP");
                 }
-
             }
             catch (Exception ex)
             {
-                // Log.Error("Error veryfying user : " + ex.Message.ToString() );
-                return BadRequest("Error veryfying user");
-
+                
+                _logger.LogError("Error verifying a user err message:{message}", ex.Message);
+                return BadRequest("Error verifying user");
             }
+        }
+
+        [HttpPost]
+        [Route("/api/account/recover")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RecoverAccount([FromBody] Recovery recovery)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Invalid Username/Email!!");
+            }
+
+            try
+            {
+                using SqlConnection connection = new(_configManager.GetConnString());
+                await connection.OpenAsync();
+
+                // Check if a user exists with the provided username or email
+                var user = await GetUserByUsernameOrEmailAsync(connection, recovery.UserName);
+
+                if (user != null)
+                {
+                    var userId = user.Id;
+                    var username = user.UserName;
+                    var userEmail = user.EMail;
+                    var secret = StringProcessors.GenerateRandomString(10);
+                    var otp = OTPGenerator.GenerateOTP(secret);
+                    var subject = "Recover Your Account | AlmondCove";
+
+                    // Send OTP via email
+                    string body = "<h1>Hey there,</h1><br> This is for the recovery of your account \"<b>" + userEmail + "</b>\" . Your OTP is: <b>" + otp + "</b> which is valid for 30 minutes. You can use this OTP to reset your password.";
+                    //trigger mail with the otp
+                    bool otpSent = _mailer.SendEmailAsync(userEmail, subject, body);
+                    //bool otpSent = true; // for testing without triggering mail
+                    
+                    if (otpSent == true)
+                    {
+                        // Save OTP in the database
+                        var saved = await SaveOTPInDatabaseAsync(connection, userId, otp);
+
+                        if (saved)
+                        {
+                            _logger.LogInformation(otp);
+                            return Ok("OTP sent to your email. Please enter the OTP to login.");
+                        }
+                        else
+                        {
+                            // Log the error
+                            // Log.Error("Error while saving OTP to the database.");
+                            return BadRequest("Something went wrong.");
+                        }
+                    }
+                    else
+                    {
+                        // Log the error
+                        // Log.Error("Unable to send mail.");
+                        return BadRequest("Unable to send mail.");
+                    }
+                }
+                else
+                {
+                    await connection.CloseAsync();
+                    return BadRequest("No record found with the given username/email.");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error recovering account for  {user} {message} ",recovery.UserName ,ex.Message);
+                return BadRequest("Something went wrong.");
+            }
+        }
+
+        private async Task<UserProfile> GetUserByUsernameOrEmailAsync(SqlConnection connection, string usernameOrEmail)
+        {
+            var sql = "SELECT * FROM TblUserProfile WHERE UserName = @username OR EMail = @username";
+            using var command = new SqlCommand(sql, connection);
+            command.Parameters.AddWithValue("@username", usernameOrEmail);
+            using var reader = await command.ExecuteReaderAsync();
+
+            return await reader.ReadAsync()
+                ? new UserProfile
+                {
+                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                    UserName = reader.GetString(reader.GetOrdinal("UserName")),
+                    EMail = reader.GetString(reader.GetOrdinal("EMail"))
+                }
+                : null;
+        }
+
+        private static async Task<bool> SaveOTPInDatabaseAsync(SqlConnection connection, int userId, string otp)
+        {
+            try
+            {
+                var maxIdCommand = new SqlCommand("SELECT ISNULL(MAX(Id), 0) + 1 FROM TblPasswordReset", connection);
+                int newId = Convert.ToInt32(await maxIdCommand.ExecuteScalarAsync());
+
+                var cmd = new SqlCommand("INSERT INTO TblPasswordReset (Id, UserId, Token, DateAdded, IsValid) VALUES (@id, @userid, @token, @dateadded, @isvalid)", connection);
+                cmd.Parameters.AddWithValue("@id", newId);
+                cmd.Parameters.AddWithValue("@userid", userId);
+                cmd.Parameters.AddWithValue("@token", otp);
+                cmd.Parameters.AddWithValue("@isvalid", true);
+                cmd.Parameters.Add("@dateadded", SqlDbType.DateTime).Value = DateTime.Now;
+
+                await cmd.ExecuteNonQueryAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Log.Error("Error saving OTP to the database: " + ex.Message);
+                return false;
+            }
+        }
+        [HttpPost]
+        [Route("/api/account/loginviaotp")]
+        [IgnoreAntiforgeryToken]
+        public IActionResult LogInViaOtp([FromBody] Verify verify)
+        {
+            try
+            {
+                using SqlConnection connection = new(_configManager.GetConnString());
+                connection.Open();
+
+                SqlCommand checkOTP = new("SELECT * FROM TblPasswordReset WHERE Token = @otp", connection);
+                checkOTP.Parameters.AddWithValue("@otp", verify.OTP);
+
+                using SqlDataReader readera = checkOTP.ExecuteReader();
+                string currUserId = "";
+
+                if (readera.Read())
+                {
+                    currUserId = readera.GetInt32(readera.GetOrdinal("UserId")).ToString();
+                }
+                else
+                { currUserId = ""; };
+                readera.Close();
+                SqlCommand checkcommand = new("select p.*,a.Image " +
+                   "from TblUserProfile p,TblAvatarMaster a " +
+                   "where p.Id = @id " +
+                   "and p.IsActive= 1 " +
+                   "and p.IsVerified = 1 " +
+                   "and p.AvatarId = a.Id", connection);
+                checkcommand.Parameters.AddWithValue("@id", currUserId);
+                using var reader = checkcommand.ExecuteReader();
+                if (reader.Read())
+                {
+                    var username = reader.GetString(reader.GetOrdinal("UserName"));
+                    var user_id = reader.GetInt32(reader.GetOrdinal("Id"));
+                    var firstname = reader.GetString(reader.GetOrdinal("FirstName"));
+                    var fullname = reader.GetString(reader.GetOrdinal("FirstName")) + " " + reader.GetString(reader.GetOrdinal("LastName"));
+                    var role = reader.GetString(reader.GetOrdinal("Role"));
+                    var avatar = reader.GetString(reader.GetOrdinal("Image"));
+                    //set session
+                    HttpContext.Session.SetString("user_id", user_id.ToString());
+                    HttpContext.Session.SetString("username", username);
+                    HttpContext.Session.SetString("first_name", firstname);
+                    HttpContext.Session.SetString("role", role);
+                    HttpContext.Session.SetString("fullname", fullname);
+                    HttpContext.Session.SetString("avatar", avatar.ToString());
+                    connection.Close();
+                    return Ok("logging in...");
+
+                }
+                else
+                {
+                    connection.Close();
+                    return BadRequest("Invalid/Expired Otp");
+                }
+            }
+            catch (Exception ex2)
+            {
+                _logger.LogError("login via OTP failed msg: {errmsg}",ex2.Message.ToString());
+                return BadRequest("Something went wrong");
+            }
+
+
+
         }
     }
 }

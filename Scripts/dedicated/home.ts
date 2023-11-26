@@ -11,8 +11,6 @@ acInit([
 
 
 async function formSubmitEvent() {
-    
-
     mailForm.addEventListener('submit', async function (event) {
         event.preventDefault();
 

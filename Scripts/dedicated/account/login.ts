@@ -1,5 +1,4 @@
-﻿import { User } from '../../Interfaces/user.interface.js';
-import { acToast, acPostData, acFormHandler, acInit } from '../../global.js';
+﻿import { acToast, acPostData, acFormHandler, acInit } from '../../global.js';
 
 const userNameInput = document.getElementById('userName') as HTMLInputElement;
 const passwordInput = document.getElementById('password') as HTMLInputElement;
@@ -36,6 +35,7 @@ async function postToLoginApi(username: string, password: string) {
         acToast(response.type, response.data);
         if (response.type === "ok") {
             submitBtn.innerHTML = "Logging in...";
+            submitBtn.classList.add('pe-none');
             const lastLink: string | null = localStorage.getItem("curr_link");
             if (lastLink) {
                 window.location.href = lastLink;
@@ -52,5 +52,6 @@ async function postToLoginApi(username: string, password: string) {
         acToast('error', 'Something went wrong');
     } finally {
         submitBtn.innerHTML = "Log In";
+        submitBtn.classList.remove('pe-none');
     }
 }

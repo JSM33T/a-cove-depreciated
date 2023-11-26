@@ -212,6 +212,34 @@ function getQueryParameters() {
 }
 
 
+function prettifyDate(inputDate: string): string {
+    const dateParts = inputDate.split('-');
+    const year = parseInt(dateParts[0]);
+    const month = parseInt(dateParts[1]);
+    const day = parseInt(dateParts[2]);
+    const inputDateTime = new Date(year, month - 1, day);
+
+    const currentDate = new Date();
+    const currentDateTime = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+
+    const timeDifference = currentDateTime.getTime() - inputDateTime.getTime();
+    const dayDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+    if (dayDifference === 0) {
+        return 'Today';
+    } else if (dayDifference === 1) {
+        return 'Yesterday';
+    } else if (dayDifference <= 7) {
+        return 'This week';
+    } else if (dayDifference <= 30) {
+        return `${dayDifference} days ago`;
+    } else {
+        const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
+        return inputDateTime.toLocaleDateString('en-US', options);
+    }
+}
+
+
 //============global ac methods=============
 
 
@@ -243,13 +271,12 @@ function acToast(type: string, message: string) {
     // Close button with data-bs-dismiss attribute
     const closeBtn = document.createElement('button');
     closeBtn.type = 'button';
-    closeBtn.classList.add('btn-close', 'btn-close-white', 'ms-2');
+    closeBtn.classList.add('btn-close', 'btn-close-white', 'ms-auto');
     closeBtn.setAttribute('data-dismiss', 'toast');
     closeBtn.setAttribute('aria-label', 'Close');
     closeBtn.setAttribute('data-bs-dismiss', 'toast'); // This line closes modals
-    closeBtn.innerHTML = '<span aria-hidden="true">&times;</span>';
+   // closeBtn.innerHTML = '<span aria-hidden="true">&times;</span>';
     toastHeader.appendChild(closeBtn);
-
     // Create toast body
     const toastBody = document.createElement('div');
     toastBody.classList.add('toast-body');
@@ -368,7 +395,9 @@ export {
 
     validateEmail, // email validation
     classesToTags, // add classes to all the tags passed as params
-    
+
+    prettifyDate,// prettify date wrt today.  (today , yesterday, 3 days ago, 23rd of july etc.)
+
     getUrl, //get current url parameters
     acToast, // toast ('type','message')
     shareIt, // share logic (ID)

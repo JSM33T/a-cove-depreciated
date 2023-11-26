@@ -39,10 +39,10 @@ const submitLoginForm = function () {
             acToast("error", "Username too short");
         }
         else if (pWord.value.length <= 6) {
-            acToast('error', 'password should be atleast 6 characters long');
+            acToast('error', 'Password should be atleast 6 characters long');
         }
         else if (pWordConfirm.value != pWord.value) {
-            acToast('error', 'passwords dont match');
+            acToast('error', 'Passwords dont match');
         }
         else {
             postToSignUpApi(signupdata);
@@ -52,7 +52,8 @@ const submitLoginForm = function () {
 function postToSignUpApi(signupdata) {
     return __awaiter(this, void 0, void 0, function* () {
         const apiUrl = '/api/account/signup';
-        signupBtn.innerHTML = "Loading...";
+        signupBtn.innerHTML = "Wait...";
+        signupBtn.classList.add('pe-none');
         try {
             const response = yield acPostData(apiUrl, signupdata);
             acToast(response.type, response.data);
@@ -67,13 +68,15 @@ function postToSignUpApi(signupdata) {
         }
         finally {
             signupBtn.innerHTML = "Log In";
+            signupBtn.classList.remove('pe-none');
         }
     });
 }
 ;
 const verifyDeets = function () {
     return __awaiter(this, void 0, void 0, function* () {
-        otpSubmit.innerHTML = "loading...";
+        otpSubmit.innerHTML = "Wait...";
+        otpSubmit.classList.add('pe-none');
         console.log(otpVal.value);
         console.log(userName.value);
         try {
@@ -99,9 +102,8 @@ const verifyDeets = function () {
         }
         finally {
             otpSubmit.innerHTML = "Verify";
+            otpSubmit.classList.remove('pe-none');
         }
     });
 };
-const redirect = () => {
-    window.location.href = "/";
-};
+const redirect = () => window.location.href = "/";

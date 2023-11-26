@@ -27,12 +27,13 @@ namespace almondCove.Middlewares
                     context.Request.Cookies.TryGetValue("SessionKey", out string cookieValue);
                     using SqlConnection connection = new(_configManager.GetConnString());
                     await connection.OpenAsync();
-                    SqlCommand checkcommand = new("select p.*,a.Image " +
-                        "from TblUserProfile p,TblAvatarMaster a " +
-                        "WHERE SessionKey = @sessionkey" +
-                        " and p.IsActive= 1 " +
-                        " and p.IsVerified = 1 " +
-                        " and p.AvatarId = a.Id", connection);
+                    SqlCommand checkcommand = new(
+                        @"select p.*,a.Image 
+                        from TblUserProfile p,TblAvatarMaster a 
+                        WHERE SessionKey = @sessionkey
+                        and p.IsActive= 1
+                        and p.IsVerified = 1
+                        and p.AvatarId = a.Id " , connection);
                     checkcommand.Parameters.AddWithValue("@sessionkey", cookieValue);
                     using var reader = await checkcommand.ExecuteReaderAsync();
                     if (reader.Read())
@@ -55,19 +56,10 @@ namespace almondCove.Middlewares
             }
             else
             {
-                // // Log.Information("session active");
+                 // Log.Information("session active");
             }
 
             await _next(context);
         }
     }
-
-    // Extension method to add the middleware to the HTTP request pipeline
-    //public static class CookieCheckMiddlewareExtensions
-    //{
-    //    public static IApplicationBuilder UseCookieCheckMiddleware(this IApplicationBuilder builder)
-    //    {
-    //        return builder.UseMiddleware<SessionManager>();
-    //    }
-    //}
 }

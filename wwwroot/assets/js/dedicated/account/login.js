@@ -42,6 +42,7 @@ function postToLoginApi(username, password) {
             acToast(response.type, response.data);
             if (response.type === "ok") {
                 submitBtn.innerHTML = "Logging in...";
+                submitBtn.classList.add('pe-none');
                 const lastLink = localStorage.getItem("curr_link");
                 if (lastLink) {
                     window.location.href = lastLink;
@@ -60,6 +61,7 @@ function postToLoginApi(username, password) {
         }
         finally {
             submitBtn.innerHTML = "Log In";
+            submitBtn.classList.remove('pe-none');
         }
     });
 }

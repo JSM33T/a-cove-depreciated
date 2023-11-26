@@ -15,6 +15,7 @@ const otpSubmit = document.getElementById("submitOtp") as HTMLButtonElement;
 const otpVal = document.getElementById("otpVal") as HTMLInputElement; 
 
 acInit([
+        //override default form post action
         () => acFormHandler('signup-form', submitLoginForm),
         () => acFormHandler('otp-form', verifyDeets)
 ]);
@@ -34,9 +35,9 @@ const submitLoginForm = async function () {
         } else if (userName.value.length < 4) {
                 acToast("error", "Username too short");
         } else if (pWord.value.length <= 6) {
-                acToast('error', 'password should be atleast 6 characters long')
+                acToast('error', 'Password should be atleast 6 characters long')
         } else if (pWordConfirm.value != pWord.value) {
-                acToast('error', 'passwords dont match');
+                acToast('error', 'Passwords dont match');
         } else {
                 postToSignUpApi(signupdata);
         }
@@ -44,8 +45,8 @@ const submitLoginForm = async function () {
 
 async function postToSignUpApi(signupdata: any) {
         const apiUrl = '/api/account/signup';
-        signupBtn.innerHTML = "Loading...";
-
+        signupBtn.innerHTML = "Wait...";
+        signupBtn.classList.add('pe-none');    //prevent clickign till the response arrives
         try {
                 const response = await acPostData(apiUrl, signupdata);
                 acToast(response.type, response.data);
@@ -57,13 +58,15 @@ async function postToSignUpApi(signupdata: any) {
         } catch (error) {
                 console.error('Error during login:', error);
         } finally {
-                signupBtn.innerHTML = "Log In";
+            signupBtn.innerHTML = "Log In";
+            signupBtn.classList.remove('pe-none');
         }
 };
 
 const verifyDeets = async function () {
 
-        otpSubmit.innerHTML = "loading...";
+    otpSubmit.innerHTML = "Wait...";
+    otpSubmit.classList.add('pe-none');
         console.log(otpVal.value);
         console.log(userName.value);
 
@@ -87,10 +90,9 @@ const verifyDeets = async function () {
                 console.error('Error during login:', error);
                 acToast('error','something went wrong');
         } finally {
-                otpSubmit.innerHTML = "Verify";
+            otpSubmit.innerHTML = "Verify";
+            otpSubmit.classList.remove('pe-none');
         }
 };
 
-const redirect = () => {
-        window.location.href = "/";
-      };
+const redirect = () => window.location.href = "/";

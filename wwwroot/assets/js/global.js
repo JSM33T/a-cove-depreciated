@@ -152,11 +152,10 @@ function acToast(type, message) {
     toastHeader.appendChild(strong);
     const closeBtn = document.createElement('button');
     closeBtn.type = 'button';
-    closeBtn.classList.add('btn-close', 'btn-close-white', 'ms-2');
+    closeBtn.classList.add('btn-close', 'btn-close-white', 'ms-auto');
     closeBtn.setAttribute('data-dismiss', 'toast');
     closeBtn.setAttribute('aria-label', 'Close');
     closeBtn.setAttribute('data-bs-dismiss', 'toast');
-    closeBtn.innerHTML = '<span aria-hidden="true">&times;</span>';
     toastHeader.appendChild(closeBtn);
     const toastBody = document.createElement('div');
     toastBody.classList.add('toast-body');

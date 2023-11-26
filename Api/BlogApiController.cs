@@ -840,7 +840,7 @@ namespace almondCove.Api
                     command.Parameters.AddWithValue("@id", blogReply.ReplyId);
                     command.Parameters.AddWithValue("@user_id", HttpContext.Session.GetString("user_id"));
                     await command.ExecuteNonQueryAsync();
-                    return Ok("Commend deleted");
+                    return Ok("Reply deleted");
 
                 }
                 catch

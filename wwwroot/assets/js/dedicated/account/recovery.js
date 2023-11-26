@@ -9,51 +9,36 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import { acToast, acPostData, acFormHandler, acInit } from '../../global.js';
 const userNameInput = document.getElementById('userName');
-const passwordInput = document.getElementById('password');
-const submitBtn = document.getElementById('submitBtn');
+const submitBtn = document.getElementById('recSubmitBtn');
+const otpModal = new bootstrap.Modal(document.getElementById('otpMdl'));
+const otpSubmit = document.getElementById("submitOtp");
+const otpVal = document.getElementById("otpVal");
 acInit([
-    setupLoginForm
+    () => acFormHandler('recovery-form', submitUserName),
+    () => acFormHandler('otp-form', recoverAccount)
 ]);
-function setupLoginForm() {
+function submitUserName() {
     return __awaiter(this, void 0, void 0, function* () {
-        acFormHandler('login-form', submitLoginForm);
-    });
-}
-function submitLoginForm() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const username = userNameInput.value;
-        const password = passwordInput.value;
-        if (username.length <= 2) {
-            acToast("error", "Username should be at least 3 characters long.");
-        }
-        else if (password.length < 6) {
-            acToast("error", "Password should be at least 6 characters long.");
+        if (userNameInput.value.trim().length <= 1) {
+            acToast("error", "Username too short");
         }
         else {
-            yield postToLoginApi(username, password);
+            yield postToLoginApi(userNameInput.value);
         }
     });
 }
-function postToLoginApi(username, password) {
+function postToLoginApi(usernameval) {
     return __awaiter(this, void 0, void 0, function* () {
-        const apiUrl = '/api/account/login';
-        const data = {
-            username,
-            password
-        };
-        submitBtn.innerHTML = "Loading...";
         try {
-            const response = yield acPostData(apiUrl, data);
+            const response = yield acPostData('/api/account/recover', {
+                userName: usernameval
+            });
+            console.log(response);
             acToast(response.type, response.data);
             if (response.type === "ok") {
-                submitBtn.innerHTML = "Logging in...";
+                submitBtn.innerHTML = "Proceed";
                 const lastLink = localStorage.getItem("curr_link");
-                if (lastLink) {
-                    window.location.href = lastLink;
-                }
-                else {
-                    window.location.href = "/";
-                }
+                otpModal.show();
             }
         }
         catch (error) {
@@ -65,3 +50,34 @@ function postToLoginApi(username, password) {
         }
     });
 }
+const recoverAccount = function () {
+    return __awaiter(this, void 0, void 0, function* () {
+        otpSubmit.innerHTML = "Wait...";
+        otpSubmit.classList.add('pe-none');
+        console.log(otpVal.value);
+        try {
+            const dt = {
+                OTP: otpVal.value.trim(),
+            };
+            const response = yield acPostData("/api/account/loginviaotp", dt);
+            console.log(response);
+            if (response.type === "ok") {
+                otpModal.hide();
+                acToast("success", "Logging into your acc. Make sure to set your password");
+                setTimeout(redirect, 2000);
+            }
+            else {
+                console.log("error", response.data);
+            }
+        }
+        catch (error) {
+            console.error('Error during login:', error);
+            acToast('error', 'something went wrong');
+        }
+        finally {
+            otpSubmit.innerHTML = "Verify";
+            otpSubmit.classList.remove('pe-none');
+        }
+    });
+};
+const redirect = () => window.location.href = "/";

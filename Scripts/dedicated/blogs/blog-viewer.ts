@@ -1,4 +1,6 @@
-﻿import { acToast, acInit ,classesToTags, acPostData, acFormHandler, acGetData} from '../../global.js'
+﻿import { acToast, acInit, classesToTags, acPostData, acFormHandler, acGetData } from '../../global.js'
+declare const bootstrap: any;
+
 
 const gl_slug = document.getElementById("ip_slug") as HTMLInputElement;
 const gl_tag = document.getElementById("ip_tags") as HTMLInputElement;
@@ -8,11 +10,19 @@ const commentStat = document.getElementById("commentStat") as HTMLElement;
 const likeIcon = document.getElementById("likeIcon") as HTMLElement;
 const likeBtn = document.getElementById("likeBtn") as HTMLButtonElement;
 
+const blogRole =  document.getElementById("ip_blogrole") as HTMLInputElement;
+const blogCount = document.getElementById("blogCount") as HTMLElement;
+const commentsHolder = document.getElementById("commentsHolder") as HTMLElement;
+
+let delModal = new bootstrap.Modal(document.getElementById('mdlDelete'));
+const delbtn = document.getElementById("delConfirm") as HTMLButtonElement;
+
+
+
+
 //comment props
 //reply props
 //delete props
-
-
 
 const global_slug = gl_slug.value;
 const global_tags = gl_tag.value;
@@ -23,11 +33,37 @@ acInit([
     loadAuthors,
     loadLikes,
     isLiked,
+    loadComments,
     () =>  likeBtn.addEventListener('click', addLike),
     () => classesToTags('img', 'rounded-3'),
-    () => acFormHandler('comment-form', addComment)
+    () => acFormHandler('comment-form', addComment),
+    () => delbtn.addEventListener('click', delConfirm) 
 ]);
  
+
+
+async function applyEvents()
+{
+    let buttons = document.querySelectorAll('.deletecontent') as NodeListOf<HTMLButtonElement>;
+
+    buttons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            // Get the data-id attribute value
+            let dataId = button.dataset.contentid;
+            let dataType = button.dataset.type;
+            delMdl(dataType, dataId);
+        });
+    });
+
+    //buttons.forEach(function (button) {
+    //    button.addEventListener('click', function () {
+    //        delMdl();
+    //    });
+    //});
+    //console.log("delete events attached");
+}
+
+
 
 //check if the article is likes or not and append <i> tag's class
 async function isLiked() {
@@ -143,43 +179,74 @@ async function addComment() {
         cmntBtn.innerHTML = 'Post Comment';
         cmntBtn.classList.remove('pe-none');
        }
-
-
-
-
-
-    //    axios({
-    //        method: 'POST',
-    //        url: '/api/blog/comment/add',
-    //        headers: {
-    //            'Content-Type': 'application/json',
-    //        },
-    //        data: {
-    //            Slug: global_slug,
-    //            Comment: blgcmnt.value,
-    //        },
-    //    })
-    //        .then(function (response) {
-    //            cmntBtn.innerHTML = 'Post Comment';
-    //            loadComments();
-    //            cmntBtn.classList.remove('pe-none');
-    //            acToast('success', 'Comment added');
-    //            blgcmnt.value = "";
-    //        })
-    //        .catch(function (error) {
-    //            console.error('Error:', error);
-    //            cmntBtn.innerHTML = 'Post Comment';
-    //            cmntBtn.classList.remove('pe-none');
-    //            acToast('error', 'Something went wrong');
-    //        });
    }
 }
 
 //load comment span
-async function loadComments(){
-    console.log("comment load function called")
-    acToast('check','comment added ig check db');
-}
+
+async function loadComments() {
+        const roleData = blogRole.value;
+        const data = {
+            Slug: global_slug
+        };
+
+    const response = await acPostData('/api/blog/comments/load',data)
+    console.log(response);
+              //  response.data.sort((a, b) => a.id - b.id);
+                let commentsHTML = "";
+                let c = 0;
+                if (response.data.length == 0) {
+                    commentsHTML = "";
+                }
+                else {
+                    for (let i = 0; i < response.data.length; i++) {
+                        const comment = response.data[i];
+                        c = i + 1;
+                        commentsHTML += '<div class="border-bottom py-4 mt-2 mb-4">' +
+                            '<div class="d-flex align-items-center pb-1 mb-3"> <img class="rounded-circle" src="/assets/images/avatars/default/' + comment.avatar + '.png" width="48" alt="Comment author">' +
+                            '<div class="ps-3">' +
+                            '<h6 class="mb-0">' + comment.fullname + ' </h6><span class="fs-sm text-muted">' + comment.date + '</span>' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="btn-group-sm me-2 ml-2 mx-2" style="float:right;" role="group" aria-label="Settings group">' +
+                            (roleData !== 'guest' ? '<button type="button" id="repl_' + comment.id + '" onclick="cmntReply(' + comment.id + ')" class="btn btn-secondary btn-icon px-2"><i class="ai-redo"></i></button>&nbsp;' : '') +
+                            (comment.edit ? '<button type="button" id="edt_' + comment.id + '" onclick="cmntEdit(' + comment.id + ')" class="btn btn-secondary btn-icon px-2"><i class="ai-edit"></i></button>&nbsp;' : '') +
+                            (comment.edit ? '<button type="button" data-type="comment" data-contentid="' + comment.id + '" class="deletecontent btn btn-secondary btn-icon px-2"><i class="ai-trash"></i></button>&nbsp;' : '') +
+                            '</div>' +
+                            '<span class="pb-2 mb-0" id="cm_' + comment.id + '">' + comment.comment + '</span>';
+
+                        if (comment.replies && comment.replies.length > 0) {
+                            comment.replies.sort((a, b) => a.replyId - b.replyId);
+                            for (let j = 0; j < comment.replies.length; j++) {
+                                const reply = comment.replies[j];
+                                commentsHTML +=
+                                    '<div class="card card-body border-0 bg-secondary mt-4">' +
+                                    '    <div class="d-flex align-items-center pb-1 mb-3">' +
+                                    '        <img class="rounded-circle" src="/assets/images/avatars/default/' + reply.replyAvatar + '.png" width="48" alt="Comment author">' +
+                                    '        <div class="ps-3">' +
+                                    '            <h6 class="mb-0">' + reply.replyFullName + '</h6><span class="fs-sm text-muted">' + reply.replyDate + '</span>' +
+                                    '        </div>' +
+                                    '    </div>' +
+                                    '    <div class="d-flex align-items-center justify-content-between mb-3" role="group" aria-label="Settings group">' +
+                                    '        <p class="mb-0"><a class="fw-bold text-decoration-none" href="#">@@' + comment.username + '</a>&nbsp;&nbsp;<span id="reply_' + reply.replyId + '">' + reply.replyComment + '</span></p>' +
+                                    '        <div>' +
+                                (reply.replyEdit ? '<button type="button" id="edt' + reply.replyId + '" onclick="replyEdit(' + reply.replyId + ')" class="btn btn-sm btn-secondary btn-icon px-2"><i class="ai-edit"></i></button>&nbsp;' : '') +
+                                (reply.replyEdit ? '<button type="button" data-type="reply" data-contentid="' + reply.replyId + '" class="deletecontent btn btn-sm btn-secondary btn-icon px-2"><i class="ai-trash"></i></button>&nbsp;' : '') +
+                                    '        </div>' +
+                                    '    </div>' +
+                                    '</div>';
+
+                            }
+                        }
+                        commentsHTML += `</div>`;
+                    }
+                }
+                commentsHolder.innerHTML = commentsHTML;
+    blogCount.innerHTML = c.toString();
+    applyEvents();
+
+    }
+
 
 //load tags related to slug
 function loadTags() {
@@ -196,3 +263,189 @@ function loadTags() {
     document.getElementById('tagsPlaceholder')!.innerHTML = tags;
 }
 
+///////////////// ls based system ///////////////////
+
+function delMdl(contenttype,contentid)
+{
+    let c_type = document.getElementById("mdlContentType") as HTMLElement;
+    if (contenttype == "comment")
+    {       
+        c_type.innerHTML = "comment";
+        delModal!.show();
+    }
+    else if (contenttype == "reply")
+    {
+        c_type.innerHTML = "reply";
+        delModal!.show();
+    }
+
+    localStorage.setItem('content-type', contenttype);
+    localStorage.setItem('content-id', contentid);
+    localStorage.setItem('action', "delete");
+}
+
+async function delConfirm()
+{
+    console.log("reached");
+    if(localStorage.getItem('action') == "delete")
+    {
+        let did = localStorage.getItem('content-type');
+        const cid = localStorage.getItem('content-id');
+        if (did == "comment") {
+            const resp = await acPostData('/api/blog/comment/delete', {
+                id: cid
+            })
+            delModal.hide();
+            acToast(resp.type, resp.data)
+        }
+        else if (did == "reply") {
+            const resp = await acPostData('/api/blog/reply/delete', {
+                replyid: cid
+            })
+            delModal.hide();
+            acToast(resp.type, resp.data)
+        }
+    }
+    loadComments();
+    localStorage.removeItem('action');
+}
+
+//function replyEdit(id) {
+//    localStorage.removeItem("replyid");
+//    localStorage.setItem('replyid', id);
+//    const v = localStorage.getItem('replyid');
+//    //$('#mdlReply').modal('show');
+//    mdlOpen('mdlReply');
+//    var replid = "reply_" + id;
+//    var p = document.getElementById(replid)!.innerHTML;
+//    replyEdt.value = p;
+//    if (p == "" || p == null) {
+//        replyEdt.value = p;
+//        alert("entity");
+//    }
+//}
+
+//function cmntEditSave() {
+//    var editId = localStorage.getItem('editid');
+//    var comment = commentEdt.value;
+//    axios.post('/api/blog/comment/edit', {
+//        id: editId,
+//        comment: comment
+//    })
+//        .then(function (response) {
+//            console.log(response.data);
+//            loadComments();
+//            document.querySelector("#blog_commentEdit").value = "";
+//            //$('#mdlEdit').modal('hide');
+//            mdlClose('mdlEdit');
+//            localStorage.removeItem("editid");
+//            toaster("success", "changes saved");
+//        })
+//        .catch(function (error) {
+//            console.error(error);
+//            toaster("error", "something went wrong");
+//        });
+//}
+
+
+//function replyEditSave() {
+//    let replyId = localStorage.getItem('replyid');
+//    let editedReply = replyEdt.value;
+
+//    axios({
+//        method: 'POST',
+//        url: '/api/blog/reply/edit',
+//        headers: {
+//            'Content-Type': 'application/json',
+//        },
+//        data: {
+//            replyId: replyId,
+//            reply: editedReply,
+//        },
+//    })
+//        .then(function (response) {
+//            loadComments();
+//            mdlClose('mdlReply');
+//            document.getElementById('blog_replyEdit').value = '';
+//            toaster('Success', 'Reply edited successfully');
+//            localStorage.removeItem('replyid');
+//        })
+//        .catch(function (error) {
+//            console.log(error);
+//            toaster('error', 'Something went wrong');
+//        });
+
+//}
+
+//function cmntDelete(id) {
+//    localStorage.setItem('delid', id);
+//    const v = localStorage.getItem('delid');
+//    //$('#mdlDelete').modal('show');
+//    mdlOpen('mdlDelete');
+//}
+
+//function cmntDeleteConfirm() {
+//    axios.post('/api/blog/comment/delete', {
+//        id: localStorage.getItem('delid')
+//    })
+//        .then(function (response) {
+//            console.log(response.data);
+//            loadComments();
+//            //$('#mdlEdit').modal('hide');
+//            //$('#mdlDelete').modal('hide');
+//            mdlClose('mdlEdit');
+//            mdlClose('mdlDelete');
+
+//            localStorage.removeItem('delid');
+//            toaster("success", "comment deleted");
+//        })
+//        .catch(function (error) {
+//            console.error(error);
+//            //$('#mdlDelete').modal('hide');
+//            mdlClose('mdlDelete');
+//            localStorage.removeItem('delid');
+//            toaster("error", "something went wrong");
+//        })
+//}
+
+
+//function cmntReply(id) {
+//    localStorage.setItem('replyto', id);
+//    const v = localStorage.getItem('replyto');
+//    document.getElementById("addReplybox").value = "";
+//    //$('#mdladdReply').modal('show');
+//    mdlOpen('mdladdReply');
+//}
+
+
+
+
+//function replAdd() {
+//    axios({
+//        method: "POST",
+//        url: "/api/blog/reply/add",
+//        headers: {
+//            "Content-Type": "application/json",
+//        },
+//        data: {
+//            Slug: global_slug,
+//            ReplyText: document.getElementById("addReplybox").value,
+//            CommentId: localStorage.getItem("replyto"),
+//        },
+//    })
+//        .then(function (response) {
+//            loadComments();
+//            mdlClose("mdladdReply");
+//            toaster("Success", "Reply added");
+//        })
+//        .catch(function (error) {
+//            console.error("Error:", error);
+//            toaster("Error", error.response.data);
+//        });
+//}
+
+//function replyDelete(id) {
+//    localStorage.setItem('delid', id);
+//    const v = localStorage.getItem('delid');
+//    mdlOpen("mdlreplyDelete");
+//}

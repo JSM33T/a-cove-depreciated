@@ -44,7 +44,32 @@
 
     @Html.AntiForgeryToken()
     <input id="ip_slug" value="@blogDeet.Slug" class="hidden"/>
-    <input id="ip_tags" value="@blogDeet.Tags" class="hidden"/>
+    <input id="ip_tags" value="@blogDeet.Tags"3 class="hidden"/>
+    <input id="ip_blogrole" value="@ViewData["BlogRole"]" 3 class="hidden" />
+
+<!--===================MODALS================-->
+
+<div class="modal" tabindex="-1" id="mdlDelete" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Delete</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Delete your <span id="mdlContentType"></span>?</p>
+      </div>
+      <div class="modal-footer flex-column flex-sm-row">
+        <button type="button" class="btn btn-secondary w-100 w-sm-auto mb-3 mb-sm-0" data-bs-dismiss="modal">Close</button>
+        <button type="button" id="delConfirm" class="btn btn-danger w-100 w-sm-auto ms-sm-3">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--===============modals end==================-->
+
+
     <div id="blogview">
         <section class="container blog-section py-5 mb-lg-4 px-2 mt-1" id="blog_intro">
             <nav aria-label="breadcrumb" class="pt-4">
@@ -111,7 +136,7 @@
                 <!-- Comments collapse-->
                 <hr />
                 <div class="collapse" id="commentsCollapse">
-                    <div id="comments"></div>
+                    <div id="commentsHolder"></div>
                 </div>
                 <div class="nav">
                     <button class="btn-more nav-link collapsed w-100 justify-content-center p-3" type="button"
@@ -119,7 +144,7 @@
                             aria-controls="commentsCollapse" data-show-label="Show all comments"
                             data-hide-label="Hide all comments">
                         <span class="fw-normal opacity-70 ms-1">
-                            (<span id="blogcount"></span>)
+                            (<span id="blogCount"></span>)
                         </span>
                     </button>
                 </div>
@@ -148,7 +173,7 @@
                     if (role != null && (role == "user" || role == "admin"))
                     {
                         <h2 class="pb-2 pb-lg-3 pb-xl-4">Leave a comment</h2>
-                        <form id="comment-form"  class="comment-form row needs-validation g-4" novalidate>
+                        <form id="comment-form"  class="comment-form row g-4" novalidate>
                             <div class="col-12">
                                 <label class="form-label" for="c-comment">Comment</label>
                                 <textarea class="form-control" rows="4" id="blog_comment" placeholder="Type your comment here..."

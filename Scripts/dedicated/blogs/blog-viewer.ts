@@ -36,6 +36,7 @@ acInit([
     loadComments,
     () =>  likeBtn.addEventListener('click', addLike),
     () => classesToTags('img', 'rounded-3'),
+    () => classesToTags('p', 'fs-lg'),
     () => acFormHandler('comment-form', addComment),
     () => delbtn.addEventListener('click', delConfirm) 
 ]);

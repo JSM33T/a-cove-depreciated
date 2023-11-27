@@ -1,7 +1,5 @@
 using System.Net.Mail;
 using System.Net;
-using Serilog;
-using almondCove.Models.Domain;
 
 namespace almondCove.Services
 {

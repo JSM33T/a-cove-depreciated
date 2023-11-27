@@ -3,6 +3,7 @@ using almondCove.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using Serilog;
 
 namespace almondCove.Api
 {
@@ -59,6 +60,42 @@ namespace almondCove.Api
             else
             {
                 return BadRequest("Access denied" );
+            }
+        }
+
+        [HttpGet]
+        [Route("/api/getavatars")]
+        public async Task<IActionResult> GetAvatars()
+        {
+            try
+            {
+                using SqlConnection connection = new(_configManager.GetConnString());
+                await connection.OpenAsync();
+
+                string sql = "SELECT * FROM TblAvatarMaster";
+
+                using SqlCommand command = new(sql, connection);
+                using SqlDataReader dataReader = await command.ExecuteReaderAsync().ConfigureAwait(false);
+
+                List<Avatar> entries = new();
+
+                while (await dataReader.ReadAsync())
+                {
+                    Avatar entry = new()
+                    {
+                        Id = dataReader["Id"] as int? ?? 0,
+                        Title = dataReader["Title"] as string ?? "",
+                        Image = dataReader["Image"] as string ?? ""
+                    };
+                    entries.Add(entry);
+                }
+
+                return Ok(entries);
+            }
+            catch (SqlException ex)
+            {
+                Log.Error("SQL error in GetAvatars: " + ex.Message);
+                return BadRequest("Unable to fetch avatars");
             }
         }
     }

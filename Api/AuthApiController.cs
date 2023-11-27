@@ -245,8 +245,8 @@ namespace almondCove.Api
                                 }
                                 catch (Exception ex2)
                                 {
-                                        _logger.LogError(ex2.Message.ToString());
-                                        return BadRequest("something went wrong");
+                                    _logger.LogError(ex2.Message.ToString());
+                                    return BadRequest("something went wrong");
                                 
                                 }
                             }

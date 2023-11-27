@@ -21,7 +21,7 @@
     <script src="~/assets/js/dedicated/profile/edit-profile.js" type="module"></script>
 }
  <!-- Basic info -->
- 
+ @Html.AntiForgeryToken()
        <div class="container py-5 mt-4 mt-lg-5 mb-lg-4 my-xl-5">
         <div class="row pt-sm-2 pt-lg-0">
           <!-- Page content -->
@@ -29,6 +29,7 @@
             <h1 class="ml-2 h2 mb-4">Overview</h1>
 
             <section class="card border-0 py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+            <form id="basicInfoForm">
               <div class="card-body">
                 <div class="d-flex align-items-center mt-sm-n1 pb-4 mb-0 mb-lg-1 mb-xl-3">
                   <i class="ai-user text-primary lead pe-1 me-2"></i>
@@ -36,11 +37,8 @@
                 </div>
                 <div class="d-flex align-items-center">
                   <div class="dropdown">
-                    <a class="d-flex flex-column justify-content-end position-relative overflow-hidden rounded-circle bg-size-cover bg-position-center flex-shrink-0" href="#" data-bs-toggle="dropdown" aria-expanded="false" style="width: 80px; height: 80px; background-image: url(assets/img/avatar/02.jpg);" aria-label="Upload picture">
-                      <span class="d-block text-light text-center lh-1 pb-1" style="background-color: rgba(0,0,0,.5)">
-                        <i class="ai-camera"></i>
-                      </span>
-                    </a>
+                    <span id="avatarPlaceHolder" class="d-flex flex-column justify-content-end position-relative overflow-hidden rounded-circle bg-size-cover bg-position-center flex-shrink-0" href="#" data-bs-toggle="dropdown" aria-expanded="false" style="width: 80px; height: 80px; background-image: url(/assets/images/avatars/default/default.png);" aria-label="Upload picture">
+                    </span>
                     <div class="dropdown-menu my-1">
                       <a class="dropdown-item fw-normal" href="#">
                         <i class="ai-camera fs-base opacity-70 me-2"></i>
@@ -56,67 +54,30 @@
                     <h3 class="h6 mb-1">Profile picture</h3>
                     <p class="fs-sm text-body-secondary mb-0">PNG or JPG no bigger than 1000px wide and tall.</p>
                   </div>
+
+                   
+                    <select class="ms-4 ps-4 form-select w-50" id="avatarDdl">
+                      <option value="" selected disabled>Select avatar</option>
+                    </select>
+
                 </div>
+               
                 <div class="row g-3 g-sm-4 mt-0 mt-lg-2">
                   <div class="col-sm-6">
                     <label class="form-label" for="fn">First name</label>
-                    <input class="form-control" type="text" value="Isabella" id="fn">
+                    <input class="form-control" type="text" value="" id="firstName">
                   </div>
                   <div class="col-sm-6">
                     <label class="form-label" for="ln">Last name</label>
-                    <input class="form-control" type="text" value="Bocouse" id="ln">
+                    <input class="form-control" type="text" value="Bocouse" id="lastName">
+                  </div>
+                   <div class="col-sm-6">
+                    <label class="form-label" for="ln">User name</label>
+                    <input class="form-control" type="text" value="" id="userName">
                   </div>
                   <div class="col-sm-6">
                     <label class="form-label" for="email">Email address</label>
-                    <input class="form-control" type="email" value="bocouse@example.com" id="email">
-                  </div>
-                  <div class="col-sm-6">
-                    <label class="form-label" for="phone">Phone <span class="text-body-secondary">(optional)</span></label>
-                    <input class="form-control" type="tel" data-format='{"numericOnly": true, "delimiters": ["+1 ", " ", " "], "blocks": [0, 3, 3, 2]}' placeholder="+1 ___ ___ __" id="phone">
-                  </div>
-                  <div class="col-sm-6">
-                    <label class="form-label" for="country">Country</label>
-                    <select class="form-select" id="country">
-                      <option value="" selected disabled>Select country</option>
-                      <option value="Australia">Australia</option>
-                      <option value="Belgium">Belgium</option>
-                      <option value="Canada">Canada</option>
-                      <option value="Denmark">Denmark</option>
-                      <option value="USA">USA</option>
-                    </select>
-                  </div>
-                  <div class="col-sm-6">
-                    <label class="form-label" for="language">Language</label>
-                    <select class="form-select" id="language">
-                      <option value="" selected disabled>Select language</option>
-                      <option value="English">English</option>
-                      <option value="Français">Français</option>
-                      <option value="Deutsch">Deutsch</option>
-                      <option value="Italiano">Italiano</option>
-                    </select>
-                  </div>
-                  <div class="col-sm-6">
-                    <label class="form-label" for="timezone">Time zone</label>
-                    <select class="form-select" id="timezone">
-                      <option value="" selected disabled>Select time zone</option>
-                      <option value="AST">Atlantic Standard Time (AST)</option>
-                      <option value="EST">Eastern Standard Time (EST)</option>
-                      <option value="CST">Central Standard Time (CST)</option>
-                      <option value="MST">Mountain Standard Time (MST)</option>
-                      <option value="PST">Pacific Standard Time (PST)</option>
-                      <option value="AKST">Alaskan Standard Time (AKST)</option>
-                      <option value="HST">Hawaii-Aleutian Standard Time (HST)</option>
-                    </select>
-                  </div>
-                  <div class="col-sm-6">
-                    <label class="form-label" for="currency">Currency</label>
-                    <select class="form-select" id="currency">
-                      <option value="" selected disabled>Select currency</option>
-                      <option value="usd">$ USD</option>
-                      <option value="eur">€ EUR</option>
-                      <option value="ukp">£ UKP</option>
-                      <option value="jpy">¥ JPY</option>
-                    </select>
+                    <input class="form-control" type="email" value="" id="emailId">
                   </div>
                   <div class="col-12">
                     <label class="form-label" for="bio">Bio</label>
@@ -154,28 +115,17 @@
                   </div>
                 </div>
               </div>
-            </section>
+            </form>  
+          </section>
 
-               <section class="card border-0 py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+            <section class="card border-0 py-1 p-md-2 p-xl-3 p-xxl-4 mb-4">
+                <form id="passForm">
               <div class="card-body">
                 <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3">
                   <i class="ai-lock-closed text-primary lead pe-1 me-2"></i>
                   <h2 class="h4 mb-0">Password change</h2>
                 </div>
                 <div class="row align-items-center g-3 g-sm-4 pb-3">
-                  <div class="col-sm-6">
-                    <label class="form-label" for="current-pass">Current password</label>
-                    <div class="password-toggle">
-                      <input class="form-control" type="password" value="hidden@password" id="current-pass">
-                      <label class="password-toggle-btn" aria-label="Show/hide password">
-                        <input class="password-toggle-check" type="checkbox">
-                        <span class="password-toggle-indicator"></span>
-                      </label>
-                    </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <a class="d-inline-block fs-sm fw-semibold text-decoration-none mt-sm-4" href="account-password-recovery.html">Forgot password?</a>
-                  </div>
                   <div class="col-sm-6">
                     <label class="form-label" for="new-pass">New password</label>
                     <div class="password-toggle">
@@ -202,15 +152,16 @@
                 </div>
                 <div class="d-flex justify-content-end pt-3">
                   <button class="btn btn-secondary" type="button">Cancel</button>
-                  <button class="btn btn-primary ms-3" type="button">Save changes</button>
+                  <button class="btn btn-primary ms-3" type="submit">Save changes</button>
                 </div>
               </div>
+              </form>
             </section>
             <section class="card border-0 py-1 p-md-2 p-xl-3 p-xxl-4">
               <div class="card-body">
                 <div class="d-flex align-items-center pb-4 mt-sm-n1 mb-0 mb-lg-1 mb-xl-3">
                   <i class="ai-trash text-primary lead pe-1 me-2"></i>
-                  <h2 class="h4 mb-0">Delete account</h2>
+                  <h2 class="h4 mb-0">Delete account (ID) </h2>
                 </div>
                 <div class="alert alert-warning d-flex mb-4">
                   <i class="ai-triangle-alert fs-xl me-2"></i>
@@ -218,7 +169,7 @@
                 </div>
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" id="confirm">
-                  <label class="form-check-label text-dark fw-medium" for="confirm">Yes, I want to delete my account</label>
+                  <label class="form-check-label text-dark fw-medium" for="confirm">Log out of all devices</label>
                 </div>
                 <div class="d-flex flex-column flex-sm-row justify-content-end pt-4 mt-sm-2 mt-md-3">
                   <button class="btn btn-danger" type="button">

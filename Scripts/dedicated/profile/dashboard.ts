@@ -11,8 +11,6 @@ const UserName = document.getElementById("userName") as HTMLSpanElement;
 const Avatar = document.getElementById("avatarPlaceHolder") as HTMLElement;
 
 
-
-
 acInit([
     fetchDetails
 ])

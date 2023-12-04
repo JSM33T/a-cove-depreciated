@@ -1,5 +1,9 @@
 ﻿import { acInit} from './global.js'
 declare const axios: { get: (arg0: string) => Promise<{ data: string | any[]; }>; }
+
+
+
+
 acInit([
     searchEvent,
     shareEvent

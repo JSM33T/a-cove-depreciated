@@ -10,14 +10,18 @@ const commentStat = document.getElementById("commentStat") as HTMLElement;
 const likeIcon = document.getElementById("likeIcon") as HTMLElement;
 const likeBtn = document.getElementById("likeBtn") as HTMLButtonElement;
 
-const blogRole =  document.getElementById("ip_blogrole") as HTMLInputElement;
+const blogRole = document.getElementById("ip_blogrole") as HTMLInputElement;
 const blogCount = document.getElementById("blogCount") as HTMLElement;
 const commentsHolder = document.getElementById("commentsHolder") as HTMLElement;
 
 let delModal = new bootstrap.Modal(document.getElementById('mdlDelete'));
 const delbtn = document.getElementById("delConfirm") as HTMLButtonElement;
 
+let editModal = new bootstrap.Modal(document.getElementById('mdlEdit'));
+const editSaveBtn = document.getElementById('saveChanges') as HTMLButtonElement;
 
+let replyModal = new bootstrap.Modal(document.getElementById('mdlReply'));
+const replySaveBtn = document.getElementById('saveReply') as HTMLButtonElement;
 
 
 //comment props
@@ -34,34 +38,52 @@ acInit([
     loadLikes,
     isLiked,
     loadComments,
-    () =>  likeBtn.addEventListener('click', addLike),
+    () => likeBtn.addEventListener('click', addLike),
     () => classesToTags('img', 'rounded-3'),
-    () => classesToTags('p', 'fs-lg'),
+    //() => classesToTags('p', 'fs-lg'),
     () => acFormHandler('comment-form', addComment),
-    () => delbtn.addEventListener('click', delConfirm) 
+    () => delbtn.addEventListener('click', delConfirm),
+    () => replySaveBtn.addEventListener('click', postReply),
+    () => editSaveBtn.addEventListener('click', saveEdits)
+    
 ]);
- 
 
 
-async function applyEvents()
-{
-    let buttons = document.querySelectorAll('.deletecontent') as NodeListOf<HTMLButtonElement>;
 
-    buttons.forEach(function (button) {
+async function applyEvents() {
+    let delbuttons = document.querySelectorAll('.deletecontent') as NodeListOf<HTMLButtonElement>;
+    let editbuttons = document.querySelectorAll('.editcontent') as NodeListOf<HTMLButtonElement>;
+    let replybuttons = document.querySelectorAll('.replyto') as NodeListOf<HTMLButtonElement>;
+
+
+    delbuttons.forEach(function (button) {
         button.addEventListener('click', function () {
-            // Get the data-id attribute value
             let dataId = button.dataset.contentid;
             let dataType = button.dataset.type;
             delMdl(dataType, dataId);
         });
     });
 
-    //buttons.forEach(function (button) {
-    //    button.addEventListener('click', function () {
-    //        delMdl();
-    //    });
-    //});
-    //console.log("delete events attached");
+
+    editbuttons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            let dataId = button.dataset.contentid;
+            let dataType = button.dataset.type;
+            editMdl(dataType, dataId);
+        })
+    });
+
+    replybuttons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            let dataId = button.dataset.contentid;
+            if(dataId)
+            {
+                replyMdl(dataId);
+            }
+            
+        });
+    });
+    console.log("delete events attached");
 }
 
 
@@ -69,15 +91,14 @@ async function applyEvents()
 //check if the article is likes or not and append <i> tag's class
 async function isLiked() {
 
-   //check if its likes by the logged in user
-   const data = {
-       slug: global_slug
-   };
+    //check if its likes by the logged in user
+    const data = {
+        slug: global_slug
+    };
 
-const isliked = await acPostData('/api/blog/likestat',data)
+    const isliked = await acPostData('/api/blog/likestat', data)
     const isBlogLiked = isliked.data;
-    if(isliked.type == "ok")
-    {
+    if (isliked.type == "ok") {
         if (isBlogLiked == true) {
             likeIcon.classList.remove("ai-heart");
             likeIcon.classList.add("ai-heart-filled");
@@ -87,10 +108,10 @@ const isliked = await acPostData('/api/blog/likestat',data)
             likeIcon.classList.add("ai-heart");
         }
     }
-    else{
+    else {
         console.log("notliked + error");
     }
-          
+
 }
 
 //load no of liekes
@@ -100,15 +121,15 @@ async function loadLikes() {
     const likes = await acGetData('/api/blog/' + global_slug + '/likes');
     console.log(likes);
 
-    if(likes.type == "ok"){
+    if (likes.type == "ok") {
         likeStat.innerHTML = likes.data;
     }
-    else{
+    else {
         likeStat.innerHTML = "0";
     }
 
-           
- 
+
+
 }
 
 //add/remove like
@@ -152,102 +173,103 @@ async function loadAuthors() {
 
 //add comment and refresh comment span
 async function addComment() {
-   const blgcmnt = document.getElementById('blog_comment') as HTMLInputElement;
-   if (blgcmnt.value.length < 2) {
-       acToast("error", "comment too short");
-   }
-   else {
-       const cmntBtn = document.getElementById('commentbutton') as HTMLButtonElement;
-       cmntBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>posting.. ';
-       cmntBtn.classList.add('pe-none');
+    const blgcmnt = document.getElementById('blog_comment') as HTMLInputElement;
+    if (blgcmnt.value.length < 2) {
+        acToast("error", "comment too short");
+    }
+    else {
+        const cmntBtn = document.getElementById('commentbutton') as HTMLButtonElement;
+        cmntBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>posting.. ';
+        cmntBtn.classList.add('pe-none');
 
-    const  commentData = {
-        Slug: global_slug,
-        Comment: blgcmnt.value,
-    };
-       const resp = await acPostData('/api/blog/comment/add', commentData);
-       try {
-           acToast(resp.type, resp.data);
-           cmntBtn.innerHTML = 'Post Comment';
-           loadComments();
-           cmntBtn.classList.remove('pe-none');
-           blgcmnt.value = "";
-        
-       } catch (error: any) {
-           console.log("catch block"+ error);
-       }
-       finally {
-        cmntBtn.innerHTML = 'Post Comment';
-        cmntBtn.classList.remove('pe-none');
-       }
-   }
+        const commentData = {
+            Slug: global_slug,
+            Comment: blgcmnt.value,
+        };
+        const resp = await acPostData('/api/blog/comment/add', commentData);
+        try {
+            acToast(resp.type, resp.data);
+            cmntBtn.innerHTML = 'Post Comment';
+            loadComments();
+            cmntBtn.classList.remove('pe-none');
+            blgcmnt.value = "";
+
+        } catch (error: any) {
+            console.log("catch block" + error);
+        }
+        finally {
+            cmntBtn.innerHTML = 'Post Comment';
+            cmntBtn.classList.remove('pe-none');
+        }
+    }
 }
 
 //load comment span
 
 async function loadComments() {
-        const roleData = blogRole.value;
-        const data = {
-            Slug: global_slug
-        };
+    const roleData = blogRole.value;
+    const data = {
+        Slug: global_slug
+    };
 
-    const response = await acPostData('/api/blog/comments/load',data)
+    const response = await acPostData('/api/blog/comments/load', data)
     console.log(response);
-              //  response.data.sort((a, b) => a.id - b.id);
-                let commentsHTML = "";
-                let c = 0;
-                if (response.data.length == 0) {
-                    commentsHTML = "";
-                }
-                else {
-                    for (let i = 0; i < response.data.length; i++) {
-                        const comment = response.data[i];
-                        c = i + 1;
-                        commentsHTML += '<div class="border-bottom py-4 mt-2 mb-4">' +
-                            '<div class="d-flex align-items-center pb-1 mb-3"> <img class="rounded-circle" src="/assets/images/avatars/default/' + comment.avatar + '.png" width="48" alt="Comment author">' +
-                            '<div class="ps-3">' +
-                            '<h6 class="mb-0">' + comment.fullname + ' </h6><span class="fs-sm text-muted">' + comment.date + '</span>' +
-                            '</div>' +
-                            '</div>' +
-                            '<div class="btn-group-sm me-2 ml-2 mx-2" style="float:right;" role="group" aria-label="Settings group">' +
-                            (roleData !== 'guest' ? '<button type="button" id="repl_' + comment.id + '" onclick="cmntReply(' + comment.id + ')" class="btn btn-secondary btn-icon px-2"><i class="ai-redo"></i></button>&nbsp;' : '') +
-                            (comment.edit ? '<button type="button" id="edt_' + comment.id + '" onclick="cmntEdit(' + comment.id + ')" class="btn btn-secondary btn-icon px-2"><i class="ai-edit"></i></button>&nbsp;' : '') +
-                            (comment.edit ? '<button type="button" data-type="comment" data-contentid="' + comment.id + '" class="deletecontent btn btn-secondary btn-icon px-2"><i class="ai-trash"></i></button>&nbsp;' : '') +
-                            '</div>' +
-                            '<span class="pb-2 mb-0" id="cm_' + comment.id + '">' + comment.comment + '</span>';
+    // response.data.sort((a, b) => a.id - b.id);
+    let commentsHTML = "";
+    let c = 0;
+    if (response.data.length == 0) {
+        commentsHTML = "";
+    }
+    else {
+        for (let i = 0; i < response.data.length; i++) {
+            const comment = response.data[i];
+            c = i + 1;
+            commentsHTML += `<div class="border-bottom py-4 mt-2 mb-4">
+                                            <div class="d-flex align-items-center pb-1 mb-3">
+                                                <img class="rounded-circle" src="/assets/images/avatars/default/${comment.avatar}.png" width="48" alt="Comment author">
+                                                <div class="ps-3">
+                                                    <h6 class="mb-0">${comment.fullname}</h6><span class="fs-sm text-muted">${comment.date}</span>
+                                                </div>
+                                            </div>
+                                            <div class="btn-group-sm me-2 ml-2 mx-2" style="float:right;" role="group" aria-label="Settings group">
+                                                ${roleData !== 'guest' ? `<button type="button" data-contentid="${comment.id}" class="replyto btn btn-secondary btn-icon px-2"><i class="ai-redo"></i></button>&nbsp;` : ''}
+                                                ${comment.edit ? `<button type="button" data-type="comment" data-contentid="${comment.id}" class="editcontent btn btn-secondary btn-icon px-2"><i class="ai-edit"></i></button>&nbsp;` : ''}
+                                                ${comment.edit ? `<button type="button" data-type="comment" data-contentid="${comment.id}" class="deletecontent btn btn-secondary btn-icon px-2"><i class="ai-trash"></i></button>&nbsp;` : ''}
+                                            </div>
+                                            <span class="pb-2 mb-0" id="comment_${comment.id}">${comment.comment}</span>
+                                        </div>`;
 
-                        if (comment.replies && comment.replies.length > 0) {
-                            comment.replies.sort((a, b) => a.replyId - b.replyId);
-                            for (let j = 0; j < comment.replies.length; j++) {
-                                const reply = comment.replies[j];
-                                commentsHTML +=
-                                    '<div class="card card-body border-0 bg-secondary mt-4">' +
-                                    '    <div class="d-flex align-items-center pb-1 mb-3">' +
-                                    '        <img class="rounded-circle" src="/assets/images/avatars/default/' + reply.replyAvatar + '.png" width="48" alt="Comment author">' +
-                                    '        <div class="ps-3">' +
-                                    '            <h6 class="mb-0">' + reply.replyFullName + '</h6><span class="fs-sm text-muted">' + reply.replyDate + '</span>' +
-                                    '        </div>' +
-                                    '    </div>' +
-                                    '    <div class="d-flex align-items-center justify-content-between mb-3" role="group" aria-label="Settings group">' +
-                                    '        <p class="mb-0"><a class="fw-bold text-decoration-none" href="#">@@' + comment.username + '</a>&nbsp;&nbsp;<span id="reply_' + reply.replyId + '">' + reply.replyComment + '</span></p>' +
-                                    '        <div>' +
-                                (reply.replyEdit ? '<button type="button" id="edt' + reply.replyId + '" onclick="replyEdit(' + reply.replyId + ')" class="btn btn-sm btn-secondary btn-icon px-2"><i class="ai-edit"></i></button>&nbsp;' : '') +
-                                (reply.replyEdit ? '<button type="button" data-type="reply" data-contentid="' + reply.replyId + '" class="deletecontent btn btn-sm btn-secondary btn-icon px-2"><i class="ai-trash"></i></button>&nbsp;' : '') +
-                                    '        </div>' +
-                                    '    </div>' +
-                                    '</div>';
 
-                            }
-                        }
-                        commentsHTML += `</div>`;
-                    }
+            if (comment.replies && comment.replies.length > 0) {
+                comment.replies.sort((a, b) => a.replyId - b.replyId);
+                for (let j = 0; j < comment.replies.length; j++) {
+                    const reply = comment.replies[j];
+                    commentsHTML +=
+                        `   <div class="card card-body border-0 bg-secondary mt-4">
+                                          <div class="d-flex align-items-center pb-1 mb-3">
+                                              <img class="rounded-circle" src="/assets/images/avatars/default/${reply.replyAvatar}.png" width="48" alt="Comment author">
+                                              <div class="ps-3">
+                                                  <h6 class="mb-0">${reply.replyFullName}</h6><span class="fs-sm text-muted">${reply.replyDate}</span>
+                                              </div>
+                                          </div>
+                                          <div class="d-flex align-items-center justify-content-between mb-3" role="group" aria-label="Settings group">
+                                              <p class="mb-0"><a class="fw-bold text-decoration-none" href="#">@${comment.username}</a>&nbsp;&nbsp;<span id="reply_${reply.replyId}">${reply.replyComment}</span></p>
+                                              <div>
+                                                  ${reply.replyEdit ? `<button type="button" data-type="reply" data-contentid="${reply.replyId}" data-action="edit" class="editcontent btn btn-sm btn-secondary btn-icon px-2"><i class="ai-edit"></i></button>&nbsp;` : ''}
+                                                  ${reply.replyEdit ? `<button type="button" data-type="reply" data-contentid="${reply.replyId}" class="deletecontent btn btn-sm btn-secondary btn-icon px-2"><i class="ai-trash"></i></button>&nbsp;` : ''}
+                                              </div>
+                                          </div>
+                                      </div>`;
                 }
-                commentsHolder.innerHTML = commentsHTML;
+            }
+            commentsHTML += `</div>`;
+        }
+    }
+    commentsHolder.innerHTML = commentsHTML;
     blogCount.innerHTML = c.toString();
     applyEvents();
 
-    }
-
+}
 
 //load tags related to slug
 function loadTags() {
@@ -266,16 +288,71 @@ function loadTags() {
 
 ///////////////// ls based system ///////////////////
 
-function delMdl(contenttype,contentid)
-{
+async function editMdl(contenttype, contentid) {
+    // delModal!.show();
+    const ip = document.getElementById('editIp') as HTMLTextAreaElement;
+    let something: string = "";
+    if (contenttype == "comment") {
+        something = "comment_" + contentid;
+    }
+    else if (contenttype == "reply") {
+        something = "reply_" + contentid;
+    }
+
+    let currComment = document.getElementById(something) as HTMLSpanElement;
+    if (currComment) {
+        ip.value = currComment.innerHTML;
+        console.log(currComment.innerHTML);
+    }
+    localStorage.setItem('type',contenttype);
+    localStorage.setItem('contentid',contentid);
+    editModal!.show();
+}
+
+
+async function saveEdits(){
+    let ipedits = document.getElementById('editIp') as HTMLTextAreaElement;
+    let contentid = localStorage.getItem('contentid');
+    let type = localStorage.getItem('type');
+    editModal!.hide();
+}
+
+
+async function replyMdl(contentid : string) {
+    localStorage.setItem('action', 'reply');
+    localStorage.setItem('contentid', contentid);
+    replyModal!.show();
+}
+
+//bkmrk
+async function postReply() {
+    let contentid = localStorage.getItem('contentid');
+    let something = document.getElementById('txtarReply') as HTMLTextAreaElement;
+    console.log(contentid + "\n" + something.value);
+    try{
+        const resp = await acPostData('/api/blog/reply/add',{
+            CommentId : contentid?.trim(),
+            ReplyText  : something.value.trim(),
+            Reply  : something.value.trim()
+        });
+        acToast(resp.type,resp.data);
+    }
+    catch{
+        acToast('error','something went wrong');
+    }
+    finally{
+        replyModal!.hide();
+        loadComments();
+    }
+}
+
+async function delMdl(contenttype, contentid) {
     let c_type = document.getElementById("mdlContentType") as HTMLElement;
-    if (contenttype == "comment")
-    {       
+    if (contenttype == "comment") {
         c_type.innerHTML = "comment";
         delModal!.show();
     }
-    else if (contenttype == "reply")
-    {
+    else if (contenttype == "reply") {
         c_type.innerHTML = "reply";
         delModal!.show();
     }
@@ -285,11 +362,9 @@ function delMdl(contenttype,contentid)
     localStorage.setItem('action', "delete");
 }
 
-async function delConfirm()
-{
+async function delConfirm() {
     console.log("reached");
-    if(localStorage.getItem('action') == "delete")
-    {
+    if (localStorage.getItem('action') == "delete") {
         let did = localStorage.getItem('content-type');
         const cid = localStorage.getItem('content-id');
         if (did == "comment") {
@@ -311,142 +386,3 @@ async function delConfirm()
     localStorage.removeItem('action');
 }
 
-//function replyEdit(id) {
-//    localStorage.removeItem("replyid");
-//    localStorage.setItem('replyid', id);
-//    const v = localStorage.getItem('replyid');
-//    //$('#mdlReply').modal('show');
-//    mdlOpen('mdlReply');
-//    var replid = "reply_" + id;
-//    var p = document.getElementById(replid)!.innerHTML;
-//    replyEdt.value = p;
-//    if (p == "" || p == null) {
-//        replyEdt.value = p;
-//        alert("entity");
-//    }
-//}
-
-//function cmntEditSave() {
-//    var editId = localStorage.getItem('editid');
-//    var comment = commentEdt.value;
-//    axios.post('/api/blog/comment/edit', {
-//        id: editId,
-//        comment: comment
-//    })
-//        .then(function (response) {
-//            console.log(response.data);
-//            loadComments();
-//            document.querySelector("#blog_commentEdit").value = "";
-//            //$('#mdlEdit').modal('hide');
-//            mdlClose('mdlEdit');
-//            localStorage.removeItem("editid");
-//            toaster("success", "changes saved");
-//        })
-//        .catch(function (error) {
-//            console.error(error);
-//            toaster("error", "something went wrong");
-//        });
-//}
-
-
-//function replyEditSave() {
-//    let replyId = localStorage.getItem('replyid');
-//    let editedReply = replyEdt.value;
-
-//    axios({
-//        method: 'POST',
-//        url: '/api/blog/reply/edit',
-//        headers: {
-//            'Content-Type': 'application/json',
-//        },
-//        data: {
-//            replyId: replyId,
-//            reply: editedReply,
-//        },
-//    })
-//        .then(function (response) {
-//            loadComments();
-//            mdlClose('mdlReply');
-//            document.getElementById('blog_replyEdit').value = '';
-//            toaster('Success', 'Reply edited successfully');
-//            localStorage.removeItem('replyid');
-//        })
-//        .catch(function (error) {
-//            console.log(error);
-//            toaster('error', 'Something went wrong');
-//        });
-
-//}
-
-//function cmntDelete(id) {
-//    localStorage.setItem('delid', id);
-//    const v = localStorage.getItem('delid');
-//    //$('#mdlDelete').modal('show');
-//    mdlOpen('mdlDelete');
-//}
-
-//function cmntDeleteConfirm() {
-//    axios.post('/api/blog/comment/delete', {
-//        id: localStorage.getItem('delid')
-//    })
-//        .then(function (response) {
-//            console.log(response.data);
-//            loadComments();
-//            //$('#mdlEdit').modal('hide');
-//            //$('#mdlDelete').modal('hide');
-//            mdlClose('mdlEdit');
-//            mdlClose('mdlDelete');
-
-//            localStorage.removeItem('delid');
-//            toaster("success", "comment deleted");
-//        })
-//        .catch(function (error) {
-//            console.error(error);
-//            //$('#mdlDelete').modal('hide');
-//            mdlClose('mdlDelete');
-//            localStorage.removeItem('delid');
-//            toaster("error", "something went wrong");
-//        })
-//}
-
-
-//function cmntReply(id) {
-//    localStorage.setItem('replyto', id);
-//    const v = localStorage.getItem('replyto');
-//    document.getElementById("addReplybox").value = "";
-//    //$('#mdladdReply').modal('show');
-//    mdlOpen('mdladdReply');
-//}
-
-
-
-
-//function replAdd() {
-//    axios({
-//        method: "POST",
-//        url: "/api/blog/reply/add",
-//        headers: {
-//            "Content-Type": "application/json",
-//        },
-//        data: {
-//            Slug: global_slug,
-//            ReplyText: document.getElementById("addReplybox").value,
-//            CommentId: localStorage.getItem("replyto"),
-//        },
-//    })
-//        .then(function (response) {
-//            loadComments();
-//            mdlClose("mdladdReply");
-//            toaster("Success", "Reply added");
-//        })
-//        .catch(function (error) {
-//            console.error("Error:", error);
-//            toaster("Error", error.response.data);
-//        });
-//}
-
-//function replyDelete(id) {
-//    localStorage.setItem('delid', id);
-//    const v = localStorage.getItem('delid');
-//    mdlOpen("mdlreplyDelete");
-//}

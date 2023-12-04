@@ -1,6 +1,8 @@
+using almondCove.Interefaces.Services;
+
 namespace almondCove.Services
 {
-  public class ConfigManager : IConfigManager
+    public class ConfigManager : IConfigManager
   {
     private readonly IConfiguration _configuration;
 

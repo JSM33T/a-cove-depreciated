@@ -1,9 +1,10 @@
 using System.Net.Mail;
 using System.Net;
+using almondCove.Interefaces.Services;
 
 namespace almondCove.Services
 {
-  public class Mailer : IMailer
+    public class Mailer : IMailer
   {
     private readonly IConfigManager _configManager;
         private readonly ILogger<Mailer> _logger;

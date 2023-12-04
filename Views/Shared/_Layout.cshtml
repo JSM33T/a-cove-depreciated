@@ -29,6 +29,9 @@
 <!--wmm:ignore-->
 <!--
 
+
+
+
        .__                             .___                            .__        
 _____  |  |   _____   ____   ____    __| _/____  _______  __ ____      |__| ____  
 \__  \ |  |  /     \ /  _ \ /    \  / __ |/ ___\/  _ \  \/ // __ \     |  |/    \ 
@@ -36,10 +39,11 @@ _____  |  |   _____   ____   ____    __| _/____  _______  __ ____      |__| ____
 (____  /____/__|_|  /\____/|___|  /\____ |\___  >____/ \_/  \___  > /\ |__|___|  /
      \/           \/            \/      \/    \/                \/  \/         \/ 
                                                                                                                                                                                                                                  
- v.1.1.0
+ v.0.5.0
+
+
 
 -->
-
 
   <!--/wmm:ignore-->
 <!DOCTYPE html>
@@ -69,7 +73,7 @@ _____  |  |   _____   ____   ____    __| _/____  _______  __ ____      |__| ____
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" id="google-font">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300&display=swap" rel="stylesheet" id="google-font">
   <link rel="manifest" href="/manifest.json">
   <!-- Vendor styles -->
   @await RenderSectionAsync("Styles", required: false)
@@ -79,6 +83,7 @@ _____  |  |   _____   ____   ____    __| _/____  _______  __ ____      |__| ____
 
   <!-- Theme styles + Bootstrap -->
   <link rel="stylesheet" media="screen" href="/assets/css/theme.css">
+  <link rel="stylesheet" media="screen" href="/lib/aos/dist/aos.min.css">
   <link href="~/assets/css/almondcove.css" rel="stylesheet" />
 
   @await RenderSectionAsync("Css", required: false)
@@ -129,7 +134,7 @@ _____  |  |   _____   ____   ____    __| _/____  _______  __ ____      |__| ____
 
     .page-loading-inner>span {
       display: block;
-      font-family: "Inter", sans-serif;
+      font-family: "Poppins", sans-serif;
       font-size: 1rem;
       font-weight: normal;
       color: #6f788b;
@@ -184,6 +189,7 @@ _____  |  |   _____   ____   ____    __| _/____  _______  __ ____      |__| ____
     }
   </style>
   <style id="customtheme">
+
   </style>
   
   <!-- Page loading scripts -->
@@ -271,6 +277,7 @@ _____  |  |   _____   ____   ____    __| _/____  _______  __ ____      |__| ____
     <!-- Vendor scripts: JS libraries and plugins -->
   <script src="~/lib/axios/dist/axios.min.js"></script>
   @await RenderSectionAsync("Scripts", required: false)
+<script src="~/lib/aos/dist/aos.min.js"></script>
   <script src="/assets/js/theme.min.js"></script>
   <script type="module" src="/assets/js/main.js"></script>
 

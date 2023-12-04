@@ -1,7 +1,6 @@
-﻿using almondCove.Models.Domain;
+﻿using almondCove.Interefaces.Services;
+using almondCove.Models.Domain;
 using almondCove.Modules;
-using almondCove.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.ComponentModel.DataAnnotations;
@@ -256,14 +255,13 @@ namespace almondCove.Api
                             }
                             else
                             {
-                                return BadRequest("username/email taken!!");
+                                return Conflict("username/email taken!!");
                             }
                         }
                         catch (Exception ex)
                         {
-                            _logger.LogError("error while signup" + ex.Message.ToString());
+                            _logger.LogError("error while signup exception: {exmessage}" , ex.Message.ToString());
                             return BadRequest("something went wrong");
-                         
                         }
                     }
                 }
@@ -533,9 +531,6 @@ namespace almondCove.Api
                 _logger.LogError("login via OTP failed msg: {errmsg}",ex2.Message.ToString());
                 return BadRequest("Something went wrong");
             }
-
-
-
         }
     }
 }

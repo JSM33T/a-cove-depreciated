@@ -1,4 +1,4 @@
-﻿using almondCove.Services;
+﻿using almondCove.Interefaces.Services;
 using Microsoft.Data.SqlClient;
 
 namespace almondCove.Middlewares

@@ -20,6 +20,18 @@ namespace almondCove.Controllers
             return View("Views/Home/Index.cshtml");
         }
 
+        [Route("/about")]
+        public IActionResult About()
+        {
+            return View("Views/Home/About.cshtml");
+        }
+
+        [Route("/404")]
+        public IActionResult NF()
+        {
+            return View("Views/Home/404.cshtml");
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

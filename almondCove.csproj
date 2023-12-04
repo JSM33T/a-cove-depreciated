@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>e2f99584-583b-4eb8-a62d-2af5236ccbf0</UserSecretsId>
@@ -36,6 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Azure.Identity" Version="1.10.4" />
     <PackageReference Include="Markdig" Version="0.33.0" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.2" />
     <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.3.2">
@@ -45,7 +46,7 @@
     <PackageReference Include="Serilog" Version="3.1.1" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
     <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="5.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     <PackageReference Include="WebMarkupMin.AspNetCore7" Version="2.15.2" />
   </ItemGroup>
@@ -55,7 +56,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Interefaces\Repositories\" />
     <Folder Include="Logs\" />
+    <Folder Include="Repositories\" />
     <Folder Include="wwwroot\content\gallery\2023\garden-state\assets\" />
     <Folder Include="wwwroot\stores\configurations\" />
     <Folder Include="wwwroot\stores\studio\" />

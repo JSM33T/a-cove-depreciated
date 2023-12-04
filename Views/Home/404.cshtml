@@ -1,0 +1,19 @@
+﻿@using almondCove.Models.Props;
+
+@{
+    HTMLProps props = new()
+            {
+                DataBsTheme = "",
+            };
+
+    MetaProps meta = new()
+            {
+                Title = "Home",
+            };
+
+    ViewData["HtmlProps"] = props;
+    ViewData["MetaProps"] = meta;
+}
+<section class="container pt-5 mt-5">
+    a simple 404 page
+</section>

@@ -1,5 +1,5 @@
-﻿using almondCove.Modules;
-using almondCove.Services;
+﻿using almondCove.Interefaces.Services;
+using almondCove.Modules;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -746,8 +746,7 @@ namespace almondCove.Api
         {
             string userid = "";
             string encodedreply = HttpUtility.HtmlEncode(blogReply.ReplyText.ToString().Trim());
-            if (blogReply.Slug != null)
-            {
+           
                 try
                 {
                     if (encodedreply.Trim() != "")
@@ -779,14 +778,10 @@ namespace almondCove.Api
                 }
                 catch (Exception ex)
                 {
-                    // Log.Information("error in adding reply by" + HttpContext.Session.GetString("username") + "on a blog :" + ex.Message.ToString());
+                    _logger.LogInformation("error in adding reply by {username} exc message: {eexmessage}" , HttpContext.Session.GetString("username"),ex.Message);
                     return BadRequest("Something went wrong");
                 }
-            }
-            else
-            {
-                return BadRequest("Invalid request");
-            }
+         
         }
 
         [HttpPost]
@@ -799,7 +794,6 @@ namespace almondCove.Api
                 var Userdet = HttpContext.Session.GetString("user_id").ToString();
                 try
                 {
-
                     using var connection = new SqlConnection(connectionString);
                     await connection.OpenAsync();
                     var sql = "UPDATE TblBlogReply SET Reply = @Replyval WHERE Id = @Idval AND UserId = @UserId ";

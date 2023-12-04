@@ -32,14 +32,12 @@
 }
 
 @section Styles{
-<style>
-    .hidden
-    {
-        display:none;
-    }
-</style>
-
-
+    <style>
+        .hidden
+        {
+            display:none;
+        }
+    </style>
 }
 
     @Html.AntiForgeryToken()
@@ -49,7 +47,7 @@
 
 <!--===================MODALS================-->
 
-<div class="modal" tabindex="-1" id="mdlDelete" role="dialog">
+<div class="modal fade" tabindex="-1" id="mdlDelete" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -66,6 +64,46 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" tabindex="-1" id="mdlEdit" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Edit?</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <textarea id="editIp" class="form-control"></textarea>
+      </div>
+      <div class="modal-footer flex-column flex-sm-row">
+        <button type="button" class="btn btn-secondary w-100 w-sm-auto mb-3 mb-sm-0" data-bs-dismiss="modal">Close</button>
+        <button type="button" id="saveChanges" class="btn btn-primary w-100 w-sm-auto ms-sm-3">Save Changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" tabindex="-1" id="mdlReply" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Edit?</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <textarea id="txtarReply" class="form-control" placeholder="enter your reply..."></textarea>
+      </div>
+      <div class="modal-footer flex-column flex-sm-row">
+        <button type="button" class="btn btn-secondary w-100 w-sm-auto mb-3 mb-sm-0" data-bs-dismiss="modal">Close</button>
+        <button type="button" id="saveReply" class="btn btn-danger w-100 w-sm-auto ms-sm-3">Post reply</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 
 <!--===============modals end==================-->
 
@@ -97,38 +135,39 @@
         
          <section class="container">
             <div class="row pt-xxl-2">
-              <div class="col-lg-9 col-xl-9 pe-lg-4 pe-xl-0 pt-5 pb-5">
+              <div class="col-lg-8 pe-lg-4 pe-xl-0 pt-5 pb-5">
                     @Html.Raw(htmlContent)
               </div>
               <!-- Sidebar -->
-              <aside class="col-lg-2 offset-lg-1 pt-4 mt-4 pt-lg-4 pb-5" style="margin-top: -7rem;">
-                <div class="position-sticky top-0 mt-2 mt-md-3 mt-lg-0" style="padding-top: 7rem;">
+                  <aside class="col-lg-3  col-sm-12 offset-lg-1 pt-4 mt-4 pt-lg-4 pb-5" style="margin-top: -7rem;">
+                    <div class="position-sticky top-0 mt-2 mt-md-3 mt-lg-0" style="padding-top: 7rem;">
 
-                  <!-- Sharing -->
-                  <h4 class="mb-4">Share:</h4>
-                  <div class="d-flex mt-n3 ms-n3 mb-lg-5 mb-4 pb-3 pb-lg-0">
-                    <a class="btn btn-outline-secondary btn-icon btn-sm btn-instagram rounded-circle mt-3 ms-3" href="#" aria-label="Instagram">
-                      <i class="ai-instagram"></i>
-                    </a>
-                    <a class="btn btn-outline-secondary btn-icon btn-sm btn-facebook rounded-circle mt-3 ms-3" href="#" aria-label="Facebook">
-                      <i class="ai-facebook"></i>
-                    </a>
-                    <a class="btn btn-outline-secondary btn-icon btn-sm btn-telegram rounded-circle mt-3 ms-3" href="#" aria-label="Telegram">
-                      <i class="ai-telegram"></i>
-                    </a>
-                    <a class="btn btn-outline-secondary btn-icon btn-sm btn-x rounded-circle mt-3 ms-3" href="#" aria-label="X">
-                      <i class="ai-x"></i>
-                    </a>
-                  </div>
+                      <!-- Sharing -->
+                      <h4 class="mb-4">Share:</h4>
+                      <div class="d-flex mt-n3 ms-n3 mb-lg-5 mb-4 pb-3 pb-lg-0">
+                        <a class="btn btn-outline-secondary btn-icon btn-sm btn-instagram rounded-circle mt-3 ms-3" href="#" aria-label="Instagram">
+                          <i class="ai-instagram"></i>
+                        </a>
+                        <a class="btn btn-outline-secondary btn-icon btn-sm btn-facebook rounded-circle mt-3 ms-3" href="#" aria-label="Facebook">
+                          <i class="ai-facebook"></i>
+                        </a>
+                        <a class="btn btn-outline-secondary btn-icon btn-sm btn-telegram rounded-circle mt-3 ms-3" href="#" aria-label="Telegram">
+                          <i class="ai-telegram"></i>
+                        </a>
+                        <a class="btn btn-outline-secondary btn-icon btn-sm btn-x rounded-circle mt-3 ms-3" href="#" aria-label="X">
+                          <i class="ai-x"></i>
+                        </a>
+                      </div>
 
-                  <!-- Relevant topics -->
-                  <h4 class="pt-xl-1 mb-4">Tags:</h4>
-                  <div class="d-flex flex-wrap mt-n3 ms-n3 mb-lg-5 mb-4 pb-3 pb-lg-0">
-                      <span id="tagsPlaceholder"></span>
-                  </div>
-                </div>
-              </aside>
-            </div>
+                      <!-- Relevant topics -->
+                      <h4 class="pt-xl-1 mb-4">Tags:</h4>
+                      <div class="d-flex flex-wrap mt-n3 ms-n3 mb-lg-5 mb-4 pb-3 pb-lg-0">
+                          <span id="tagsPlaceholder"></span>
+                      </div>
+                    </div>
+                  </aside>
+                
+          </div>
          </section>
 
         <div class="pt-4 pt-xl-5 mt-4">

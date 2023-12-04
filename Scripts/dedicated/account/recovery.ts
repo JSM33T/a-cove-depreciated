@@ -39,7 +39,6 @@ async function postToLoginApi(usernameval: string) {
             submitBtn.innerHTML = "Proceed";
             const lastLink: string | null = localStorage.getItem("curr_link");
             otpModal!.show();
-
         }
     } catch (error) {
         console.error('Error during login:', error);
@@ -63,7 +62,10 @@ const recoverAccount = async function () {
                 if (response.type === "ok") {
                         otpModal!.hide();
                         acToast("success","Logging into your acc. Make sure to set your password");
-                        setTimeout(redirect,2000);
+                    setTimeout(
+                        redirect,
+                        2000
+                    );
                 }
                 else{
                         console.log("error",response.data);

@@ -1,3 +1,4 @@
+using almondCove.Interefaces.Services;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data;
@@ -5,7 +6,7 @@ using System.Data.Common;
 
 namespace almondCove.Services
 {
-  public class SqlService : ISqlService
+    public class SqlService : ISqlService
   {
     private readonly IConfigManager _configuration;
     private readonly SqlConnection _connection;

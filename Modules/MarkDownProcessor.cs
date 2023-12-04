@@ -6,7 +6,7 @@ namespace almondCove.Modules
     {
         public static string ConvertMarkdownToHtml(string markdownContent)
         {
-            // Use Markdig to perform the conversion
+            //Use Markdig to perform the conversion
             var pipeline = new MarkdownPipelineBuilder().Build();
             return Markdig.Markdown.ToHtml(markdownContent, pipeline);
         }

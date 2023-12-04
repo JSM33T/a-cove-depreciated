@@ -1,9 +1,8 @@
 using almondCove.Extensions;
+using almondCove.Interefaces.Services;
 using almondCove.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Session;
-using Serilog;
-//using Serilog;
 using WebMarkupMin.AspNetCore7;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -50,24 +49,6 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
        })
        ;
 
-
-Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Information()
-                .WriteTo.Async(a =>
-                    {
-                        a.File("Logs/log.txt", rollingInterval: RollingInterval.Day);
-                    })
-                .WriteTo.Async(a =>
-                    {
-                        a.Console();
-                    })
-                .CreateLogger();
-
-
-builder.Services.AddLogging(loggingBuilder =>
-        loggingBuilder.AddSerilog());
-
-
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -81,6 +62,15 @@ app.UseMiddleware<SessionMiddleware>();
 app.UseSession();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.Use(async (context, next) =>
+{
+    await next();
+    if (context.Response.StatusCode == 404)
+    {
+        context.Request.Path = "/404";
+        await next();
+    }
+});
 app.UseRouting();
 app.UseAuthorization();
 app.UseCookieCheckMiddleware();

@@ -1,7 +1,7 @@
 using almondCove.Extensions;
 using almondCove.Interefaces.Services;
 using almondCove.Services;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Session;
 using WebMarkupMin.AspNetCore7;
 
@@ -13,12 +13,17 @@ builder.Services.AddSession(options =>
 });
 builder.Services.AddControllersWithViews();
 
-//exc services
 
+builder.Services.AddAuthentication("MyCookieAuthenticationScheme")
+     .AddCookie("MyCookieAuthenticationScheme", options =>
+     {
+         options.LoginPath = "/"; // Customize the login path
+         options.AccessDeniedPath = "/404"; // Customize the access denied path
+     });
+//exc services
 builder.Services.AddSingleton<IConfigManager, ConfigManager>();
 builder.Services.AddSingleton<IMailer, Mailer>();
 builder.Services.AddSingleton<ISqlService, SqlService>();
-
 
 builder.Services.AddWebMarkupMin(options =>
 {
@@ -39,16 +44,6 @@ builder.Services.AddWebMarkupMin(options =>
 .AddXmlMinification()
 .AddHttpCompression();
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-       .AddCookie(options =>
-       {
-           options.Cookie.HttpOnly = true;
-           options.Cookie.IsEssential = true;
-           options.ExpireTimeSpan = TimeSpan.FromDays(200);
-           options.SlidingExpiration = true;
-       })
-       ;
-
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -58,7 +53,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<SessionMiddleware>();
-//app.UseWebMarkupMin();
+app.UseWebMarkupMin();
 app.UseSession();
 app.UseHttpsRedirection();
 app.UseStaticFiles();

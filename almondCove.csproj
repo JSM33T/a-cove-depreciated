@@ -38,6 +38,8 @@
   <ItemGroup>
     <PackageReference Include="Azure.Identity" Version="1.10.4" />
     <PackageReference Include="Markdig" Version="0.33.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.ResponseCompression" Version="2.2.0" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.2" />
     <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.3.2">
       <PrivateAssets>all</PrivateAssets>
@@ -56,9 +58,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Auth\" />
     <Folder Include="Interefaces\Repositories\" />
     <Folder Include="Logs\" />
     <Folder Include="Repositories\" />
+    <Folder Include="wwwroot\content\gallery\2023\darjeeling-diaries\assets\" />
+    <Folder Include="wwwroot\content\gallery\2023\backyard-birdies\assets\" />
     <Folder Include="wwwroot\content\gallery\2023\garden-state\assets\" />
     <Folder Include="wwwroot\stores\configurations\" />
     <Folder Include="wwwroot\stores\studio\" />
@@ -94,9 +99,6 @@
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Update="Scripts\dedicated\blogs\blog-viewer.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Update="Scripts\dedicated\blogs\browse.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>
     <TypeScriptCompile Update="Scripts\dedicated\blogs\index.ts">

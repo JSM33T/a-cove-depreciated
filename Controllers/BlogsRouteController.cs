@@ -16,7 +16,8 @@ namespace almondCove.Controllers
         public string Title { get; set; }
         public string Slug { get; set; }
         public string Year { get; set; }
-        public string Likes { get; internal set; }
+        public string Likes { get; set; }
+        public string Content { get; set; }
     }
     public class BlogsRouteController : Controller
     {
@@ -27,16 +28,11 @@ namespace almondCove.Controllers
             _hostingEnvironment = hostingEnvironment;
             _configManager = configManager;
         }
-        [Route("/blogs")]
-        public IActionResult Index()
-        {
-            return View("Views/Blogs/Index.cshtml");
-        }
 
-        [Route("/blogs/browse/{something?}/{anotherthing?}")]
+        [Route("/blogs")]
         public IActionResult Browse()
         {
-            return View("Views/Blogs/Browse.cshtml");
+            return View("Views/Blogs/Index.cshtml");
         }
 
         [HttpGet]
@@ -48,7 +44,7 @@ namespace almondCove.Controllers
             var markdownFilePath = "";
             using var connection = new SqlConnection(connectionString);
             connection.Open();
-            var command = new SqlCommand("SELECT a.Id, a.Tags, a.Title, a.UrlHandle, COUNT(b.blogid) AS LikeCount FROM TblBlogMaster a LEFT JOIN TblBlogLike b ON a.Id = b.blogid WHERE a.UrlHandle = '" + Slug + "' GROUP BY a.Id, a.Tags, a.Title, a.UrlHandle; ", connection);
+            var command = new SqlCommand("SELECT a.Id, a.Tags, a.Title,a.PostContent, a.UrlHandle, COUNT(b.blogid) AS LikeCount FROM TblBlogMaster a LEFT JOIN TblBlogLike b ON a.Id = b.blogid WHERE a.UrlHandle = '" + Slug + "' GROUP BY a.Id, a.Tags, a.Title, a.UrlHandle,a.PostContent; ", connection);
             var reader = command.ExecuteReader();
             string tags = string.Empty;
 
@@ -61,7 +57,7 @@ namespace almondCove.Controllers
                     Title = reader["Title"].ToString(),
                     Slug = reader["UrlHandle"].ToString(),
                     Year = Year,
-                    Likes = reader["LikeCount"].ToString(),
+                    Likes = reader["LikeCount"].ToString()
                 };
                  markdownFilePath = Path.Combine(_hostingEnvironment.WebRootPath, "content/blogs/" + blogLoad.Year + "/" + blogLoad.Slug + "/content.md");
             }

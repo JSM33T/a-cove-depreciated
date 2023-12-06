@@ -15,7 +15,7 @@ namespace almondCove.Middlewares
         {
             _next = next;
             _configManager = configManager;
-          //  _logger = logger;
+            //  _logger = logger;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -33,7 +33,7 @@ namespace almondCove.Middlewares
                         WHERE SessionKey = @sessionkey
                         and p.IsActive= 1
                         and p.IsVerified = 1
-                        and p.AvatarId = a.Id " , connection);
+                        and p.AvatarId = a.Id ", connection);
                     checkcommand.Parameters.AddWithValue("@sessionkey", cookieValue);
                     using var reader = await checkcommand.ExecuteReaderAsync();
                     if (reader.Read())
@@ -56,7 +56,7 @@ namespace almondCove.Middlewares
             }
             else
             {
-                 // Log.Information("session active");
+                // Log.Information("session active");
             }
 
             await _next(context);

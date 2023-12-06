@@ -23,7 +23,7 @@ async function submitLoginForm() {
 
 async function postToLoginApi(username: string, password: string) {
     const apiUrl = '/api/account/login';
-    
+
     const data: { username: string; password: string } = {
         username,
         password
@@ -45,7 +45,7 @@ async function postToLoginApi(username: string, password: string) {
             }
         }
         else {
-            acToast('error',response.data);
+            acToast('error', response.data);
         }
     } catch (error) {
         console.error('Error during login:', error);

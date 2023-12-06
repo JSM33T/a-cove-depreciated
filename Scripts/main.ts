@@ -1,7 +1,5 @@
-﻿import { acInit} from './global.js'
+﻿import { acInit } from './global.js'
 declare const axios: { get: (arg0: string) => Promise<{ data: string | any[]; }>; }
-
-
 
 
 acInit([
@@ -29,7 +27,7 @@ function livesearch() {
                 for (var i = 0; i < response.data.length; i++) {
                     sb += `
                     <div class="d-flex align-items-center border-bottom pb-4 mb-4 fade-in">
-                        <a class="position-relative d-inline-block flex-shrink-0 bg-secondary rounded-1" href="${ response.data[i].url}">
+                        <a class="position-relative d-inline-block flex-shrink-0 bg-secondary rounded-1" href="${response.data[i].url}">
                         <img src="/assets/images/search_thumbs/${response.data[i].image}.svg" width="70" alt="Product" /></a>
                         <div class="ps-3">
                             <h4 class="h6 mb-2"><a href="${response.data[i].url}">${response.data[i].title}</a></h4>

@@ -1,5 +1,5 @@
 
-import { acGetData, acInit,prettifyDate } from '../../global.js'
+import { acGetData, acInit, prettifyDate } from '../../global.js'
 import { Profile } from '../../Interfaces/profile.interface.js';
 
 const Name = document.getElementById("fullName") as HTMLSpanElement;
@@ -16,17 +16,16 @@ acInit([
 ])
 
 
-async function fetchDetails()
-{
+async function fetchDetails() {
     const response = acGetData('api/profile/getdetails');
     console.log(response);
-    const resp : Profile = (await response).data;
+    const resp: Profile = (await response).data;
     Name.innerHTML = resp.firstName + ' ' + resp.lastName;
     Bio.innerHTML = resp.bio;
     Email.innerHTML = resp.eMail;
     Gender.innerHTML = resp.gender === "m" ? "Male" : resp.gender === "f" ? "Female" : "Other";
     DateJoined.innerHTML = prettifyDate(resp.dateElement);
     UserName.innerHTML = "@" + resp.userName.trim();
-    Avatar.style.backgroundImage = 'url(/assets/images/avatars/default/'+ resp.avatarImg +'.png)' 
+    Avatar.style.backgroundImage = 'url(/assets/images/avatars/default/' + resp.avatarImg + '.png)'
 
 }

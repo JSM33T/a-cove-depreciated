@@ -1,6 +1,6 @@
 ﻿import { Email } from './Interfaces/email.interface';
 
-declare const bootstrap: any,axios:any;
+declare const bootstrap: any, axios: any;
 const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]') as HTMLInputElement;
 
 ///===================== URL UTILS ====================
@@ -112,10 +112,27 @@ function classesToTags(tag: string, classes: string) {
                 elements[i].classList.add(classesArray[j]);
             }
         }
-        console.log("Classes added successfully!");
+        console.log("classes: " + classes + "added to tag: " + tag + " successfully!");
     } else {
         console.error("No elements with tag '" + tag + "' found.");
     }
+}
+
+function addTargetBlankToLinks() {
+    // Get all the anchor tags on the page
+    const links = document.getElementsByTagName('a');
+    // Loop through each anchor tag and add the target="_blank" attribute
+    if (links.length > 0) {
+        for (var i = 0; i < links.length; i++) {
+            links[i].setAttribute('target', '_blank');
+        }
+        console.log(i + " anchor tags found");
+        console.log("applied target=_blank to a tags");
+    }
+    else {
+        console.log("no a tags");
+    }
+
 }
 
 
@@ -127,7 +144,7 @@ function acInit(functions: (() => void)[]): void {
             functions.forEach(func => func());
         });
     }
-} 
+}
 
 //id
 //function smartLoad(fns) {
@@ -257,7 +274,7 @@ function acToast(type: string, message: string) {
 
     // Create toast header
     const toastHeader = document.createElement('div');
-    toastHeader.classList.add('toast-header','bg-primary','text-white');
+    toastHeader.classList.add('toast-header', 'bg-primary', 'text-white');
 
     //const i = document.createElement('i');
     //i.classList.add('ai-bell', 'fs-lg me-2');
@@ -275,7 +292,7 @@ function acToast(type: string, message: string) {
     closeBtn.setAttribute('data-dismiss', 'toast');
     closeBtn.setAttribute('aria-label', 'Close');
     closeBtn.setAttribute('data-bs-dismiss', 'toast'); // This line closes modals
-   // closeBtn.innerHTML = '<span aria-hidden="true">&times;</span>';
+    // closeBtn.innerHTML = '<span aria-hidden="true">&times;</span>';
     toastHeader.appendChild(closeBtn);
     // Create toast body
     const toastBody = document.createElement('div');
@@ -287,7 +304,7 @@ function acToast(type: string, message: string) {
     toastElement.appendChild(toastBody);
 
     // Append the toast element to the body
-   // document.body.appendChild(toastElement);
+    // document.body.appendChild(toastElement);
     toastContainer!.appendChild(toastElement);
 
     const toast = new bootstrap.Toast(toastElement);
@@ -339,44 +356,44 @@ function acFormHandler(formId: string, submitMethod: (event: Event) => Promise<v
 
 class Url {
     private urlObject: URL;
-  
+
     constructor(url?: string) {
-      const targetUrl = url || window.location.href;
-      this.urlObject = new URL(targetUrl);
+        const targetUrl = url || window.location.href;
+        this.urlObject = new URL(targetUrl);
     }
-  
+
     get protocol(): string {
-      return this.urlObject.protocol;
+        return this.urlObject.protocol;
     }
-  
+
     get host(): string {
-      return this.urlObject.host;
+        return this.urlObject.host;
     }
-  
+
     get hostname(): string {
-      return this.urlObject.hostname;
+        return this.urlObject.hostname;
     }
-  
+
     get port(): string {
-      return this.urlObject.port;
+        return this.urlObject.port;
     }
-  
+
     get path(): string {
-      return this.urlObject.pathname;
+        return this.urlObject.pathname;
     }
-  
+
     get query(): string {
-      return this.urlObject.search;
+        return this.urlObject.search;
     }
-  
+
     get hash(): string {
-      return this.urlObject.hash;
+        return this.urlObject.hash;
     }
-  
+
     get fullUrl(): string {
-      return this.urlObject.href;
+        return this.urlObject.href;
     }
-  }
+}
 
 
 export {
@@ -388,13 +405,15 @@ export {
     acQueryParams, // set query params 
     acClearParams, // clear query params
     getQueryParameters, //get query param(s)
-    
+
     acGetData, //get data axios currently xhr via axios
     acPostData, //post data currently xhr via axios
-    acFormHandler, //set default submit behaviour to a custom method/function
+
+    acFormHandler, //set default submit behaviour to a custom function
 
     validateEmail, // email validation
-    classesToTags, // add classes to all the tags passed as params
+    classesToTags, // add classes to all the tags passed as params(markdown to html)
+    addTargetBlankToLinks,//add target blank to all the links in content (markdown to html)
 
     prettifyDate,// prettify date wrt today.  (today , yesterday, 3 days ago, 23rd of july etc.)
 

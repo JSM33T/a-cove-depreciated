@@ -12,7 +12,7 @@ const signupBtn = document.getElementById('submitBtn') as HTMLButtonElement;
 
 const otpModal = new bootstrap.Modal(document.getElementById('otpMdl'));
 const otpSubmit = document.getElementById("submitOtp") as HTMLButtonElement;
-const otpVal = document.getElementById("otpVal") as HTMLInputElement; 
+const otpVal = document.getElementById("otpVal") as HTMLInputElement;
 
 acInit([
         //override default form post action
@@ -58,40 +58,40 @@ async function postToSignUpApi(signupdata: any) {
         } catch (error) {
                 console.error('Error during login:', error);
         } finally {
-            signupBtn.innerHTML = "Log In";
-            signupBtn.classList.remove('pe-none');
+                signupBtn.innerHTML = "Log In";
+                signupBtn.classList.remove('pe-none');
         }
 };
 
 const verifyDeets = async function () {
 
-    otpSubmit.innerHTML = "Wait...";
-    otpSubmit.classList.add('pe-none');
+        otpSubmit.innerHTML = "Wait...";
+        otpSubmit.classList.add('pe-none');
         console.log(otpVal.value);
         console.log(userName.value);
 
         try {
                 const dt = {
-                        OTP : otpVal.value.trim(),
-                        UserName : userName.value.trim()
+                        OTP: otpVal.value.trim(),
+                        UserName: userName.value.trim()
                 }
-                const response = await acPostData("/api/user/verification",dt);
+                const response = await acPostData("/api/user/verification", dt);
                 console.log(dt);
                 console.log(response);
                 if (response.type === "ok") {
                         otpModal!.hide();
-                        acToast("success","user verified redirecting to login page...");
-                        setTimeout(redirect,2000);
+                        acToast("success", "user verified redirecting to login page...");
+                        setTimeout(redirect, 2000);
                 }
-                else{
-                        console.log("error",response.data);
+                else {
+                        console.log("error", response.data);
                 }
         } catch (error) {
                 console.error('Error during login:', error);
-                acToast('error','something went wrong');
+                acToast('error', 'something went wrong');
         } finally {
-            otpSubmit.innerHTML = "Verify";
-            otpSubmit.classList.remove('pe-none');
+                otpSubmit.innerHTML = "Verify";
+                otpSubmit.classList.remove('pe-none');
         }
 };
 

@@ -27,20 +27,20 @@ builder.Services.AddSingleton<ISqlService, SqlService>();
 
 builder.Services.AddWebMarkupMin(options =>
 {
-    options.AllowMinificationInDevelopmentEnvironment = false;
-    options.AllowCompressionInDevelopmentEnvironment = false;
+    options.AllowMinificationInDevelopmentEnvironment = true;
+    options.AllowCompressionInDevelopmentEnvironment = true;
 })
-.AddHtmlMinification(options =>
-{
-    options.MinificationSettings.RemoveRedundantAttributes = true;
-    options.MinificationSettings.RemoveHttpProtocolFromAttributes = true;
-    options.MinificationSettings.RemoveHttpsProtocolFromAttributes = true;
-    options.MinificationSettings.PreserveNewLines = true;
-    options.MinificationSettings.MinifyEmbeddedCssCode = true;
-    options.MinificationSettings.RemoveHtmlComments = true;
-    options.MinificationSettings.RemoveHtmlCommentsFromScriptsAndStyles = true;
-    options.MinificationSettings.MinifyEmbeddedJsCode = true;
-})
+//.AddHtmlMinification(options =>
+//{
+//    options.MinificationSettings.RemoveRedundantAttributes = true;
+//    options.MinificationSettings.RemoveHttpProtocolFromAttributes = true;
+//    options.MinificationSettings.RemoveHttpsProtocolFromAttributes = true;
+//    options.MinificationSettings.PreserveNewLines = true;
+//    options.MinificationSettings.MinifyEmbeddedCssCode = true;
+//    options.MinificationSettings.RemoveHtmlComments = true;
+//    options.MinificationSettings.RemoveHtmlCommentsFromScriptsAndStyles = true;
+//    options.MinificationSettings.MinifyEmbeddedJsCode = true;
+//})
 .AddXmlMinification()
 .AddHttpCompression();
 

@@ -1,5 +1,5 @@
 
-import { acFormHandler, acGetData, acInit,acPostData,prettifyDate } from '../../global.js'
+import { acFormHandler, acGetData, acInit, acPostData, prettifyDate } from '../../global.js'
 import { Profile } from '../../Interfaces/profile.interface.js';
 
 const firstName = document.getElementById("firstName") as HTMLInputElement;
@@ -26,11 +26,11 @@ acInit([
 
 
 async function onAvatarChangeEvent() {
- 
+
 
     // Attach the event listener to the dropdown
     //avatarDdl.addEventListener("change", function () {
-        
+
     //    Avatar.style.backgroundImage = 'url(/assets/images/avatars/default/' + avatarDdl.dataset.img + '.png)' 
     //});
 
@@ -43,15 +43,14 @@ async function onAvatarChangeEvent() {
         var imgValue = selectedOption.dataset.img;
 
         // Update the background image of the Avatar element
-        
+
         Avatar!.style.backgroundImage = 'url(/assets/images/avatars/default/' + imgValue + '.png)';
     });
 
 
 }
 
-async function fetchDetails()
-{
+async function fetchDetails() {
     const response = acGetData('/api/profile/getdetails');
     const resp: Profile = (await response).data;
     firstName.value = resp.firstName;
@@ -60,7 +59,7 @@ async function fetchDetails()
     emailId.value = resp.eMail;
     bio.value = resp.bio;
     avatarDdl.value = resp.avatarId.toString();
-    Avatar.style.backgroundImage = 'url(/assets/images/avatars/default/'+ resp.avatarImg +'.png)' 
+    Avatar.style.backgroundImage = 'url(/assets/images/avatars/default/' + resp.avatarImg + '.png)'
 
 }
 
@@ -68,22 +67,21 @@ async function loadavatarDdl() {
     const optns = await acGetData("/api/getavatars");
     let options = ` <option value="" selected disabled>Select avatar</option>`;
     var i;
-    for (i = 1; i < optns.data.length; i++)
-    {
+    for (i = 1; i < optns.data.length; i++) {
         options += `<option value="${optns.data[i].id}" data-img="${optns.data[i].image}">${optns.data[i].title}</option>`;
-    }                     
+    }
     avatarDdl.innerHTML = options;
 }
 
 async function submitDetails() {
     const data = {
-        firstName : "",
-        lastName : ""
+        firstName: "",
+        lastName: ""
 
     }
     const resp = acPostData('ssss', data)
 }
 
 
-async function submitPass(){
+async function submitPass() {
 }

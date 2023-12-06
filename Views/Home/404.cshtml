@@ -7,15 +7,12 @@
                 DataBsTheme = "",
             };
 
-    MetaProps meta = new()
-            {
-                Title = "Home",
-            };
+    MetaProps meta = new(){};
 
     ViewData["HtmlProps"] = props;
     ViewData["MetaProps"] = meta;
 }
 <section class="container pt-5 mt-5">
     Oops nothing at this route!!!
-    <button class="btn btn-primary rounded-pill">Go back</button>
+    <a class="btn btn-primary rounded-pill" href="/"><i class="ai ai-home"></i>Home</a>
 </section>

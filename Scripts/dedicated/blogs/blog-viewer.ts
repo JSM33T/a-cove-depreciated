@@ -45,7 +45,7 @@ acInit([
     () => delbtn.addEventListener('click', delConfirm),
     () => replySaveBtn.addEventListener('click', postReply),
     () => editSaveBtn.addEventListener('click', saveEdits)
-    
+
 ]);
 
 
@@ -76,11 +76,10 @@ async function applyEvents() {
     replybuttons.forEach(function (button) {
         button.addEventListener('click', function () {
             let dataId = button.dataset.contentid;
-            if(dataId)
-            {
+            if (dataId) {
                 replyMdl(dataId);
             }
-            
+
         });
     });
     console.log("delete events attached");
@@ -304,13 +303,13 @@ async function editMdl(contenttype, contentid) {
         ip.value = currComment.innerHTML;
         console.log(currComment.innerHTML);
     }
-    localStorage.setItem('type',contenttype);
-    localStorage.setItem('contentid',contentid);
+    localStorage.setItem('type', contenttype);
+    localStorage.setItem('contentid', contentid);
     editModal!.show();
 }
 
 
-async function saveEdits(){
+async function saveEdits() {
     let ipedits = document.getElementById('editIp') as HTMLTextAreaElement;
     let contentid = localStorage.getItem('contentid');
     let type = localStorage.getItem('type');
@@ -318,7 +317,7 @@ async function saveEdits(){
 }
 
 
-async function replyMdl(contentid : string) {
+async function replyMdl(contentid: string) {
     localStorage.setItem('action', 'reply');
     localStorage.setItem('contentid', contentid);
     replyModal!.show();
@@ -329,18 +328,18 @@ async function postReply() {
     let contentid = localStorage.getItem('contentid');
     let something = document.getElementById('txtarReply') as HTMLTextAreaElement;
     console.log(contentid + "\n" + something.value);
-    try{
-        const resp = await acPostData('/api/blog/reply/add',{
-            CommentId : contentid?.trim(),
-            ReplyText  : something.value.trim(),
-            Reply  : something.value.trim()
+    try {
+        const resp = await acPostData('/api/blog/reply/add', {
+            CommentId: contentid?.trim(),
+            ReplyText: something.value.trim(),
+            Reply: something.value.trim()
         });
-        acToast(resp.type,resp.data);
+        acToast(resp.type, resp.data);
     }
-    catch{
-        acToast('error','something went wrong');
+    catch {
+        acToast('error', 'something went wrong');
     }
-    finally{
+    finally {
         replyModal!.hide();
         loadComments();
     }

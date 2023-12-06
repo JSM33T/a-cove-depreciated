@@ -1,5 +1,6 @@
 ﻿using almondCove.Interefaces.Services;
 using almondCove.Models.Domain;
+using almondCove.Models.DTO;
 using almondCove.Modules;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -8,31 +9,6 @@ using System.Data;
 
 namespace almondCove.Api
 {
-    public class LoginCreds
-    {
-        [Required]
-        [MaxLength(50)]
-        [MinLength(4)]
-        public string UserName { get; set; }
-        [Required]
-        [MaxLength(50)]
-        [MinLength(6)]
-        public string Password { get; set; }
-        public string Otp { get; set; }
-    }
-    public class Verify
-    {
-        public string UserName { get; set; }
-        public string OTP { get; set; }
-    }
-
-    public class Recovery
-    {
-        [Required]
-        public string UserName { get; set; }
-    }
-
-    [Route("api/auth")]
     [ApiController]
     public class AuthApiController : ControllerBase
     {
@@ -48,7 +24,7 @@ namespace almondCove.Api
         }
 
         [HttpPost("/api/account/login")]
-        [IgnoreAntiforgeryToken]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UserLogin([FromBody] LoginCreds loginCreds)
         {
             if (ModelState.IsValid)
@@ -139,7 +115,7 @@ namespace almondCove.Api
         }
 
         [HttpPost("/api/account/signup")]
-        [IgnoreAntiforgeryToken]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UserSignUp([FromBody] UserProfile userProfile)
         {
             if (!ModelState.IsValid)

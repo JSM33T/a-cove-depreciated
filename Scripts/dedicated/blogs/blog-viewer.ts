@@ -313,6 +313,15 @@ async function saveEdits() {
     let ipedits = document.getElementById('editIp') as HTMLTextAreaElement;
     let contentid = localStorage.getItem('contentid');
     let type = localStorage.getItem('type');
+    let url = "/api/blog/" + type + "/edit";
+    const data = {
+        Id : contentid,
+        comment : ipedits.value
+    }
+    let resp =await acPostData(url,data);
+    console.log(data);
+    console.log(resp);
+    await loadComments();
     editModal!.hide();
 }
 
@@ -323,7 +332,6 @@ async function replyMdl(contentid: string) {
     replyModal!.show();
 }
 
-//bkmrk
 async function postReply() {
     let contentid = localStorage.getItem('contentid');
     let something = document.getElementById('txtarReply') as HTMLTextAreaElement;
@@ -341,6 +349,7 @@ async function postReply() {
     }
     finally {
         replyModal!.hide();
+        something.value="";
         loadComments();
     }
 }

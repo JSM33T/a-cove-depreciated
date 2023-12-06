@@ -58,13 +58,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Auth\" />
-    <Folder Include="Interefaces\Repositories\" />
     <Folder Include="Logs\" />
-    <Folder Include="Repositories\" />
     <Folder Include="wwwroot\content\gallery\2023\darjeeling-diaries\assets\" />
     <Folder Include="wwwroot\content\gallery\2023\backyard-birdies\assets\" />
     <Folder Include="wwwroot\content\gallery\2023\garden-state\assets\" />
+    <Folder Include="wwwroot\content\learning-hub\" />
     <Folder Include="wwwroot\stores\configurations\" />
     <Folder Include="wwwroot\stores\studio\" />
   </ItemGroup>
@@ -74,18 +72,6 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Update="Views\Studio\Viewer.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Views\Studio\Browse.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Views\Studio\Browse.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

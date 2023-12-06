@@ -5,57 +5,34 @@ This repository contains the source code for a community website project made wi
 
 ## Project Structure
 
-The .NET project is organized as follows:
-
-
-
-- **src:** Contains all .NET source files.
-  - **Modules:** Directory for modularizing features. Each feature has its own folder with controllers, services, and other related files.
+### C#/.NET:
+  - **src:** Contains all .NET source files.
+  - **Utility Classes:** Directory for modularizing features. Each feature has its own folder with controllers, services, and other related files.
   - **Services:** Directory for common services used across multiple modules.
+  - **Controllers** : 
+    - Routers : handle routing and prerendering of contents
+    - Api  : Api controllers for lazy loading & js operations
+
   - **Interfaces:** Directory for defining interfaces, promoting abstraction and separation of concerns.
   - **Middlewares:** Directory for custom middlewares used in the project.
   - **Extensions:** Directory for extension methods or service collection extensions.
+  - **Repositories** : Data access methods.
+  - **Migrations** : SQL files for migrating db schema.
   - **appsettings.json:** Configuration file for application settings.
-  - **Startup.cs:** Main entry point for configuring services, middleware, and the application pipeline.
+  - **Program.cs:** Main entry point for configuring services, middleware, and the application pipeline.
 
-## Key Components
+### Typescript
 
-### 1. Services
+ - **global.ts** : Contains global accessible functions imported by submodules
+ - **dedicated modules** : Page specific modules to carry around dedicated operations
+ - **interfaces** : interfaces to define the shape of incoming DTOs
 
-directory contains common services used across the application:
-
-- `Feature1Controller.cs`: Controller for handling HTTP requests related to Feature1.
-- `Feature1Service.cs`: Service class containing the business logic for Feature1.
-
-### 2. Modules (statically imported functionalities)
-
-The `Modules` directory contains common services used across the application:
-
-- `CommonService.cs`: Common service providing shared functionality.
-
-### 3. Interfaces
-
-The `Interfaces` directory contains interfaces for promoting abstraction:
-
-- `IFeature1Service.cs`: Interface defining the contract for Feature1 service.
-- `IFeature2Service.cs`: Interface defining the contract for Feature2 service.
-
-### 4. Middlewares
-
-The `Middlewares` directory contains custom middlewares:
-
-- `CustomMiddleware.cs`: Custom middleware for handling specific aspects of the request/response pipeline.
-
-### 5. Extensions
-
-The `Extensions` directory contains extension methods or service collection extensions:
-
-- `ServiceCollectionExtensions.cs`: Extension methods for IServiceCollection.
 
 ## Configuration and Startup
 
 - **appsettings.json:** Configuration file containing application settings, connection strings, etc.
-- **Startup.cs:** Main entry point for configuring services, middleware, and the application pipeline.
+- **Program.cs** : Main entry point for configuring services, middleware, and the application pipeline.
+- **Migrations** : Migrations
 
 ## Project File
 

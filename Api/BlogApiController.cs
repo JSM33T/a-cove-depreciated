@@ -13,6 +13,7 @@ namespace almondCove.Api
     {
         public string Slug { get; set; }
         public string CommentId { get; set; }
+
         [MaxLength(200)]
         [MinLength(2)]
         public string Reply { get; set; }
@@ -164,7 +165,7 @@ namespace almondCove.Api
         }
 
         [HttpGet]
-        [Route("api/blogs/{mode}/{classify}/{key}")]
+        [Route("/api/blogs/{mode}/{classify}/{key}")]
         public async Task<JsonResult> GetBlogs(string mode, string classify, string key)
         {
             mode = "0";
@@ -190,7 +191,7 @@ namespace almondCove.Api
                     }
                     else if (classify == "year")
                     {
-                        sql = "SELECT m.Id, m.Title,m.Description,m.UrlHandle,m.DatePosted,m.Tags,YEAR(m.DatePosted) AS Year,c.Title AS Category,c.Locator,COUNT(bc.Id) AS Comments FROM TblBlogMaster m " +
+                       sql = "SELECT m.Id, m.Title,m.Description,m.UrlHandle,m.DatePosted,m.Tags,YEAR(m.DatePosted) AS Year,c.Title AS Category,c.Locator,COUNT(bc.Id) AS Comments FROM TblBlogMaster m " +
                              "LEFT JOIN TblBlogComment bc ON m.Id = bc.PostId " +
                              "JOIN TblBlogCategory c ON m.CategoryId = c.Id " +
                              "WHERE m.CategoryId = c.Id and YEAR(m.DatePosted) = '" + key + "' AND m.IsActive = 1" +
@@ -255,7 +256,7 @@ namespace almondCove.Api
         }
 
         [HttpGet]
-        [Route("api/blog/{Slug}/authors")]
+        [Route("/api/blog/{Slug}/authors")]
         [IgnoreAntiforgeryToken]
         public async Task<IActionResult> LoadAuthors(string Slug)
         {
@@ -289,7 +290,7 @@ namespace almondCove.Api
         }
 
         [HttpGet]
-        [Route("api/blog/{Slug}/likes")]
+        [Route("/api/blog/{Slug}/likes")]
         [IgnoreAntiforgeryToken]
         public async Task<int> LoadLikes(string Slug)
         {
@@ -312,7 +313,7 @@ namespace almondCove.Api
         }
 
         [HttpPost]
-        [Route("api/blog/addlike")]
+        [Route("/api/blog/addlike")]
         [IgnoreAntiforgeryToken]
         public async Task<IActionResult> AddLike(BlogLike blogLike)
         {
@@ -377,7 +378,7 @@ namespace almondCove.Api
         }
 
         [HttpPost]
-        [Route("api/blog/likestat")]
+        [Route("/api/blog/likestat")]
         [IgnoreAntiforgeryToken]
         public async Task<IActionResult> IsLiked(BlogLike blogLike)
         {
@@ -417,7 +418,7 @@ namespace almondCove.Api
         }
 
         [HttpGet]
-        [Route("api/blogs/categories/load")]
+        [Route("/api/blogs/categories/load")]
         [IgnoreAntiforgeryToken]
         public async Task<IActionResult> LoadCategories()
         {
@@ -464,7 +465,7 @@ namespace almondCove.Api
         }
 
         [HttpPost]
-        [Route("api/blog/comment/add")]
+        [Route("/api/blog/comment/add")]
         [IgnoreAntiforgeryToken]
         public async Task<IActionResult> AddComment([FromBody] BlogComment blogComment)
         {
@@ -528,7 +529,7 @@ namespace almondCove.Api
         }
 
         [HttpPost]
-        [Route("api/blog/comments/load")]
+        [Route("/api/blog/comments/load")]
         [IgnoreAntiforgeryToken]
         public async Task<IActionResult> LoadComments([FromBody] BlogComment blogComment)
         {
@@ -606,7 +607,7 @@ namespace almondCove.Api
                         user = "no";
                     }
                     var commentId = reader.GetInt32(0);
-                    if (!comments.ContainsKey(commentId))
+                    if (!comments.TryGetValue(commentId, out dynamic value))
                     {
                         var comment = new
                         {
@@ -621,9 +622,27 @@ namespace almondCove.Api
                             avatar = reader.GetString(8),
                             replies = new List<object>()
                         };
-
-                        comments.Add(commentId, comment);
+                        value = comment;
+                        comments.Add(commentId, value);
                     }
+                    //if (!comments.ContainsKey(commentId))
+                    //{
+                    //    var comment = new
+                    //    {
+                    //        id = commentId,
+                    //        edit = editable,
+                    //        user,
+                    //        fullname = reader.GetString(3) + " " + reader.GetString(4),
+                    //        userid = reader.GetInt32(2),
+                    //        username = reader.GetString(5),
+                    //        comment = HttpUtility.HtmlDecode(reader.GetString(1)),
+                    //        date = reader.GetString(7),
+                    //        avatar = reader.GetString(8),
+                    //        replies = new List<object>()
+                    //    };
+
+                    //    comments.Add(commentId, comment);
+                    //}
 
                     if (!reader.IsDBNull(9))
                     {
@@ -640,8 +659,7 @@ namespace almondCove.Api
                             replyFullName = reader.GetString(13) + " " + reader.GetString(14),
                             replyAvatar = reader.GetString(15)
                         };
-
-                        comments[commentId].replies.Add(reply);
+                        value.replies.Add(reply);
                     }
                 }
             }
@@ -659,8 +677,8 @@ namespace almondCove.Api
         }
 
         [HttpPost]
-        [Route("api/blog/comment/edit")]
-        [IgnoreAntiforgeryToken]
+        [Route("/api/blog/comment/edit")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditComment([FromBody] BlogComment blogComment)
         {
             if (HttpContext.Session.GetString("username") != null)
@@ -668,9 +686,7 @@ namespace almondCove.Api
                 var Userdet = HttpContext.Session.GetString("user_id").ToString();
                 try
                 {
-
                     using var connection = new SqlConnection(connectionString);
-
                     await connection.OpenAsync();
                     var sql = "UPDATE TblBlogComment SET Comment = @Commentval WHERE Id = @Idval AND UserId = @UserId";
                     var command = new SqlCommand(sql, connection);
@@ -683,7 +699,7 @@ namespace almondCove.Api
                 }
                 catch (Exception ex)
                 {
-                    // Log.Error("error editing comment by user " + Userdet + "message:" + ex.Message.ToString());
+                    _logger.LogError("error while editing comment exception:{msg}", ex.Message);
                     return BadRequest("Something went wrong");
                 }
             }
@@ -695,7 +711,42 @@ namespace almondCove.Api
         }
 
         [HttpPost]
-        [Route("api/blog/comment/delete")]
+        [Route("/api/blog/reply/edit")]
+        [IgnoreAntiforgeryToken]
+        public async Task<IActionResult> EditrReply([FromBody] BlogReply blogReply)
+        {
+            if (HttpContext.Session.GetString("username") != null)
+            {
+                var Userdet = HttpContext.Session.GetString("user_id").ToString();
+                try
+                {
+                    using var connection = new SqlConnection(connectionString);
+                    await connection.OpenAsync();
+                    var sql = "UPDATE TblBlogReply SET Reply = @Replyval WHERE Id = @Idval AND UserId = @UserId ";
+                    var command = new SqlCommand(sql, connection);
+                    command.Parameters.AddWithValue("@Replyval", HttpUtility.HtmlEncode(blogReply.Reply));
+                    command.Parameters.AddWithValue("@Idval", blogReply.ReplyId);
+                    command.Parameters.AddWithValue("@UserId", HttpContext.Session.GetString("user_id").ToString());
+                    await command.ExecuteNonQueryAsync();
+                    await connection.CloseAsync();
+                    return Ok("changes saved");
+                }
+                catch (Exception ex)
+                {
+                    // Log.Error("error editing reply by user " + Userdet + "message:" + ex.Message.ToString());
+                    return BadRequest("Something went wrong");
+                }
+            }
+            else
+            {
+                return BadRequest("Access denied");
+            }
+
+        }
+
+
+        [HttpPost]
+        [Route("/api/blog/comment/delete")]
         [IgnoreAntiforgeryToken]
         public async Task<IActionResult> DeleteComment([FromBody] BlogComment blogComment)
         {
@@ -740,7 +791,7 @@ namespace almondCove.Api
         }
 
         [HttpPost]
-        [Route("api/blog/reply/add")]
+        [Route("/api/blog/reply/add")]
         [IgnoreAntiforgeryToken]
         public async Task<IActionResult> AddReply([FromBody] BlogReply blogReply)
         {
@@ -784,42 +835,10 @@ namespace almondCove.Api
          
         }
 
-        [HttpPost]
-        [Route("api/blog/reply/edit")]
-        [IgnoreAntiforgeryToken]
-        public async Task<IActionResult> EditrReply([FromBody] BlogReply blogReply)
-        {
-            if (HttpContext.Session.GetString("username") != null)
-            {
-                var Userdet = HttpContext.Session.GetString("user_id").ToString();
-                try
-                {
-                    using var connection = new SqlConnection(connectionString);
-                    await connection.OpenAsync();
-                    var sql = "UPDATE TblBlogReply SET Reply = @Replyval WHERE Id = @Idval AND UserId = @UserId ";
-                    var command = new SqlCommand(sql, connection);
-                    command.Parameters.AddWithValue("@Replyval", HttpUtility.HtmlEncode(blogReply.Reply));
-                    command.Parameters.AddWithValue("@Idval", blogReply.ReplyId);
-                    command.Parameters.AddWithValue("@UserId", HttpContext.Session.GetString("user_id").ToString());
-                    await command.ExecuteNonQueryAsync();
-                    await connection.CloseAsync();
-                    return Ok("changes saved");
-                }
-                catch (Exception ex)
-                {
-                    // Log.Error("error editing reply by user " + Userdet + "message:" + ex.Message.ToString());
-                    return BadRequest("Something went wrong");
-                }
-            }
-            else
-            {
-                return BadRequest("Access denied");
-            }
-
-        }
+        
 
         [HttpPost]
-        [Route("api/blog/reply/delete")]
+        [Route("/api/blog/reply/delete")]
         [IgnoreAntiforgeryToken]
         public async Task<IActionResult> DeleteReply([FromBody] BlogReply blogReply)
         {

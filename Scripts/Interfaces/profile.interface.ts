@@ -1,4 +1,4 @@
-export interface Profile {
+export interface IProfile {
     avatarId: number;
     avatarImg: string;
     badges: null | string[]; // Assuming badges can be an array of strings or null

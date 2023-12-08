@@ -1,6 +1,6 @@
 
 import { acGetData, acInit, prettifyDate } from '../../global.js'
-import { Profile } from '../../Interfaces/profile.interface.js';
+import { IProfile } from '../../Interfaces/profile.interface.js';
 
 const Name = document.getElementById("fullName") as HTMLSpanElement;
 const Email = document.getElementById("emailId") as HTMLSpanElement;
@@ -19,7 +19,7 @@ acInit([
 async function fetchDetails() {
     const response = acGetData('api/profile/getdetails');
     console.log(response);
-    const resp: Profile = (await response).data;
+    const resp: IProfile = (await response).data;
     Name.innerHTML = resp.firstName + ' ' + resp.lastName;
     Bio.innerHTML = resp.bio;
     Email.innerHTML = resp.eMail;

@@ -1,6 +1,6 @@
 
 import { acFormHandler, acGetData, acInit, acPostData, prettifyDate } from '../../global.js'
-import { Profile } from '../../Interfaces/profile.interface.js';
+import { IProfile } from '../../Interfaces/profile.interface.js';
 
 const firstName = document.getElementById("firstName") as HTMLInputElement;
 const lastName = document.getElementById("lastName") as HTMLInputElement;
@@ -8,20 +8,19 @@ const emailId = document.getElementById("emailId") as HTMLInputElement;
 const userName = document.getElementById("userName") as HTMLInputElement;
 const bio = document.getElementById("bio") as HTMLTextAreaElement;
 
-const detailsForm = document.getElementById("basicInfoForm") as HTMLFormElement;
-const passForm = document.getElementById("passForm") as HTMLFormElement;
+// const detailsForm = document.getElementById("basicInfoForm") as HTMLFormElement;
+// const passForm = document.getElementById("passForm") as HTMLFormElement;
 
 const Avatar = document.getElementById("avatarPlaceHolder") as HTMLElement;
 const avatarDdl = document.getElementById("avatarDdl") as HTMLSelectElement;
-
 
 
 acInit([
     fetchDetails,
     loadavatarDdl,
     onAvatarChangeEvent,
-    () => acFormHandler('detailsForm', submitDetails),
-    () => acFormHandler('detailsForm', submitPass)
+    () => acFormHandler('basicInfoForm', submitDetails),
+    () => acFormHandler('passForm', submitPass)
 ])
 
 
@@ -52,7 +51,7 @@ async function onAvatarChangeEvent() {
 
 async function fetchDetails() {
     const response = acGetData('/api/profile/getdetails');
-    const resp: Profile = (await response).data;
+    const resp: IProfile = (await response).data;
     firstName.value = resp.firstName;
     lastName.value = resp.lastName;
     userName.value = resp.userName.trim();
@@ -75,11 +74,15 @@ async function loadavatarDdl() {
 
 async function submitDetails() {
     const data = {
-        firstName: "",
-        lastName: ""
-
+        firstName: firstName.value,
+        lastName: lastName.value,
+        bio: bio.value,
+        avatarId: parseInt(avatarDdl.value) || 0,
+        eMail: emailId.value,
+        gender: "m",
+        userName: userName.value
     }
-    const resp = acPostData('ssss', data)
+    const resp = acPostData('/api/profile/update', data)
 }
 
 

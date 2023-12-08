@@ -340,9 +340,9 @@ function acClearParams() {
 }
 
 //==================== form handler ========================
+
 function acFormHandler(formId: string, submitMethod: (event: Event) => Promise<void>) {
     const form = document.getElementById(formId) as HTMLFormElement;
-
     if (form) {
         form.addEventListener('submit', async (event) => {
             event.preventDefault();

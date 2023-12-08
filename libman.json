@@ -131,6 +131,32 @@
         "lit-element.min.js",
         "lit-element.js.map"
       ]
+    },
+    {
+      "library": "jarallax@2.1.4",
+      "destination": "wwwroot/lib/jarallax/",
+      "files": [
+        "dist/jarallax-element.js",
+        "dist/jarallax-element.js.map",
+        "dist/jarallax-element.min.js",
+        "dist/jarallax-element.min.js.map",
+        "dist/jarallax-video.js",
+        "dist/jarallax-video.js.map",
+        "dist/jarallax-video.min.js",
+        "dist/jarallax-video.min.js.map",
+        "dist/jarallax.cjs",
+        "dist/jarallax.cjs.map",
+        "dist/jarallax.css",
+        "dist/jarallax.esm.js",
+        "dist/jarallax.esm.js.map",
+        "dist/jarallax.esm.min.js",
+        "dist/jarallax.esm.min.js.map",
+        "dist/jarallax.js",
+        "dist/jarallax.js.map",
+        "dist/jarallax.min.css",
+        "dist/jarallax.min.js",
+        "dist/jarallax.min.js.map"
+      ]
     }
   ]
 }

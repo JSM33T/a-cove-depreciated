@@ -1,7 +1,6 @@
 ﻿import { acToast, acInit, classesToTags, acPostData, acFormHandler, acGetData } from '../../global.js'
 declare const bootstrap: any;
 
-
 const gl_slug = document.getElementById("ip_slug") as HTMLInputElement;
 const gl_tag = document.getElementById("ip_tags") as HTMLInputElement;
 
@@ -40,7 +39,7 @@ acInit([
     loadComments,
     () => likeBtn.addEventListener('click', addLike),
     () => classesToTags('img', 'rounded-3'),
-    //() => classesToTags('p', 'fs-lg'),
+    () => classesToTags('p', 'fs-lg'),
     () => acFormHandler('comment-form', addComment),
     () => delbtn.addEventListener('click', delConfirm),
     () => replySaveBtn.addEventListener('click', postReply),
@@ -84,8 +83,6 @@ async function applyEvents() {
     });
     console.log("delete events attached");
 }
-
-
 
 //check if the article is likes or not and append <i> tag's class
 async function isLiked() {
@@ -204,7 +201,6 @@ async function addComment() {
 }
 
 //load comment span
-
 async function loadComments() {
     const roleData = blogRole.value;
     const data = {
@@ -271,7 +267,7 @@ async function loadComments() {
 }
 
 //load tags related to slug
-function loadTags() {
+async function loadTags() {
     var input = global_tags;
     var parts = input.split(',');
     var tags = "";
@@ -285,9 +281,8 @@ function loadTags() {
     document.getElementById('tagsPlaceholder')!.innerHTML = tags;
 }
 
-///////////////// ls based system ///////////////////
 
-async function editMdl(contenttype, contentid) {
+async function editMdl(contenttype: any, contentid: any) {
     // delModal!.show();
     const ip = document.getElementById('editIp') as HTMLTextAreaElement;
     let something: string = "";
@@ -308,7 +303,6 @@ async function editMdl(contenttype, contentid) {
     editModal!.show();
 }
 
-
 async function saveEdits() {
     let ipedits = document.getElementById('editIp') as HTMLTextAreaElement;
     let contentid = localStorage.getItem('contentid');
@@ -324,7 +318,6 @@ async function saveEdits() {
     await loadComments();
     editModal!.hide();
 }
-
 
 async function replyMdl(contentid: string) {
     localStorage.setItem('action', 'reply');
@@ -354,7 +347,7 @@ async function postReply() {
     }
 }
 
-async function delMdl(contenttype, contentid) {
+async function delMdl(contenttype: any, contentid: any) {
     let c_type = document.getElementById("mdlContentType") as HTMLElement;
     if (contenttype == "comment") {
         c_type.innerHTML = "comment";

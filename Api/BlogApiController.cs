@@ -96,7 +96,7 @@ namespace almondCove.Api
         {
             try
             {
-                List<BlogThumbz> entries = new();
+                List<BlogThumbz> entries = [];
                 string sql;
                 string connectionString = _configManager.GetConnString();
                 using (SqlConnection connection = new(connectionString))
@@ -173,7 +173,6 @@ namespace almondCove.Api
             _ = new List<BlogThumbz>();
             if (mode != "n")
             {
-
                 using SqlConnection connection = new(connectionString);
                 await connection.OpenAsync();
                 string sql = "";
@@ -263,10 +262,12 @@ namespace almondCove.Api
             List<object> data = new();
             using var connection = new SqlConnection(connectionString);
             await connection.OpenAsync();
-            var command = new SqlCommand("SELECT ba.AuthorId,u.UserName,u.Bio,u.FirstName,u.LastName,avt.Image FROM TblBlogMaster AS b " +
-                                        "JOIN TblBlogAuthor AS ba ON ba.BlogId = b.Id " +
-                                        "JOIN TblUserProfile AS u ON ba.AuthorId = u.Id " +
-                                        "JOIN TblAvatarMaster AS avt ON u.AvatarId = avt.Id where b.UrlHandle = @UrlHandle ", connection);
+            var command = new SqlCommand(@"
+                SELECT ba.AuthorId,u.UserName,u.Bio,u.FirstName,u.LastName,avt.Image FROM TblBlogMaster AS b 
+                JOIN TblBlogAuthor AS ba ON ba.BlogId = b.Id 
+                JOIN TblUserProfile AS u ON ba.AuthorId = u.Id 
+                JOIN TblAvatarMaster AS avt ON u.AvatarId = avt.Id where b.UrlHandle = @UrlHandle 
+            ", connection);
             //added scalar vars
             command.Parameters.AddWithValue("@UrlHandle", Slug);
             var reader = await command.ExecuteReaderAsync();
@@ -294,7 +295,7 @@ namespace almondCove.Api
         [IgnoreAntiforgeryToken]
         public async Task<int> LoadLikes(string Slug)
         {
-            List<object> data = new();
+            List<object> data = [];
             try
             {
                 using var connection = new SqlConnection(connectionString);
@@ -367,7 +368,7 @@ namespace almondCove.Api
                 }
                 catch (Exception ex)
                 {
-                    // Log.Error("load user's isLiked message:" + ex.Message.ToString());
+                    _logger.LogError("load user's isLiked message {message}", ex.Message.ToString());
                     return BadRequest("Something went wrong");
                 }
             }
@@ -386,7 +387,7 @@ namespace almondCove.Api
             if (HttpContext.Session.GetString("user_id") != null)
             {
                 string LoggedInUserId = HttpContext.Session.GetString("user_id").ToString();
-                List<object> data = new();
+                List<object> data = [];
                 try
                 {
                     using var connection = new SqlConnection(connectionString);
@@ -396,18 +397,12 @@ namespace almondCove.Api
                     command.Parameters.AddWithValue("@slug", blogLike.Slug);
                     int likecounter = (int)await command.ExecuteScalarAsync();
                     await connection.CloseAsync();
-                    if (likecounter == 1)
-                    {
-                        return Ok(true);
-                    }
-                    else
-                    {
-                        return Ok(false);
-                    }
+                    return (likecounter == 1) ? Ok(true) : Ok(false);
+
                 }
                 catch (Exception ex)
                 {
-                    // Log.Error("load user's isLiked message:" + ex.Message.ToString() + " user logged in:" + HttpContext.Session.GetString("username").ToString());
+                    _logger.LogError("load user's isLiked message:" + ex.Message.ToString() + " user logged in:" + HttpContext.Session.GetString("username").ToString());
                     return BadRequest();
                 }
             }
@@ -422,7 +417,7 @@ namespace almondCove.Api
         [IgnoreAntiforgeryToken]
         public async Task<IActionResult> LoadCategories()
         {
-            List<object> data = new();
+            List<object> data = [];
             using var connection = new SqlConnection(connectionString);
             await connection.OpenAsync();
             var command = new SqlCommand(
@@ -517,7 +512,7 @@ namespace almondCove.Api
                 }
                 catch (Exception ex)
                 {
-                    // // Log.Information("error in adding comment by" + HttpContext.Session.GetString("username") + "on a blog :" + ex.Message.ToString());
+                    _logger.LogError("error in adding comment on a blog msg {msg} ", ex.Message.ToString());
                     return BadRequest("Something went wrong");
                 }
             }
@@ -570,6 +565,7 @@ namespace almondCove.Api
             command.Parameters.AddWithValue("@posturl", blogComment.Slug);
             var reader = await command.ExecuteReaderAsync();
             string user = "";
+            string SessionUser = HttpContext.Session.GetString("username").ToString();
             bool editable = false, replyeditable = false;
             if (reader.HasRows)
             {
@@ -578,27 +574,14 @@ namespace almondCove.Api
                     if (HttpContext.Session.GetString("username") != null)
                     {
                         user = "yes";
-                        if (reader.GetString(5) == HttpContext.Session.GetString("username").ToString())
-                        {
-                            editable = true;
-                        }
-                        else
-                        {
-                            editable = false;
-                        }
                         try
                         {
-                            if (reader.GetString(16) == HttpContext.Session.GetString("username").ToString())
-                            {
-                                replyeditable = true;
-                            }
-                            else
-                            {
-                                replyeditable = false;
-                            }
+                            editable = (reader.GetString(5) == SessionUser);
+                            replyeditable = (reader.GetString(16) == SessionUser);
                         }
                         catch
                         {
+                            editable = false;
                             replyeditable = false;
                         }
                     }
@@ -694,7 +677,6 @@ namespace almondCove.Api
                     command.Parameters.AddWithValue("@Idval", blogComment.Id);
                     command.Parameters.AddWithValue("@UserId", Userdet);
                     await command.ExecuteNonQueryAsync();
-                    await connection.CloseAsync();
                     return Ok("changes saved");
                 }
                 catch (Exception ex)
@@ -712,28 +694,28 @@ namespace almondCove.Api
 
         [HttpPost]
         [Route("/api/blog/reply/edit")]
-        [IgnoreAntiforgeryToken]
-        public async Task<IActionResult> EditrReply([FromBody] BlogReply blogReply)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditrReply([FromBody] BlogComment blogComment)
         {
             if (HttpContext.Session.GetString("username") != null)
             {
-                var Userdet = HttpContext.Session.GetString("user_id").ToString();
+                string Userdet = HttpContext.Session.GetString("user_id").ToString();
                 try
                 {
                     using var connection = new SqlConnection(connectionString);
                     await connection.OpenAsync();
                     var sql = "UPDATE TblBlogReply SET Reply = @Replyval WHERE Id = @Idval AND UserId = @UserId ";
                     var command = new SqlCommand(sql, connection);
-                    command.Parameters.AddWithValue("@Replyval", HttpUtility.HtmlEncode(blogReply.Reply));
-                    command.Parameters.AddWithValue("@Idval", blogReply.ReplyId);
-                    command.Parameters.AddWithValue("@UserId", HttpContext.Session.GetString("user_id").ToString());
+                    command.Parameters.AddWithValue("@Replyval", HttpUtility.HtmlEncode(blogComment.Comment));
+                    command.Parameters.AddWithValue("@Idval", blogComment.Id);
+                    command.Parameters.AddWithValue("@UserId", Userdet);
                     await command.ExecuteNonQueryAsync();
                     await connection.CloseAsync();
                     return Ok("changes saved");
                 }
                 catch (Exception ex)
                 {
-                    // Log.Error("error editing reply by user " + Userdet + "message:" + ex.Message.ToString());
+                    _logger.LogError("error editing reply by user " + Userdet + "message:" + ex.Message.ToString());
                     return BadRequest("Something went wrong");
                 }
             }
@@ -779,7 +761,7 @@ namespace almondCove.Api
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    // Log.Error("error deleting comment:" + ex.Message.ToString());
+                    _logger.LogError("error deleting comment: {msg}", ex.Message.ToString());
                     return BadRequest("Something went wrong");
                 }
             }

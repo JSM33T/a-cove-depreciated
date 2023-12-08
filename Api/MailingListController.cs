@@ -89,9 +89,6 @@ namespace almondCove.Api
                 _logger.LogError("error while email submission:" + ex.Message.ToString());
                 return StatusCode(500, "An error occurred while processing the request.");
             }
-            
         }
-
-    
     }
 }

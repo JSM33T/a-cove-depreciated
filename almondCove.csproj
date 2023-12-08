@@ -63,6 +63,8 @@
     <Folder Include="wwwroot\content\gallery\2023\backyard-birdies\assets\" />
     <Folder Include="wwwroot\content\gallery\2023\garden-state\assets\" />
     <Folder Include="wwwroot\content\learning-hub\" />
+    <Folder Include="wwwroot\content\music\global\" />
+    <Folder Include="wwwroot\content\music\radio-cuts\" />
     <Folder Include="wwwroot\stores\configurations\" />
     <Folder Include="wwwroot\stores\studio\" />
   </ItemGroup>

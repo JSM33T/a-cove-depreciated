@@ -129,7 +129,7 @@ namespace almondCove.Api
                 {
                     if (userProfile.FirstName.Trim() == "")
                     {
-                        return BadRequest("first name is mandatory");
+                       return BadRequest("first name is mandatory");
                     }
                     else if (userProfile.UserName.Trim() == "")
                     {

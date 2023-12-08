@@ -7,29 +7,24 @@ namespace almondCove.Controllers
 {
     public class AccountRouteController : Controller
     {
-        [Authorize(Policy = "RequireAdminRole")]
         [Route("/account")]
         public IActionResult Index()
         {
             return View("Views/Account/Index.cshtml");
         }
 
-        [AllowAnonymous]
         [Route("/account/login")]
         public IActionResult Login()
         {
             return View("Views/Account/Login.cshtml");
-            //return Unauthorized();
         }
 
-        [AllowAnonymous]
         [Route("/account/sign-up")]
         public IActionResult SignUp()
         {
             return View("Views/Account/SignUp.cshtml");
         }
 
-        [AllowAnonymous]
         [Route("/account/recover-account")]
         public IActionResult AccountRecovery()
         {

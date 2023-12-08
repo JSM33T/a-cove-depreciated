@@ -16,9 +16,16 @@
     ViewData["MetaProps"] = meta;
 
 }
-    
+
+@section Scripts
+{
+     <script src="~/lib/shufflejs/dist/shuffle.min.js"></script>
+     <script src="~/lib/imagesloaded/imagesloaded.pkgd.min.js"></script>
+}
 @section Styles{
-      .noclick {
+      
+     <style>
+         .noclick {
             cursor: not-allowed;
             pointer-events: none;
             opacity: 0.5;
@@ -32,12 +39,9 @@
             width: 100%; /* This ensures the image scales proportionally to the container width */
             height: auto; /* This maintains the aspect ratio */
         }
-     
+     </style>
 }
-@section Scripts
-{
-     
-}
+
 <section class="container py-5 mt-5 mb-xl-3 mb-xxl-5">
     <div class="row pt-2">
         <!-- Text + CTA button-->
@@ -67,7 +71,7 @@
 
         @* cover image *@
         <div class="col-lg-6" data-aos="fade-up" data-aos-duration="700">
-                <img src="~/assets/images/covers/studio-cover-min.png" alt="Studio Cover">
+                <img src="~/assets/images/covers/studio-cover.png" alt="Studio Cover">
         </div>
     </div>
 </section>
@@ -114,10 +118,10 @@
              <article class="masonry-grid-item pb-5 mb-md-2 mb-lg-4 mb-xl-5" data-groups="[&quot;album&quot;]">
                 <div class="zoom-effect position-relative border-bottom pb-3" style="max-width: 704px;">
                     <div class="zoom-effect-wrapper">
-                        <div class="zoom-effect-img"><img src="/content/studiocontent/albums/tcr-bootleg-compilation-2023/cover_thumb.png" alt="Image"></div>
+                        <div class="zoom-effect-img"><img src="/content/music/albums/tcr-bootleg-compilation-2023/cover_thumb.png" alt="Image"></div>
                     </div>
                     <div class="pt-4 mt-lg-2">
-                        <h2 class="h4 mb-2"><a class="stretched-link" href="/music/album/tcr-bootleg-compilation-2023">Coffeeroom Bootlegs</a></h2>
+                        <h2 class="h4 mb-2"><a class="stretched-link" href="#">Coffeeroom Bootlegs</a></h2>
                         <div class="d-flex justify-content-between fs-lg text-muted"><span>various artists</span><span>2023</span></div>
                     </div>
                 </div>
@@ -127,10 +131,10 @@
             <article class="masonry-grid-item pb-5 mb-md-2 mb-lg-4 mb-xl-5" data-groups="[&quot;album&quot;]">
                 <div class="zoom-effect position-relative border-bottom pb-3" style="max-width: 550px;">
                     <div class="zoom-effect-wrapper">
-                        <div class="zoom-effect-img"><img src="/content/studiocontent/albums/recuerdos-2/cover_thumb.jpg" alt="Image"></div>
+                        <div class="zoom-effect-img"><img src="/content/music/albums/recuerdos-2/cover_thumb.jpg" alt="Image"></div>
                     </div>
                     <div class="pt-4 mt-lg-2">
-                        <h2 class="h4 mb-2"><a class="stretched-link" href="/music/album/recuerdos-2">Recuerdos 2</a></h2>
+                        <h2 class="h4 mb-2"><a class="stretched-link" href="#">Recuerdos 2</a></h2>
                         <div class="d-flex justify-content-between fs-lg text-muted"><span>Bootlegs</span><span>2019</span></div>
                     </div>
                 </div>
@@ -138,10 +142,10 @@
             <article class="masonry-grid-item pb-5 mb-md-2 mb-lg-4 mb-xl-5" data-groups="[&quot;album&quot;]">
                 <div class="zoom-effect position-relative border-bottom pb-3" style="max-width: 550px;">
                     <div class="zoom-effect-wrapper">
-                        <div class="zoom-effect-img"><img src="/content/studiocontent/albums/recuerdos-1/cover_thumb.jpg" alt="Image"></div>
+                        <div class="zoom-effect-img"><img src="/content/music/albums/recuerdos-1/cover_thumb.jpg" alt="Image"></div>
                     </div>
                     <div class="pt-4 mt-lg-2">
-                        <h2 class="h4 mb-2"><a class="stretched-link" href="/music/album/recuerdos-1">Recuerdos 1</a></h2>
+                        <h2 class="h4 mb-2"><a class="stretched-link" href="#">Recuerdos 1</a></h2>
                         <div class="d-flex justify-content-between fs-lg text-muted"><span>Botlegs</span><span>2016-17</span></div>
                     </div>
                 </div>
@@ -184,10 +188,10 @@
             <article class="masonry-grid-item pb-5 mb-md-2 mb-lg-4 mb-xl-5" data-groups="[&quot;single&quot;]">
                 <div class="zoom-effect position-relative border-bottom mx-auto pb-3" style="max-width: 470px;">
                     <div class="zoom-effect-wrapper">
-                        <div class="zoom-effect-img"><img src="/content/studiocontent/singles/melancholy/cover_thumb.jpg" alt="Image"></div>
+                        <div class="zoom-effect-img"><img src="/content/music/singles/melancholy/cover_thumb.jpg" alt="Image"></div>
                     </div>
                     <div class="pt-4 mt-lg-2">
-                        <h2 class="h4 mb-2"><a class="stretched-link" href="/music/single/melancholy">Melancholy</a></h2>
+                        <h2 class="h4 mb-2"><a class="stretched-link" href="#">Melancholy</a></h2>
                         <div class="d-flex justify-content-between fs-lg text-muted"><span>orchestral,original</span><span>2020</span></div>
                     </div>
                 </div>

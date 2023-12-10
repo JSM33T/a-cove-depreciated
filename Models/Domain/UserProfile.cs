@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace almondCove.Models.Domain
+namespace laymaann.Models.Domain
 {
     public class UserProfile
     {

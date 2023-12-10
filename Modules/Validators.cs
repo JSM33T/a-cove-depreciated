@@ -1,7 +1,7 @@
 ﻿using System.Net.Mail;
 using System.Text.RegularExpressions;
 
-namespace almondCove.Modules
+namespace laymaann.Modules
 {
     public class Validators
     {

@@ -1,7 +1,7 @@
 ﻿using Markdig;
 using Microsoft.AspNetCore.Mvc;
 
-namespace almondCove.Controllers
+namespace laymaann.Controllers
 {
     public class TestRouteController : Controller
     { 

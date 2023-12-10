@@ -1,5 +1,6 @@
-﻿using almondCove.Interefaces.Services;
-using almondCove.Modules;
+﻿using laymaann.Interefaces.Services;
+using laymaann.Models.DTO;
+using laymaann.Modules;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -7,75 +8,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Web;
 
-namespace almondCove.Api
+namespace laymaann.Api
 {
-    public class BlogReply
-    {
-        public string Slug { get; set; }
-        public string CommentId { get; set; }
-
-        [MaxLength(200)]
-        [MinLength(2)]
-        public string Reply { get; set; }
-        public int ReplyId { get; set; }
-        public int UserId { get; set; }
-        public string ReplyText { get; set; }
-    }
-    public class BlogComment
-    {
-
-        public int Id { get; set; }
-
-        public string Comment { get; set; }
-
-        public string DateCommented { get; set; }
-
-        public int UserId { get; set; }
-
-        public string UsersName { get; set; }
-
-        public string UserName { get; set; }
-
-        public string Slug { get; set; }
-    }
-    public class BlogLike
-    {
-        public int UserId { get; set; }
-        public int BlogId { get; set; }
-        public bool IsLiked { get; set; }
-        public string Slug { get; set; }
-    }
-    public class BlogThumbz
-    {
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string UrlHandle { get; set; }
-        public string PostContent { get; set; }
-        public string Category { get; set; }
-        public string Author { get; set; }
-        public string Tags { get; set; }
-        public string Yr { get; set; }
-        public string Locator { get; set; }
-        public string PostLikes { get; set; }
-        public int Comments { get; set; }
-        public int Likes { get; set; }
-        public DateTime DatePosted { get; set; }
-        public int Id { get; internal set; }
-        public string DateFormatted { get; internal set; }
-    }
-    public class BlogTriggers
-    {
-        public string Mode { get; set; }
-        public string Classifypost { get; set; }
-        public string Keypost { get; set; }
-
-    }
-    public class BlogCat
-    {
-        public string Category { get; set; }
-        public string BlogNum { get; set; }
-
-    }
     [ApiController]
     public class BlogApiController : ControllerBase
     {
@@ -96,7 +30,7 @@ namespace almondCove.Api
         {
             try
             {
-                List<BlogThumbz> entries = [];
+                List<BlogThumbsDTO> entries = [];
                 string sql;
                 string connectionString = _configManager.GetConnString();
                 using (SqlConnection connection = new(connectionString))
@@ -138,7 +72,7 @@ namespace almondCove.Api
 
                     while (await dataReader.ReadAsync())
                     {
-                        BlogThumbz entry = new()
+                        BlogThumbsDTO entry = new()
                         {
                             Id = (int)dataReader["Id"],
                             Title = (string)dataReader["Title"],
@@ -169,8 +103,8 @@ namespace almondCove.Api
         public async Task<JsonResult> GetBlogs(string mode, string classify, string key)
         {
             mode = "0";
-            List<BlogThumbz> thumbs = new();
-            _ = new List<BlogThumbz>();
+            List<BlogThumbsDTO> thumbs = new();
+            _ = new List<BlogThumbsDTO>();
             if (mode != "n")
             {
                 using SqlConnection connection = new(connectionString);
@@ -237,7 +171,7 @@ namespace almondCove.Api
                 {
                     while (await dataReader.ReadAsync())
                     {
-                        thumbs.Add(new BlogThumbz
+                        thumbs.Add(new BlogThumbsDTO
                         {
                             Title = dataReader.GetString(1),
                             Description = dataReader.GetString(2),
@@ -316,7 +250,7 @@ namespace almondCove.Api
         [HttpPost]
         [Route("/api/blog/addlike")]
         [IgnoreAntiforgeryToken]
-        public async Task<IActionResult> AddLike(BlogLike blogLike)
+        public async Task<IActionResult> AddLike(BlogLikeDTO blogLike)
         {
 
             if (HttpContext.Session.GetString("user_id") != null)
@@ -381,7 +315,7 @@ namespace almondCove.Api
         [HttpPost]
         [Route("/api/blog/likestat")]
         [IgnoreAntiforgeryToken]
-        public async Task<IActionResult> IsLiked(BlogLike blogLike)
+        public async Task<IActionResult> IsLiked(BlogLikeDTO blogLike)
         {
 
             if (HttpContext.Session.GetString("user_id") != null)
@@ -462,7 +396,7 @@ namespace almondCove.Api
         [HttpPost]
         [Route("/api/blog/comment/add")]
         [IgnoreAntiforgeryToken]
-        public async Task<IActionResult> AddComment([FromBody] BlogComment blogComment)
+        public async Task<IActionResult> AddComment([FromBody] BlogCommentDTO blogComment)
         {
 
             string userid = "", blogid = "";
@@ -526,10 +460,10 @@ namespace almondCove.Api
         [HttpPost]
         [Route("/api/blog/comments/load")]
         [IgnoreAntiforgeryToken]
-        public async Task<IActionResult> LoadComments([FromBody] BlogComment blogComment)
+        public async Task<IActionResult> LoadComments([FromBody] BlogCommentDTO blogComment)
         {
 
-            Dictionary<int, dynamic> comments = new();
+            Dictionary<int, dynamic> comments = [];
             using var connection = new SqlConnection(connectionString);
             await connection.OpenAsync();
             var command = new SqlCommand(@"SELECT
@@ -558,14 +492,14 @@ namespace almondCove.Api
                           LEFT JOIN TblBlogMaster bm ON bm.Id = c.PostId
 						  LEFT JOIN TblUserProfile u2 ON r.UserId = u2.Id
 						  LEFT JOIN TblAvatarMaster a2 ON u2.AvatarId = a2.Id
-            where bm.UrlHandle = @posturl
+                        WHERE bm.UrlHandle = @posturl
 						ORDER BY
 						  c.DatePosted;
 						", connection);
             command.Parameters.AddWithValue("@posturl", blogComment.Slug);
             var reader = await command.ExecuteReaderAsync();
             string user = "";
-            string SessionUser = HttpContext.Session.GetString("username").ToString();
+            string SessionUser = HttpContext.Session.GetString("username");
             bool editable = false, replyeditable = false;
             if (reader.HasRows)
             {
@@ -662,7 +596,7 @@ namespace almondCove.Api
         [HttpPost]
         [Route("/api/blog/comment/edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditComment([FromBody] BlogComment blogComment)
+        public async Task<IActionResult> EditComment([FromBody] BlogCommentDTO blogComment)
         {
             if (HttpContext.Session.GetString("username") != null)
             {
@@ -695,7 +629,7 @@ namespace almondCove.Api
         [HttpPost]
         [Route("/api/blog/reply/edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditrReply([FromBody] BlogComment blogComment)
+        public async Task<IActionResult> EditrReply([FromBody] BlogCommentDTO blogComment)
         {
             if (HttpContext.Session.GetString("username") != null)
             {
@@ -730,7 +664,7 @@ namespace almondCove.Api
         [HttpPost]
         [Route("/api/blog/comment/delete")]
         [IgnoreAntiforgeryToken]
-        public async Task<IActionResult> DeleteComment([FromBody] BlogComment blogComment)
+        public async Task<IActionResult> DeleteComment([FromBody] BlogCommentDTO blogComment)
         {
             if (HttpContext.Session.GetString("username") != null)
             {
@@ -775,7 +709,7 @@ namespace almondCove.Api
         [HttpPost]
         [Route("/api/blog/reply/add")]
         [IgnoreAntiforgeryToken]
-        public async Task<IActionResult> AddReply([FromBody] BlogReply blogReply)
+        public async Task<IActionResult> AddReply([FromBody] BlogReplyDTO blogReply)
         {
             string userid = "";
             string encodedreply = HttpUtility.HtmlEncode(blogReply.ReplyText.ToString().Trim());
@@ -822,7 +756,7 @@ namespace almondCove.Api
         [HttpPost]
         [Route("/api/blog/reply/delete")]
         [IgnoreAntiforgeryToken]
-        public async Task<IActionResult> DeleteReply([FromBody] BlogReply blogReply)
+        public async Task<IActionResult> DeleteReply([FromBody] BlogReplyDTO blogReply)
         {
             if (HttpContext.Session.GetString("username") != null)
             {

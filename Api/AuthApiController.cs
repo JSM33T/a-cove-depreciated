@@ -1,27 +1,21 @@
-﻿using almondCove.Interefaces.Services;
-using almondCove.Models.Domain;
-using almondCove.Models.DTO;
-using almondCove.Modules;
+﻿using laymaann.Interefaces.Services;
+using laymaann.Models.Domain;
+using laymaann.Models.DTO;
+using laymaann.Modules;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 
-namespace almondCove.Api
+namespace laymaann.Api
 {
     [ApiController]
-    public class AuthApiController : ControllerBase
+    public class AuthApiController(IConfigManager configManager, ILogger<AuthApiController> logger, IMailer mailer) : ControllerBase
     {
 
-        private readonly IConfigManager _configManager;
-        private readonly ILogger<AuthApiController> _logger;
-        private readonly IMailer _mailer;
-        public AuthApiController(IConfigManager configManager, ILogger<AuthApiController> logger,IMailer mailer)
-        {
-            _configManager = configManager;
-            _logger = logger;
-            _mailer = mailer;
-        }
+        private readonly IConfigManager _configManager = configManager;
+        private readonly ILogger<AuthApiController> _logger = logger;
+        private readonly IMailer _mailer = mailer;
 
         [HttpPost("/api/account/login")]
         [ValidateAntiForgeryToken]
@@ -42,8 +36,8 @@ namespace almondCove.Api
                         " and p.AvatarId = a.Id", connection);
                     checkcommand.Parameters.AddWithValue("@username", loginCreds.UserName.ToLower());
                     checkcommand.Parameters.AddWithValue("@password", EnDcryptor.Encrypt(loginCreds.Password, _configManager.GetCryptKey()));
-                  //TEST CRYPT KEYS
-                  //_logger.LogCritical( "{cryptkey}" ,EnDcryptor.Encrypt(loginCreds.Password, _configManager.GetCryptKey()));
+                      // TEST
+                      //_logger.LogCritical( "{cryptkey}" ,EnDcryptor.Encrypt(loginCreds.Password, _configManager.GetCryptKey()));
                     using var reader = await checkcommand.ExecuteReaderAsync();
                     if (reader.Read())
                     {
@@ -101,7 +95,7 @@ namespace almondCove.Api
                     }
                     else
                     {
-                        _logger.LogInformation("invalid creds by username:" + loginCreds.UserName);
+                        _logger.LogInformation("invalid creds by username {username}", loginCreds.UserName);
                         return BadRequest("Invalid Credentials");
                     }
                 }
@@ -174,8 +168,8 @@ namespace almondCove.Api
                                 try
                                 {
 
-                                 body = "<!DOCTYPE html><html><head><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Verification</title></head><body style=\"margin:0;padding:0;font-family:Arial,sans-serif;line-height:1.4;color:#111;background-color:#fff\"><div style=\"max-width:600px;margin:0 auto;background-color:#fff;padding:20px;border-radius:5px\"><h1 style=\"color:#111;margin-bottom:20px;font-size:24px\">Complete Signup</h1><p>Hey there,</p><div style=\"text-align:center;margin-bottom:20px\"><img src=\"https://almondCove.in/assets/favicon/apple-touch-icon.png\" width=\"100\" alt=\"Image\" style=\"max-width:100%;height:auto;border-radius:5px\"></div><p>Welcome to the AlmondCove.Your OTP is <h2><b>" + otp + " </b></h2> .You can verify your account from the following button too.</p><p>" +
-                                        "<a href=\"https://almondCove.in/account/verification/" + FilteredUsername + "/" + otp + "\"" +
+                                 body = "<!DOCTYPE html><html><head><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Verification</title></head><body style=\"margin:0;padding:0;font-family:Arial,sans-serif;line-height:1.4;color:#111;background-color:#fff\"><div style=\"max-width:600px;margin:0 auto;background-color:#fff;padding:20px;border-radius:5px\"><h1 style=\"color:#111;margin-bottom:20px;font-size:24px\">Complete Signup</h1><p>Hey there,</p><div style=\"text-align:center;margin-bottom:20px\"><img src=\"https://laymaann.in/assets/favicon/apple-touch-icon.png\" width=\"100\" alt=\"Image\" style=\"max-width:100%;height:auto;border-radius:5px\"></div><p>Welcome to the AlmondCove.Your OTP is <h2><b>" + otp + " </b></h2> .You can verify your account from the following button too.</p><p>" +
+                                        "<a href=\"https://laymaann.in/account/verification/" + FilteredUsername + "/" + otp + "\"" +
                                         " style=\"display:inline-block;padding:10px 20px;background-color:#111;color:#fff;text-decoration:none;border-radius:4px\">Verify Email</a></p><p>If you did not sign up for this account, please ignore this email.</p><div style=\"margin-top:20px;text-align:center;font-size:12px;color:#999\"><p>This is an automated email, please do not reply.</p></div></div></body></html>";
 
                                  bool stat =  _mailer.SendEmailAsync(userProfile.EMail.ToString(), subject, body);

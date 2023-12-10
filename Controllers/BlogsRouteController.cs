@@ -1,33 +1,19 @@
-﻿using almondCove.Api;
-using almondCove.Interefaces.Services;
-using almondCove.Models;
-using almondCove.Modules;
+﻿using laymaann.Api;
+using laymaann.Interefaces.Services;
+using laymaann.Models;
+using laymaann.Models.DTO;
 using Markdig;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.Diagnostics;
 
-namespace almondCove.Controllers
+namespace laymaann.Controllers
 {
-    public class BlogLoad
+    
+    public class BlogsRouteController(IWebHostEnvironment hostingEnvironment, IConfigManager configManager) : Controller
     {
-        public int Id { get; set; }
-        public string Tags { get; set; }
-        public string Title { get; set; }
-        public string Slug { get; set; }
-        public string Year { get; set; }
-        public string Likes { get; set; }
-        public string Content { get; set; }
-    }
-    public class BlogsRouteController : Controller
-    {
-        private readonly IWebHostEnvironment _hostingEnvironment;
-        private readonly IConfigManager _configManager;
-        public BlogsRouteController(IWebHostEnvironment hostingEnvironment,IConfigManager configManager)
-        {
-            _hostingEnvironment = hostingEnvironment;
-            _configManager = configManager;
-        }
+        private readonly IWebHostEnvironment _hostingEnvironment = hostingEnvironment;
+        private readonly IConfigManager _configManager = configManager;
 
         [Route("/blogs")]
         public IActionResult Browse()
@@ -40,11 +26,18 @@ namespace almondCove.Controllers
         public IActionResult Blogs(string Year, string Slug)
         {
             string connectionString = _configManager.GetConnString();
-            BlogLoad blogLoad = null;
+            BlogLoadDTO blogLoad = null;
             var markdownFilePath = "";
             using var connection = new SqlConnection(connectionString);
             connection.Open();
-            var command = new SqlCommand("SELECT a.Id, a.Tags, a.Title,a.PostContent, a.UrlHandle, COUNT(b.blogid) AS LikeCount FROM TblBlogMaster a LEFT JOIN TblBlogLike b ON a.Id = b.blogid WHERE a.UrlHandle = '" + Slug + "' GROUP BY a.Id, a.Tags, a.Title, a.UrlHandle,a.PostContent; ", connection);
+            string extractQuery = @"
+                SELECT a.Id, a.Tags, a.Title,a.PostContent, a.UrlHandle, COUNT(b.blogid) AS LikeCount FROM TblBlogMaster a 
+                LEFT JOIN TblBlogLike b ON a.Id = b.blogid 
+                WHERE a.UrlHandle = @Slug 
+                GROUP BY a.Id, a.Tags, a.Title, a.UrlHandle,a.PostContent
+            ";
+            var command = new SqlCommand(extractQuery, connection);
+            command.Parameters.AddWithValue("@Slug", Slug);
             var reader = command.ExecuteReader();
             string tags = string.Empty;
 
@@ -62,7 +55,6 @@ namespace almondCove.Controllers
                  markdownFilePath = Path.Combine(_hostingEnvironment.WebRootPath, "content/blogs/" + blogLoad.Year + "/" + blogLoad.Slug + "/content.md");
             }
             reader.Close();
-            
 
             string markdownContent = System.IO.File.ReadAllText(markdownFilePath);
             string htmlContent = ConvertMarkdownToHtml(markdownContent);
@@ -76,7 +68,6 @@ namespace almondCove.Controllers
         //dedicated methods
         private static string ConvertMarkdownToHtml(string markdownContent)
         {
-            // Use Markdig to perform the conversion
             var pipeline = new MarkdownPipelineBuilder().Build();
             return Markdig.Markdown.ToHtml(markdownContent, pipeline);
         }

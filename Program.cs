@@ -1,6 +1,6 @@
-using almondCove.Extensions;
-using almondCove.Interefaces.Services;
-using almondCove.Services;
+using laymaann.Extensions;
+using laymaann.Interefaces.Services;
+using laymaann.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Session;
 using WebMarkupMin.AspNetCore7;
@@ -8,7 +8,7 @@ using WebMarkupMin.AspNetCore7;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSession(options =>
 {
-    options.Cookie.Name = ".almondCove.Session";
+    options.Cookie.Name = ".laymaann.Session";
     options.IdleTimeout = TimeSpan.FromSeconds(3600);
 });
 builder.Services.AddControllersWithViews();
@@ -54,6 +54,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseMiddleware<SessionMiddleware>();
 app.UseWebMarkupMin();
+app.UseCookieCheckMiddleware();
 app.UseSession();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -68,7 +69,7 @@ app.Use(async (context, next) =>
 });
 app.UseRouting();
 app.UseAuthorization();
-app.UseCookieCheckMiddleware();
+//ols place for session
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

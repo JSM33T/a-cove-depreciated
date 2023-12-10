@@ -1,9 +1,9 @@
-﻿using almondCove.Models;
+﻿using laymaann.Models;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using System.Diagnostics;
 
-namespace almondCove.Controllers
+namespace laymaann.Controllers
 {
     public class HomeRouteController : Controller
     {

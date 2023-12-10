@@ -1,10 +1,10 @@
-using almondCove.Interefaces.Services;
+using laymaann.Interefaces.Services;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Data.Common;
 
-namespace almondCove.Services
+namespace laymaann.Services
 {
     public class SqlService : ISqlService
   {

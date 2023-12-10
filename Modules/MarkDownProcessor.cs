@@ -1,6 +1,6 @@
 ﻿using Markdig;
 
-namespace almondCove.Modules
+namespace laymaann.Modules
 {
     public class MarkDownProcessor
     {

@@ -1,4 +1,4 @@
-﻿@using almondCove.Models.Props;
+﻿@using laymaann.Models.Props;
 @{
 var htmlProps = ViewData["HtmlProps"] as HTMLProps;
 var metaProps = ViewData["MetaProps"] as MetaProps;
@@ -6,19 +6,19 @@ var metaProps = ViewData["MetaProps"] as MetaProps;
 var mySessionVariable = Context.Session.GetString("username");
 if (mySessionVariable != null)
 {
-ViewData["user_name"] = Context.Session.GetString("username").ToString();
-ViewData["first_name"] = Context.Session.GetString("first_name").ToString();
-ViewData["role"] = Context.Session.GetString("role").ToString();
-ViewData["avatar"] = Context.Session.GetString("avatar").ToString();
-ViewData["user_id"] = Context.Session.GetString("user_id").ToString();
-ViewData["fullname"] = Context.Session.GetString("fullname").ToString();
+    ViewData["user_name"] = Context.Session.GetString("username").ToString();
+    ViewData["first_name"] = Context.Session.GetString("first_name").ToString();
+    ViewData["role"] = Context.Session.GetString("role").ToString();
+    ViewData["avatar"] = Context.Session.GetString("avatar").ToString();
+    ViewData["user_id"] = Context.Session.GetString("user_id").ToString();
+    ViewData["fullname"] = Context.Session.GetString("fullname").ToString();
 }
 else
 {
-ViewData["first_name"] = "guest";
-ViewData["role"] = "guest";
-ViewData["avatar"] = "default";
-ViewData["user_id"] = "0";
+    ViewData["first_name"] = "guest";
+    ViewData["role"] = "guest";
+    ViewData["avatar"] = "default";
+    ViewData["user_id"] = "0";
 }
 }
 <!--wmm:ignore-->

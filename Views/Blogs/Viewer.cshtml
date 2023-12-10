@@ -1,5 +1,6 @@
-﻿@using almondCove.Controllers;
-@using almondCove.Models.Props;
+﻿@using laymaann.Controllers;
+@using laymaann.Models.DTO
+@using laymaann.Models.Props;
 
 @{
     HTMLProps props = new()
@@ -19,7 +20,7 @@
     ViewData["MetaProps"] = meta;
 
    var htmlContent = ViewData["HtmlContent"] as string;
-    var blogDeet = ViewData["blogdeet"] as BlogLoad;
+    var blogDeet = ViewData["blogdeet"] as BlogLoadDTO;
 
     if (Context.Session.GetString("role") != null && Context.Session.GetString("role").Trim() != "" && Context.Session.GetString("role") != "guest")
     {

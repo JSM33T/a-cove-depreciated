@@ -1,7 +1,7 @@
-﻿using almondCove.Interefaces.Services;
+﻿using laymaann.Interefaces.Services;
 using Microsoft.Data.SqlClient;
 
-namespace almondCove.Middlewares
+namespace laymaann.Middlewares
 {
 
     public class SessionManager

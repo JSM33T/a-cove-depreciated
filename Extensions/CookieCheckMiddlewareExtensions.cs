@@ -1,6 +1,6 @@
-﻿using almondCove.Middlewares;
+﻿using laymaann.Middlewares;
 
-namespace almondCove.Extensions
+namespace laymaann.Extensions
 {
     public static class CookieCheckMiddlewareExtensions
     {

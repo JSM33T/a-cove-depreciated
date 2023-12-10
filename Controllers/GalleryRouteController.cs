@@ -1,9 +1,9 @@
-﻿using almondCove.Models;
+﻿using laymaann.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Text.Json;
 
-namespace almondCove.Controllers
+namespace laymaann.Controllers
 {
     public class GalleryModel
     {

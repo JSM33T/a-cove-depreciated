@@ -1,13 +1,13 @@
-﻿using almondCove.Interefaces.Services;
-using almondCove.Models.Domain;
-using almondCove.Modules;
+﻿using laymaann.Interefaces.Services;
+using laymaann.Models.Domain;
+using laymaann.Modules;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Serilog;
 using System.Data;
 
-namespace almondCove.Api
+namespace laymaann.Api
 {
     [ApiController]
     public class ProfileApiController : ControllerBase

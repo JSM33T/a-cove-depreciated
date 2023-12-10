@@ -1,4 +1,4 @@
-﻿namespace almondCove.Models.Props
+﻿namespace laymaann.Models.Props
 {
     public static class RolesConstants
     {

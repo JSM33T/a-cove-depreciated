@@ -1,10 +1,10 @@
-﻿using almondCove.Interefaces.Services;
-using almondCove.Models.Domain;
+﻿using laymaann.Interefaces.Services;
+using laymaann.Models.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 
-namespace almondCove.Api
+namespace laymaann.Api
 {
     [ApiController]
     public class MailingListController : ControllerBase
@@ -19,7 +19,8 @@ namespace almondCove.Api
 
         [HttpPost("/api/mailinglist/subscribe")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> GetAllMails([FromBody] Mail mail)
+        //removed from body
+        public async Task<IActionResult> GetAllMails(Mail mail)
         {
             try
             {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace almondCove.Controllers
+namespace laymaann.Controllers
 {
     public class ProfileRouteController : Controller
     {

@@ -1,6 +1,6 @@
-using laymaann.Interefaces.Services;
+using almondcove.Interefaces.Services;
 
-namespace laymaann.Services
+namespace almondcove.Services
 {
 	public class ConfigManager : IConfigManager
 	{

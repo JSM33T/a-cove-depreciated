@@ -1,13 +1,13 @@
-﻿using laymaann.Api;
-using laymaann.Interefaces.Services;
-using laymaann.Models;
-using laymaann.Models.DTO;
+﻿using almondcove.Api;
+using almondcove.Interefaces.Services;
+using almondcove.Models;
+using almondcove.Models.DTO;
 using Markdig;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.Diagnostics;
 
-namespace laymaann.Controllers
+namespace almondcove.Controllers
 {
     
     public class BlogsRouteController(IWebHostEnvironment hostingEnvironment, IConfigManager configManager) : Controller
@@ -15,7 +15,8 @@ namespace laymaann.Controllers
         private readonly IWebHostEnvironment _hostingEnvironment = hostingEnvironment;
         private readonly IConfigManager _configManager = configManager;
 
-        [Route("/blogs")]
+        [Route("/blogs/{subcat?}/{subcatb?}")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "ASP0018:Unused route parameter", Justification = "<Pending>")]
         public IActionResult Browse()
         {
             return View("Views/Blogs/Index.cshtml");

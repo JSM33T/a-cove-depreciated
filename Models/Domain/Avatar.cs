@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace laymaann.Models.Domain
+namespace almondcove.Models.Domain
 {
     public class Avatar
     {

@@ -1,9 +1,9 @@
-﻿using laymaann.Models;
+﻿using almondcove.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Text.Json;
 
-namespace laymaann.Controllers
+namespace almondcove.Controllers
 {
     public class StudioRouteController : Controller
     {

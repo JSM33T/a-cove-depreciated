@@ -58,7 +58,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Api\External\" />
     <Folder Include="Logs\" />
     <Folder Include="wwwroot\content\gallery\2023\darjeeling-diaries\assets\" />
     <Folder Include="wwwroot\content\gallery\2023\backyard-birdies\assets\" />

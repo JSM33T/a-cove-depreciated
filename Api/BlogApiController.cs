@@ -1,6 +1,6 @@
-﻿using laymaann.Interefaces.Services;
-using laymaann.Models.DTO;
-using laymaann.Modules;
+﻿using almondcove.Interefaces.Services;
+using almondcove.Models.DTO;
+using almondcove.Modules;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Web;
 
-namespace laymaann.Api
+namespace almondcove.Api
 {
     [ApiController]
     public class BlogApiController : ControllerBase

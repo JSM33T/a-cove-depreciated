@@ -1,7 +1,7 @@
 using Microsoft.Data.SqlClient;
 using System.Data;
 
-namespace laymaann.Interefaces.Services
+namespace almondcove.Interefaces.Services
 {
     public interface ISqlService
     {

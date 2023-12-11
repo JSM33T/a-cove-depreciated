@@ -1,13 +1,13 @@
-﻿using laymaann.Interefaces.Services;
-using laymaann.Models.Domain;
-using laymaann.Models.DTO;
-using laymaann.Modules;
+﻿using almondcove.Interefaces.Services;
+using almondcove.Models.Domain;
+using almondcove.Models.DTO;
+using almondcove.Modules;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 
-namespace laymaann.Api
+namespace almondcove.Api
 {
     [ApiController]
     public class AuthApiController(IConfigManager configManager, ILogger<AuthApiController> logger, IMailer mailer) : ControllerBase
@@ -168,8 +168,8 @@ namespace laymaann.Api
                                 try
                                 {
 
-                                 body = "<!DOCTYPE html><html><head><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Verification</title></head><body style=\"margin:0;padding:0;font-family:Arial,sans-serif;line-height:1.4;color:#111;background-color:#fff\"><div style=\"max-width:600px;margin:0 auto;background-color:#fff;padding:20px;border-radius:5px\"><h1 style=\"color:#111;margin-bottom:20px;font-size:24px\">Complete Signup</h1><p>Hey there,</p><div style=\"text-align:center;margin-bottom:20px\"><img src=\"https://laymaann.in/assets/favicon/apple-touch-icon.png\" width=\"100\" alt=\"Image\" style=\"max-width:100%;height:auto;border-radius:5px\"></div><p>Welcome to the AlmondCove.Your OTP is <h2><b>" + otp + " </b></h2> .You can verify your account from the following button too.</p><p>" +
-                                        "<a href=\"https://laymaann.in/account/verification/" + FilteredUsername + "/" + otp + "\"" +
+                                 body = "<!DOCTYPE html><html><head><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Verification</title></head><body style=\"margin:0;padding:0;font-family:Arial,sans-serif;line-height:1.4;color:#111;background-color:#fff\"><div style=\"max-width:600px;margin:0 auto;background-color:#fff;padding:20px;border-radius:5px\"><h1 style=\"color:#111;margin-bottom:20px;font-size:24px\">Complete Signup</h1><p>Hey there,</p><div style=\"text-align:center;margin-bottom:20px\"><img src=\"https://almondcove.in/assets/favicon/apple-touch-icon.png\" width=\"100\" alt=\"Image\" style=\"max-width:100%;height:auto;border-radius:5px\"></div><p>Welcome to the AlmondCove.Your OTP is <h2><b>" + otp + " </b></h2> .You can verify your account from the following button too.</p><p>" +
+                                        "<a href=\"https://almondcove.in/account/verification/" + FilteredUsername + "/" + otp + "\"" +
                                         " style=\"display:inline-block;padding:10px 20px;background-color:#111;color:#fff;text-decoration:none;border-radius:4px\">Verify Email</a></p><p>If you did not sign up for this account, please ignore this email.</p><div style=\"margin-top:20px;text-align:center;font-size:12px;color:#999\"><p>This is an automated email, please do not reply.</p></div></div></body></html>";
 
                                  bool stat =  _mailer.SendEmailAsync(userProfile.EMail.ToString(), subject, body);

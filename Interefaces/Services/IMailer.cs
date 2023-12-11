@@ -1,4 +1,4 @@
-namespace laymaann.Interefaces.Services
+namespace almondcove.Interefaces.Services
 {
     public interface IMailer
     {

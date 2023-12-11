@@ -1,4 +1,4 @@
-namespace laymaann.Models
+namespace almondcove.Models
 {
     public class ErrorViewModel
     {

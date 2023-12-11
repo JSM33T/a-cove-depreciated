@@ -1,4 +1,4 @@
-﻿namespace laymaann.Models.Domain
+﻿namespace almondcove.Models.Domain
 {
     public class Mail
     {

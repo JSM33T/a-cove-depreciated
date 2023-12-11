@@ -1,6 +1,8 @@
-using laymaann.Extensions;
-using laymaann.Interefaces.Services;
-using laymaann.Services;
+using almondcove.Extensions;
+using almondcove.Interefaces.Repositories;
+using almondcove.Interefaces.Services;
+using almondcove.Repositories;
+using almondcove.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Session;
 using WebMarkupMin.AspNetCore7;
@@ -8,7 +10,7 @@ using WebMarkupMin.AspNetCore7;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSession(options =>
 {
-    options.Cookie.Name = ".laymaann.Session";
+    options.Cookie.Name = ".almondcove.Session";
     options.IdleTimeout = TimeSpan.FromSeconds(3600);
 });
 builder.Services.AddControllersWithViews();
@@ -24,6 +26,7 @@ builder.Services.AddAuthentication("MyCookieAuthenticationScheme")
 builder.Services.AddSingleton<IConfigManager, ConfigManager>();
 builder.Services.AddSingleton<IMailer, Mailer>();
 builder.Services.AddSingleton<ISqlService, SqlService>();
+builder.Services.AddScoped<IMailingListRepository, MailingListRepository>();
 
 builder.Services.AddWebMarkupMin(options =>
 {

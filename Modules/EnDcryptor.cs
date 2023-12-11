@@ -1,8 +1,8 @@
-﻿using laymaann.Services;
+﻿using almondcove.Services;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace laymaann.Modules
+namespace almondcove.Modules
 {
     public static class EnDcryptor
     {

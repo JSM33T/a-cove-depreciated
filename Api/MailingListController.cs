@@ -1,95 +1,50 @@
-﻿using laymaann.Interefaces.Services;
-using laymaann.Models.Domain;
+﻿using almondcove.Interefaces.Repositories;
+using almondcove.Interefaces.Services;
+using almondcove.Models.Domain;
+using Almondcove.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 
-namespace laymaann.Api
+namespace almondcove.Api
 {
     [ApiController]
     public class MailingListController : ControllerBase
     {
         private readonly ILogger<MailingListController> _logger;
-        private readonly IConfigManager _configManager;
-        public MailingListController(ILogger<MailingListController> logger,IConfigManager configManager)
+        private readonly IMailingListRepository _mailRepo;
+        public MailingListController(ILogger<MailingListController> logger,IMailingListRepository mailRepo)
         {
             _logger = logger;
-            _configManager = configManager;
+            _mailRepo = mailRepo;
         }
 
         [HttpPost("/api/mailinglist/subscribe")]
-        [ValidateAntiForgeryToken]
-        //removed from body
-        public async Task<IActionResult> GetAllMails(Mail mail)
+        [IgnoreAntiforgeryToken]
+        public async Task<IActionResult> PostMail(MailDTO mailDTO)
         {
             try
             {
-                if (ModelState.IsValid)
-                {
-                    int emailCount;
-                    int maxId;
-                    string checkEmailQuery = @"
-                                SELECT COUNT(*) AS EmailCount, 
-                                (SELECT MAX(Id) FROM TblMailingList) AS MaxId 
-                                FROM TblMailingList 
-                                WHERE Email = @Email
-                            ";
+                var mail = MapToMailEntity(mailDTO);
+                var (Success, Message) = await _mailRepo.PostMail(mail);
 
-                    using (var connection = new SqlConnection(_configManager.GetConnString()))
-                    {
-                        await connection.OpenAsync();
-
-                        using var command = new SqlCommand(checkEmailQuery, connection);
-                        command.Parameters.AddWithValue("@Email", mail.Email);
-
-                        using var reader = await command.ExecuteReaderAsync();
-                        if (reader.Read())
-                        {
-                            emailCount = (int)reader["EmailCount"];
-                            maxId = (int)reader["MaxId"];
-                        }
-                        else
-                        {
-                            return BadRequest("Invalid data");
-                        }
-                    }
-
-                    if (emailCount == 0)
-                    {
-                        string insertQuery = @"
-                            INSERT INTO TblMailingList (Id, Email, Origin, DateAdded)
-                            VALUES (@Id, @Email, @Origin, @DateAdded)
-                        ";
-
-                        using var connection = new SqlConnection(_configManager.GetConnString());
-                        await connection.OpenAsync();
-
-                        using var command = new SqlCommand(insertQuery, connection);
-                        command.Parameters.AddWithValue("@Id", maxId + 1);
-                        command.Parameters.AddWithValue("@Email", mail.Email?.Trim());
-                        command.Parameters.AddWithValue("@Origin", mail.Origin?.Trim());
-                        command.Parameters.AddWithValue("@DateAdded", DateTime.Now);
-
-                        int rowsAffected = await command.ExecuteNonQueryAsync();
-                        _logger.LogInformation("email added:" + mail.Email?.ToString());
-                        return Ok("Email added successfully");
-                    }
-                    else
-                    {
-                        return BadRequest("Email already exists");
-                    }
-                }
-                else
-                {
-                    _logger.LogError("model invalid");
-                    return BadRequest("Invalid data");
-                }
+                return Success ? Ok(Message) : BadRequest(Message);
             }
             catch (Exception ex)
             {
-                _logger.LogError("error while email submission:" + ex.Message.ToString());
+                _logger.LogError("Error while processing email submission: {Message}", ex.Message);
                 return StatusCode(500, "An error occurred while processing the request.");
             }
+        }
+
+        private static Mail MapToMailEntity(MailDTO mailDTO)
+        {
+            return new Mail
+            {
+                Email = mailDTO.EMail,
+                Origin = mailDTO.Origin,
+                DateAdded = DateTime.Now,
+            };
         }
     }
 }

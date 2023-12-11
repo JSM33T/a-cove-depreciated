@@ -1,8 +1,8 @@
 using System.Net.Mail;
 using System.Net;
-using laymaann.Interefaces.Services;
+using almondcove.Interefaces.Services;
 
-namespace laymaann.Services
+namespace almondcove.Services
 {
 	public class Mailer : IMailer
 	{
@@ -21,7 +21,7 @@ namespace laymaann.Services
 			{
 				MailMessage message = new()
 				{
-					From = new MailAddress("mail@laymaann.in", "AlmondCove"),
+					From = new MailAddress("mail@almondcove.in", "AlmondCove"),
 					Subject = subject,
 					Body = body,
 					IsBodyHtml = true

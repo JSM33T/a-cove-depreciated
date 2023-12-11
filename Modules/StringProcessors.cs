@@ -1,4 +1,4 @@
-﻿namespace laymaann.Modules
+﻿namespace almondcove.Modules
 {
     public class StringProcessors
     {

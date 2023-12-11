@@ -1,4 +1,4 @@
-﻿namespace laymaann.Models.Props
+﻿namespace almondcove.Models.Props
 {
     public class HTMLProps
     {

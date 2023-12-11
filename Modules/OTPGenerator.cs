@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 
-namespace laymaann.Modules
+namespace almondcove.Modules
 {
     public class OTPGenerator
     {

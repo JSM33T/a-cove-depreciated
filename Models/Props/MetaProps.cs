@@ -1,16 +1,16 @@
-﻿namespace laymaann.Models.Props
+﻿namespace almondcove.Models.Props
 {
     public class MetaProps
     {
         public MetaProps()
         {
-            Title = "AlmondCove";
-            Description = "A webspace for music, apps, blogs, sample packs and much more";
-            Tags = "almondcove,blog, blogs,movies,series,morbid,urbex,urbanexploration,portfolo";
+            Title = "almondcove";
+            Description = "A webspace for photos, videos by almondcove";
+            Tags = "almondcove,blog, blogs,movies,series,morbid,urbex,urbanexploration,portfolio";
             Image = "https://almondcove.in/assets/meta/banner.jpg";
             Url = "https://almondcove.in";
             Type = "Website";
-            Author = "jsm33t";
+            Author = "almondcove | Karan Singh";
         }
 
         public string Title { get; set; }

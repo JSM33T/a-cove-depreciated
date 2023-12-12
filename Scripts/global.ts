@@ -259,6 +259,54 @@ function prettifyDate(inputDate: string): string {
 
 //============global ac methods=============
 
+//function acObserver() {
+//    const observeElements = document.querySelectorAll('[data-observe-id]') as HTMLAllCollection;
+
+//    observeElements.forEach((observeElement) => {
+//        const observeId = observeElement.getAttribute('data-observe-id');
+//        const acmodelElement = document.getElementById(observeId) as HTMLInputElement;
+
+//        observeElement.value = acmodelElement ? acmodelElement.value : '';
+
+//        observeElement.addEventListener('input', () => {
+//            if (acmodelElement) {
+//                acmodelElement.value = observeElement.value;
+//            }
+//        });
+
+//        if (acmodelElement) {
+//            acmodelElement.addEventListener('input', () => {
+//                observeElement.value = acmodelElement.value;
+//            });
+//        }
+//    });
+//}
+
+function asBinder() {
+
+    interface InputElement extends HTMLInputElement {
+        acmodel: string;
+    }
+
+    interface SelectElement extends HTMLSelectElement {
+        acmodel: string;
+    }
+
+    const elements: (InputElement | SelectElement)[] = Array.from(document.querySelectorAll('[acmodel]'));
+
+    elements.forEach(element => {
+        const acmodel = element.getAttribute('acmodel');
+
+        if (acmodel !== null) {
+            if (element.type === 'radio' || element.type === 'checkbox') {
+                (window as any)[acmodel] = (window as any)[acmodel] || [];
+                (window as any)[acmodel].push(element);
+            } else {
+                (window as any)[acmodel] = element;
+            }
+        }
+    });
+}
 
 function acToast(type: string, message: string) {
 
@@ -401,7 +449,7 @@ export {
     acInit, // stuff to do when the dom loads
     acTemplate, //use a template,morph it using data
     acSetEvent, // event handler (ID)
-
+    asBinder,
     acQueryParams, // set query params 
     acClearParams, // clear query params
     getQueryParameters, //get query param(s)

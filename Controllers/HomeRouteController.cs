@@ -1,19 +1,9 @@
-﻿using almondcove.Models;
-using Microsoft.AspNetCore.Mvc;
-using Serilog;
-using System.Diagnostics;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace almondcove.Controllers
 {
-    public class HomeRouteController : Controller
+    public class HomeRouteController() : Controller
     {
-        private readonly ILogger<HomeRouteController> _logger;
-
-        public HomeRouteController(ILogger<HomeRouteController> logger)
-        {
-            _logger = logger;
-        }
-
         [Route("/")]
         public IActionResult Index()
         {
@@ -30,12 +20,6 @@ namespace almondcove.Controllers
         public IActionResult NF()
         {
             return View("Views/Home/404.cshtml");
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

@@ -4,30 +4,20 @@ using almondcove.Modules;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
-using Serilog;
 using System.Data;
 
 namespace almondcove.Api
 {
     [ApiController]
-    public class ProfileApiController : ControllerBase
+    public class ProfileApiController(IConfigManager configuration, ILogger<ProfileApiController> logger) : ControllerBase
     {
-        private readonly ILogger<ProfileApiController> _logger;
-        private readonly IConfigManager _configManager;
-        public ProfileApiController(IConfigManager configuration,ILogger<ProfileApiController> logger)
-        {
-            _configManager = configuration;
-            _logger = logger;
-        }
-
-
         [HttpGet]
         [Route("/api/profile/getdetails")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index()
         {
             UserProfile userProfile = null;
-            string connectionString = _configManager.GetConnString();
+            string connectionString = configuration.GetConnString();
             var sessionStat = HttpContext.Session.GetString("role");
 
             if (sessionStat != null && (sessionStat == "user" || sessionStat == "admin"))
@@ -76,7 +66,7 @@ namespace almondcove.Api
         {
             try
             {
-                using SqlConnection connection = new(_configManager.GetConnString());
+                using SqlConnection connection = new(configuration.GetConnString());
                 await connection.OpenAsync();
 
                 string sql = "SELECT * FROM TblAvatarMaster";
@@ -101,7 +91,7 @@ namespace almondcove.Api
             }
             catch (SqlException ex)
             {
-                _logger.LogError("SQL error in GetAvatars exception: {message}", ex.Message);
+                logger.LogError("SQL error in GetAvatars exception: {message}", ex.Message);
                 return BadRequest("Unable to fetch avatars");
             }
         }
@@ -122,7 +112,7 @@ namespace almondcove.Api
                     try
                     {
                         string LoggedUser = HttpContext.Session.GetString("username").ToString();
-                        using SqlConnection connection = new(_configManager.GetConnString());
+                        using SqlConnection connection = new(configuration.GetConnString());
 
                         await connection.OpenAsync();
                         SqlCommand insertCommand = new(@"
@@ -130,7 +120,7 @@ namespace almondcove.Api
                                     where UserName = @username"
                         , connection);
                         insertCommand.Parameters.AddWithValue("@username", LoggedUser);
-                        insertCommand.Parameters.AddWithValue("@cryptedpassword", EnDcryptor.Encrypt(userProfile.Password,_configManager.GetCryptKey()));
+                        insertCommand.Parameters.AddWithValue("@cryptedpassword", EnDcryptor.Encrypt(userProfile.Password,configuration.GetCryptKey()));
                         insertCommand.Parameters.Add("@dateupdated", SqlDbType.DateTime).Value = DateTime.Now;
 
                         await insertCommand.ExecuteNonQueryAsync();
@@ -140,7 +130,7 @@ namespace almondcove.Api
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError("error updating profile:" + ex.Message.ToString());
+                        logger.LogError("error updating profile:" + ex.Message.ToString());
                         return BadRequest("Something went wrong");
                     }
                 }
@@ -164,7 +154,7 @@ namespace almondcove.Api
 
             try
             {
-                using var connection = new SqlConnection(_configManager.GetConnString());
+                using var connection = new SqlConnection(configuration.GetConnString());
                 await connection.OpenAsync();
 
                 using var transaction = connection.BeginTransaction();
@@ -187,7 +177,7 @@ namespace almondcove.Api
             }
             catch (Exception ex)
             {
-                 _logger.LogError("Error updating profile exception {exc}", ex.Message);
+                 logger.LogError("Error updating profile exception {exc}", ex.Message);
                 return BadRequest("Something went wrong");
             }
         }
@@ -226,7 +216,7 @@ namespace almondcove.Api
 
         private string GetAvatar(int avatarId)
         {
-            using var connection = new SqlConnection(_configManager.GetConnString());
+            using var connection = new SqlConnection(configuration.GetConnString());
             connection.Open();
 
             var sql = "SELECT Image FROM TblAvatarMaster WHERE Id = @avtrid";

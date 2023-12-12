@@ -5,7 +5,6 @@ using almondcove.Repositories;
 using almondcove.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Session;
-using WebMarkupMin.AspNetCore7;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSession(options =>
@@ -28,24 +27,6 @@ builder.Services.AddSingleton<IMailer, Mailer>();
 builder.Services.AddSingleton<ISqlService, SqlService>();
 builder.Services.AddScoped<IMailingListRepository, MailingListRepository>();
 
-builder.Services.AddWebMarkupMin(options =>
-{
-    options.AllowMinificationInDevelopmentEnvironment = true;
-    options.AllowCompressionInDevelopmentEnvironment = true;
-})
-//.AddHtmlMinification(options =>
-//{
-//    options.MinificationSettings.RemoveRedundantAttributes = true;
-//    options.MinificationSettings.RemoveHttpProtocolFromAttributes = true;
-//    options.MinificationSettings.RemoveHttpsProtocolFromAttributes = true;
-//    options.MinificationSettings.PreserveNewLines = true;
-//    options.MinificationSettings.MinifyEmbeddedCssCode = true;
-//    options.MinificationSettings.RemoveHtmlComments = true;
-//    options.MinificationSettings.RemoveHtmlCommentsFromScriptsAndStyles = true;
-//    options.MinificationSettings.MinifyEmbeddedJsCode = true;
-//})
-.AddXmlMinification()
-.AddHttpCompression();
 
 var app = builder.Build();
 
@@ -56,7 +37,6 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<SessionMiddleware>();
-app.UseWebMarkupMin();
 app.UseCookieCheckMiddleware();
 app.UseSession();
 app.UseHttpsRedirection();
@@ -72,7 +52,6 @@ app.Use(async (context, next) =>
 });
 app.UseRouting();
 app.UseAuthorization();
-//ols place for session
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

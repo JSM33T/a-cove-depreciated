@@ -1,47 +1,52 @@
-﻿using almondcove.Models;
+﻿using almondcove.Models.DTO.Media.Gallery;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 using System.Text.Json;
 
 namespace almondcove.Controllers
 {
-    public class GalleryModel
+    public class GalleryRouteController(ILogger<GalleryRouteController> logger, IWebHostEnvironment hostingEnvironment) : Controller
     {
-        public List<AlbumInfo> Gallery { get; set; }
-    }
-    public class AlbumInfo {
-        public int Album_id { get; set; }
-        public string Album_name { get; set; }
-        public string Album_desc { get; set; }
-        public string Category { get; set; }
-        public string Year{ get; set; }
-        public bool IsActive{ get; set; }
-    }
-    public class GalleryRouteController : Controller
-    {
-        private readonly ILogger<GalleryRouteController> _logger;
-        public GalleryRouteController(ILogger<GalleryRouteController> logger)
-        {
-            _logger = logger;
-        }
+        private readonly ILogger<GalleryRouteController> _logger = logger;
+        private readonly IWebHostEnvironment _hostingEnvironment = hostingEnvironment;
 
         [Route("/gallery")]
         public IActionResult Browse()
         {
-            return View("Views/Gallery/Index.cshtml");
+            string webRootPath = _hostingEnvironment.WebRootPath;
+            string jsonFilePath = Path.Combine(webRootPath, "content", "gallery","gallery.json");
+            _logger.LogError(jsonFilePath + " and " + webRootPath);
+            if (System.IO.File.Exists(jsonFilePath))
+            {
+                string jsonContent = System.IO.File.ReadAllText(jsonFilePath);
+                List<AlbumDTO> albumModel = JsonSerializer.Deserialize<List<AlbumDTO>>(jsonContent);
+                _logger.LogError(albumModel.ToString());
+                return View("Views/Gallery/Index.cshtml", albumModel);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
-     
 
-        [Route("/gallery/view/{slug}")]
-        public IActionResult Viewer()
-        {
-            return View("Views/Gallery/Index.cshtml");
-        }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [Route("/gallery/album/{Slug}")]
+        public IActionResult Viewer(string Slug)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            string webRootPath = _hostingEnvironment.WebRootPath;
+            string jsonFilePath = Path.Combine(webRootPath, "content","gallery", Slug, "content.json");
+            _logger.LogError(jsonFilePath + " and " + webRootPath);
+            if (System.IO.File.Exists(jsonFilePath))
+            {
+                // Read the JSON file content
+                string jsonContent = System.IO.File.ReadAllText(jsonFilePath);
+
+                List<AlbumItemsDTO> albumModel = JsonSerializer.Deserialize<List<AlbumItemsDTO>>(jsonContent);
+                return View("Views/Gallery/Viewer.cshtml", albumModel);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Almondcove.DTOs
+namespace almondcove.Models.DTO
 {
     public class MailDTO
     {

@@ -11,7 +11,7 @@ namespace almondcove.Api
     [ApiController]
     public class ProfileApiController(IConfigManager configuration, ILogger<ProfileApiController> logger) : ControllerBase
     {
-        [HttpGet]
+                [HttpGet]
         [Route("/api/profile/getdetails")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index()
@@ -25,7 +25,7 @@ namespace almondcove.Api
                 using var connection = new SqlConnection(connectionString);
                 await connection.OpenAsync();
                 var command = new SqlCommand(@"
-                                SELECT a.FirstName,a.LastName,a.UserName,a.Role,a.Gender,a.Bio,a.DateJoined,a.EMail, b.Image 
+                                SELECT a.FirstName,a.LastName,a.UserName,a.Role,a.Gender,a.Bio,a.DateJoined,a.EMail, b.Image ,b.Id
                                 FROM TblUserProfile a, TblAvatarMaster b 
                                 WHERE UserName = @username and a.AvatarId = b.Id
                 ", connection);
@@ -45,6 +45,7 @@ namespace almondcove.Api
                         DateElement = reader.GetDateTime(6).ToString("yyyy-MM-dd"),
                         EMail = reader.GetString(7),
                         AvatarImg = reader.GetString(8),
+                        AvatarId = reader.GetInt32(9)
 
                     };
                 }

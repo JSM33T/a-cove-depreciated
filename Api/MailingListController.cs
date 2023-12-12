@@ -9,15 +9,13 @@ using Microsoft.Data.SqlClient;
 namespace almondcove.Api
 {
     [ApiController]
-    public class MailingListController : ControllerBase
+    public class MailingListController(
+        ILogger<MailingListController> logger,
+        IMailingListRepository mailRepo
+    ) : ControllerBase
     {
-        private readonly ILogger<MailingListController> _logger;
-        private readonly IMailingListRepository _mailRepo;
-        public MailingListController(ILogger<MailingListController> logger,IMailingListRepository mailRepo)
-        {
-            _logger = logger;
-            _mailRepo = mailRepo;
-        }
+        private readonly ILogger<MailingListController> _logger = logger;
+        private readonly IMailingListRepository _mailRepo = mailRepo;
 
         [HttpPost("/api/mailinglist/subscribe")]
         [IgnoreAntiforgeryToken]

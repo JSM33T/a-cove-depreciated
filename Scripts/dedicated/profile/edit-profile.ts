@@ -54,10 +54,10 @@ async function fetchDetails() {
     const resp: IProfile = (await response).data;
     firstName.value = resp.firstName;
     lastName.value = resp.lastName;
-    userName.value = resp.userName.trim();
+    userName.value = resp.userName;
     emailId.value = resp.eMail;
     bio.value = resp.bio;
-    avatarDdl.value = resp.avatarId.toString();
+    avatarDdl.value = resp.avatarId!.toString();
     Avatar.style.backgroundImage = 'url(/assets/images/avatars/default/' + resp.avatarImg + '.png)'
 
 }
@@ -82,7 +82,8 @@ async function submitDetails() {
         gender: "m",
         userName: userName.value
     }
-    const resp = acPostData('/api/profile/update', data)
+    //const resp = acPostData('/api/profile/update', data)
+    console.log(data);
 }
 
 

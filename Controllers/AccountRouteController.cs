@@ -1,12 +1,15 @@
-﻿using almondcove.Models;
-using Microsoft.AspNetCore.Authorization;
+﻿using almondcove.Enums;
+using almondcove.Models;
+using almondcove.Modules;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace almondcove.Controllers
 {
-    public class AccountRouteController : Controller
+    public class AccountRouteController(ILogger<AccountRouteController> logger) : RootController
     {
+        private readonly ILogger<AccountRouteController> _logger = logger;
+
         [Route("/account")]
         public IActionResult Index()
         {
@@ -28,7 +31,15 @@ namespace almondcove.Controllers
         [Route("/account/recover-account")]
         public IActionResult AccountRecovery()
         {
-            return View("Views/Account/AccountRecovery.cshtml");
+            _logger.LogError("derived: {something} and real: {sasas}",GetUserRole().ToString(), HttpContext.Session.GetString("role").ToString());
+            
+            if (PermissionHelper.HasPermission(GetUserRole(), Perm.Guest))
+            {
+                return View("Views/Account/AccountRecovery.cshtml");
+            }
+            else
+            { return Redirect("/"); }
+            
         }
 
         [Route("/account/logout")]

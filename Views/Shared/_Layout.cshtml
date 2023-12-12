@@ -186,6 +186,7 @@ _____  |  |   _____   ____   ____    __| _/____  _______  __ ____      |__| ____
                console.error('Service Worker registration failed:', error);
              });
          }
+         
          let mode = window.localStorage.getItem('mode'),
            root = document.getElementsByTagName('html')[0];
          if (mode !== undefined && mode === 'dark') {

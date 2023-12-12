@@ -36,8 +36,8 @@ namespace almondcove.Api
                         " and p.AvatarId = a.Id", connection);
                     checkcommand.Parameters.AddWithValue("@username", loginCreds.UserName.ToLower());
                     checkcommand.Parameters.AddWithValue("@password", EnDcryptor.Encrypt(loginCreds.Password, _configManager.GetCryptKey()));
-                      // TEST
-                      //_logger.LogCritical( "{cryptkey}" ,EnDcryptor.Encrypt(loginCreds.Password, _configManager.GetCryptKey()));
+                    // TEST
+                    //_logger.LogCritical( "{cryptkey}" ,EnDcryptor.Encrypt(loginCreds.Password, _configManager.GetCryptKey()));
                     using var reader = await checkcommand.ExecuteReaderAsync();
                     if (reader.Read())
                     {
@@ -89,19 +89,19 @@ namespace almondcove.Api
                         });
 
 
-                        _logger.LogInformation("{user} logged in on {time}",loginCreds.UserName, DateTime.Now);
+                        _logger.LogInformation("{user} logged in on {time}", loginCreds.UserName, DateTime.Now);
                         return Ok("logging in...");
 
                     }
                     else
                     {
-                        _logger.LogInformation("invalid creds by username {username}", loginCreds.UserName);
+                        _logger.LogError("invalid creds by username {username}", loginCreds.UserName);
                         return BadRequest("Invalid Credentials");
                     }
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError("Error in login form, message : {exmessage}, user : {user} " ,ex.Message.ToString(), loginCreds.UserName);
+                    _logger.LogError("Error in login form, message : {exmessage}, user : {user} ", ex.Message.ToString(), loginCreds.UserName);
                     return StatusCode(500, "something went wrong");
                 }
             }
@@ -118,12 +118,12 @@ namespace almondcove.Api
             }
             else
             {
-            string body, subject;
+                string body, subject;
                 if (userProfile.UserName != null && userProfile.Password != null)
                 {
                     if (userProfile.FirstName.Trim() == "")
                     {
-                       return BadRequest("first name is mandatory");
+                        return BadRequest("first name is mandatory");
                     }
                     else if (userProfile.UserName.Trim() == "")
                     {
@@ -161,18 +161,18 @@ namespace almondcove.Api
                             cmd.Parameters.AddWithValue("@inputemail", userProfile.EMail);
                             var counter = cmd.ExecuteScalar().ToString();
                             if (counter == "0")
-                            {   
+                            {
                                 string secret = StringProcessors.GenerateRandomString(10);
                                 var otp = OTPGenerator.GenerateOTP(secret);
                                 subject = "Verify Your Account | AlmondCove";
                                 try
                                 {
 
-                                 body = "<!DOCTYPE html><html><head><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Verification</title></head><body style=\"margin:0;padding:0;font-family:Arial,sans-serif;line-height:1.4;color:#111;background-color:#fff\"><div style=\"max-width:600px;margin:0 auto;background-color:#fff;padding:20px;border-radius:5px\"><h1 style=\"color:#111;margin-bottom:20px;font-size:24px\">Complete Signup</h1><p>Hey there,</p><div style=\"text-align:center;margin-bottom:20px\"><img src=\"https://almondcove.in/assets/favicon/apple-touch-icon.png\" width=\"100\" alt=\"Image\" style=\"max-width:100%;height:auto;border-radius:5px\"></div><p>Welcome to the AlmondCove.Your OTP is <h2><b>" + otp + " </b></h2> .You can verify your account from the following button too.</p><p>" +
-                                        "<a href=\"https://almondcove.in/account/verification/" + FilteredUsername + "/" + otp + "\"" +
-                                        " style=\"display:inline-block;padding:10px 20px;background-color:#111;color:#fff;text-decoration:none;border-radius:4px\">Verify Email</a></p><p>If you did not sign up for this account, please ignore this email.</p><div style=\"margin-top:20px;text-align:center;font-size:12px;color:#999\"><p>This is an automated email, please do not reply.</p></div></div></body></html>";
+                                    body = "<!DOCTYPE html><html><head><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Verification</title></head><body style=\"margin:0;padding:0;font-family:Arial,sans-serif;line-height:1.4;color:#111;background-color:#fff\"><div style=\"max-width:600px;margin:0 auto;background-color:#fff;padding:20px;border-radius:5px\"><h1 style=\"color:#111;margin-bottom:20px;font-size:24px\">Complete Signup</h1><p>Hey there,</p><div style=\"text-align:center;margin-bottom:20px\"><img src=\"https://almondcove.in/assets/favicon/apple-touch-icon.png\" width=\"100\" alt=\"Image\" style=\"max-width:100%;height:auto;border-radius:5px\"></div><p>Welcome to the AlmondCove.Your OTP is <h2><b>" + otp + " </b></h2> .You can verify your account from the following button too.</p><p>" +
+                                           "<a href=\"https://almondcove.in/account/verification/" + FilteredUsername + "/" + otp + "\"" +
+                                           " style=\"display:inline-block;padding:10px 20px;background-color:#111;color:#fff;text-decoration:none;border-radius:4px\">Verify Email</a></p><p>If you did not sign up for this account, please ignore this email.</p><div style=\"margin-top:20px;text-align:center;font-size:12px;color:#999\"><p>This is an automated email, please do not reply.</p></div></div></body></html>";
 
-                                 bool stat =  _mailer.SendEmailAsync(userProfile.EMail.ToString(), subject, body);
+                                    bool stat = _mailer.SendEmailAsync(userProfile.EMail.ToString(), subject, body);
 
 
                                     if (stat)
@@ -187,7 +187,7 @@ namespace almondcove.Api
                                             cmd.Parameters.AddWithValue("@lastname", userProfile.LastName);
                                             cmd.Parameters.AddWithValue("@email", userProfile.EMail);
                                             cmd.Parameters.AddWithValue("@username", FilteredUsername.Trim());
-                                            cmd.Parameters.AddWithValue("@cryptedpassword", EnDcryptor.Encrypt(userProfile.Password.Trim(),_configManager.GetCryptKey()));
+                                            cmd.Parameters.AddWithValue("@cryptedpassword", EnDcryptor.Encrypt(userProfile.Password.Trim(), _configManager.GetCryptKey()));
                                             cmd.Parameters.AddWithValue("@otp", otp.Trim());
                                             cmd.Parameters.Add("@otptime", SqlDbType.DateTime).Value = DateTime.Now;
                                             cmd.Parameters.Add("@datejoined", SqlDbType.DateTime).Value = DateTime.Now;
@@ -195,20 +195,20 @@ namespace almondcove.Api
                                             await cmd.ExecuteNonQueryAsync();
                                             _logger.LogInformation(userProfile.FirstName + " registered, Email: " + userProfile.EMail);
                                             return Ok("verification email send please verify your account");
-                    
-                                           
+
+
                                         }
                                         catch (Exception exm)
                                         {
-                                            _logger.LogError("Exception while user {username} 's registration on {datetime},ex message: {exmessage}",userProfile.UserName,DateTime.Now, exm.Message.ToString());
+                                            _logger.LogError("Exception while user {username} 's registration on {datetime},ex message: {exmessage}", userProfile.UserName, DateTime.Now, exm.Message.ToString());
                                             return BadRequest("something went wrong");
-                                           
+
                                         }
 
                                     }
                                     else
                                     {
-                                        _logger.LogError("unable to send mail to {user} on datetime: {datetime}",userProfile.UserName,DateTime.Now);
+                                        _logger.LogError("unable to send mail to {user} on datetime: {datetime}", userProfile.UserName, DateTime.Now);
                                         return BadRequest("unable to send the mail");
                                     }
                                 }
@@ -216,10 +216,10 @@ namespace almondcove.Api
                                 {
                                     _logger.LogError(ex2.Message.ToString());
                                     return BadRequest("something went wrong");
-                                
+
                                 }
                             }
-                            else if(counter == null)
+                            else if (counter == null)
                             {
                                 return BadRequest("something went wrong");
                             }
@@ -230,7 +230,7 @@ namespace almondcove.Api
                         }
                         catch (Exception ex)
                         {
-                            _logger.LogError("error while signup exception: {exmessage}" , ex.Message.ToString());
+                            _logger.LogError("error while signup exception: {exmessage}", ex.Message.ToString());
                             return BadRequest("something went wrong");
                         }
                     }
@@ -239,7 +239,7 @@ namespace almondcove.Api
                 {
                     return BadRequest("invalid data");
                 }
-            
+
             }
         }
 
@@ -322,7 +322,7 @@ namespace almondcove.Api
             }
             catch (Exception ex)
             {
-                
+
                 _logger.LogError("Error verifying a user err message:{message}", ex.Message);
                 return BadRequest("Error verifying user");
             }
@@ -360,7 +360,7 @@ namespace almondcove.Api
                     //trigger mail with the otp
                     bool otpSent = _mailer.SendEmailAsync(userEmail, subject, body);
                     //bool otpSent = true; // for testing without triggering mail
-                    
+
                     if (otpSent == true)
                     {
                         // Save OTP in the database
@@ -393,7 +393,7 @@ namespace almondcove.Api
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error recovering account for  {user} {message} ",recovery.UserName ,ex.Message);
+                _logger.LogError("Error recovering account for  {user} {message} ", recovery.UserName, ex.Message);
                 return BadRequest("Something went wrong.");
             }
         }
@@ -435,8 +435,6 @@ namespace almondcove.Api
             }
             catch (Exception ex)
             {
-                //static hence , look into it later
-               //_logger.LogError("Error saving OTP to the database: " + ex.Message);
                 return false;
             }
         }
@@ -498,7 +496,7 @@ namespace almondcove.Api
             }
             catch (Exception ex2)
             {
-                _logger.LogError("login via OTP failed msg: {errmsg}",ex2.Message.ToString());
+                _logger.LogError("login via OTP failed msg: {errmsg}", ex2.Message.ToString());
                 return BadRequest("Something went wrong");
             }
         }

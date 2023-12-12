@@ -59,7 +59,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\" />
     <Folder Include="Models\DTO\Media\Music\" />
     <Folder Include="Logs\" />
     <Folder Include="wwwroot\content\gallery\darjeeling-diaries\assets\" />

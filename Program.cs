@@ -13,13 +13,14 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromSeconds(3600);
 });
 builder.Services.AddControllersWithViews();
-
+    
 
 builder.Services.AddAuthentication("MyCookieAuthenticationScheme")
      .AddCookie("MyCookieAuthenticationScheme", options =>
      {
-         options.LoginPath = "/"; // Customize the login path
+         options.LoginPath = "/account/login"; // Customize the login path
          options.AccessDeniedPath = "/404"; // Customize the access denied path
+         options.ExpireTimeSpan = TimeSpan.FromDays(100);
      });
 //exc services
 builder.Services.AddSingleton<IConfigManager, ConfigManager>();

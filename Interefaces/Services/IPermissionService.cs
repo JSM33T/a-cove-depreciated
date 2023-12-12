@@ -8,9 +8,9 @@ namespace Almondcove.Interefaces.Services
     public interface IPermissionService
     {
         Task<bool> IsPageAllowed(int UserId);
+
         //id
         Task<bool> IsActionAllowed();
         Task<string> CurrentRole(int UserId);
-
     }
 }

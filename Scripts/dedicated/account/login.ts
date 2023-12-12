@@ -3,7 +3,6 @@
 const userNameInput = document.getElementById('userName') as HTMLInputElement;
 const passwordInput = document.getElementById('password') as HTMLInputElement;
 const submitBtn = document.getElementById('submitBtn') as HTMLButtonElement;
-
 acInit([
     () => acFormHandler('login-form', submitLoginForm)
 ]);

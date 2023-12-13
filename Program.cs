@@ -18,15 +18,17 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication("MyCookieAuthenticationScheme")
      .AddCookie("MyCookieAuthenticationScheme", options =>
      {
-         options.LoginPath = "/account/login"; // Customize the login path
-         options.AccessDeniedPath = "/404"; // Customize the access denied path
+         options.LoginPath = "/account/login";
+         options.AccessDeniedPath = "/404";
          options.ExpireTimeSpan = TimeSpan.FromDays(100);
      });
 //exc services
 builder.Services.AddSingleton<IConfigManager, ConfigManager>();
 builder.Services.AddSingleton<IMailer, Mailer>();
 builder.Services.AddSingleton<ISqlService, SqlService>();
+
 builder.Services.AddScoped<IMailingListRepository, MailingListRepository>();
+builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 
 
 var app = builder.Build();

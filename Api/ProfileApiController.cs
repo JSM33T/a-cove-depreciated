@@ -1,4 +1,5 @@
-﻿using almondcove.Interefaces.Services;
+﻿using almondcove.Interefaces.Repositories;
+using almondcove.Interefaces.Services;
 using almondcove.Models.Domain;
 using almondcove.Modules;
 using Microsoft.AspNetCore.Http;
@@ -9,54 +10,83 @@ using System.Data;
 namespace almondcove.Api
 {
     [ApiController]
-    public class ProfileApiController(IConfigManager configuration, ILogger<ProfileApiController> logger) : ControllerBase
+    public class ProfileApiController(IConfigManager _configuration, ILogger<ProfileApiController> _logger,IProfileRepository _profileRepo) : ControllerBase
     {
+        //[HttpGet]
+        //[Route("/api/profile/getdetails")]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Index()
+        //{
+        //    UserProfile userProfile = null;
+        //    string connectionString = configuration.GetConnString();
+        //    var sessionStat = HttpContext.Session.GetString("role");
+
+        //    if (sessionStat != null && (sessionStat == "user" || sessionStat == "admin"))
+        //    {
+        //        using var connection = new SqlConnection(connectionString);
+        //        await connection.OpenAsync();
+        //        var command = new SqlCommand(@"
+        //                        SELECT a.FirstName,a.LastName,a.UserName,a.Role,a.Gender,a.Bio,a.DateJoined,a.EMail, b.Image 
+        //                        FROM TblUserProfile a, TblAvatarMaster b 
+        //                        WHERE UserName = @username and a.AvatarId = b.Id
+        //        ", connection);
+        //        command.Parameters.AddWithValue("@username", HttpContext.Session.GetString("username"));
+        //        var reader = await command.ExecuteReaderAsync();
+
+        //        if (await reader.ReadAsync())
+        //        {
+        //            userProfile = new UserProfile()
+        //            {
+        //                FirstName = reader.GetString(0),
+        //                LastName = reader.GetString(1),
+        //                UserName = reader.GetString(2),
+        //                Role = reader.GetString(3),
+        //                Gender = reader.GetString(4),
+        //                Bio = reader.GetString(5),
+        //                DateElement = reader.GetDateTime(6).ToString("yyyy-MM-dd"),
+        //                EMail = reader.GetString(7),
+        //                AvatarImg = reader.GetString(8),
+
+        //            };
+        //        }
+
+        //        await reader.CloseAsync();
+        //        await connection.CloseAsync();
+
+        //        return Ok(userProfile);
+        //    }
+        //    else
+        //    {
+        //        return BadRequest("Access denied" );
+        //    }
+        //}
+
         [HttpGet]
         [Route("/api/profile/getdetails")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index()
         {
-            UserProfile userProfile = null;
-            string connectionString = configuration.GetConnString();
             var sessionStat = HttpContext.Session.GetString("role");
 
             if (sessionStat != null && (sessionStat == "user" || sessionStat == "admin"))
             {
-                using var connection = new SqlConnection(connectionString);
-                await connection.OpenAsync();
-                var command = new SqlCommand(@"
-                                SELECT a.FirstName,a.LastName,a.UserName,a.Role,a.Gender,a.Bio,a.DateJoined,a.EMail, b.Image 
-                                FROM TblUserProfile a, TblAvatarMaster b 
-                                WHERE UserName = @username and a.AvatarId = b.Id
-                ", connection);
-                command.Parameters.AddWithValue("@username", HttpContext.Session.GetString("username"));
-                var reader = await command.ExecuteReaderAsync();
-
-                if (await reader.ReadAsync())
+                try
                 {
-                    userProfile = new UserProfile()
-                    {
-                        FirstName = reader.GetString(0),
-                        LastName = reader.GetString(1),
-                        UserName = reader.GetString(2),
-                        Role = reader.GetString(3),
-                        Gender = reader.GetString(4),
-                        Bio = reader.GetString(5),
-                        DateElement = reader.GetDateTime(6).ToString("yyyy-MM-dd"),
-                        EMail = reader.GetString(7),
-                        AvatarImg = reader.GetString(8),
-
-                    };
+                    return Ok(
+                        await _profileRepo.GetProfileByUsername(HttpContext.Session.GetString("username"))
+                        ); 
                 }
-
-                await reader.CloseAsync();
-                await connection.CloseAsync();
-
-                return Ok(userProfile);
+                catch(Exception ex)
+                {
+                    _logger.LogError("exception in fetching profile details for user {msg}",ex.Message);
+                    return BadRequest();
+                }
+                
             }
             else
             {
-                return BadRequest("Access denied" );
+                _logger.LogError("unauth attempt to fetch profile details");
+                return BadRequest("Access denied");
             }
         }
 
@@ -66,7 +96,7 @@ namespace almondcove.Api
         {
             try
             {
-                using SqlConnection connection = new(configuration.GetConnString());
+                using SqlConnection connection = new(_configuration.GetConnString());
                 await connection.OpenAsync();
 
                 string sql = "SELECT * FROM TblAvatarMaster";
@@ -91,7 +121,7 @@ namespace almondcove.Api
             }
             catch (SqlException ex)
             {
-                logger.LogError("SQL error in GetAvatars exception: {message}", ex.Message);
+                _logger.LogError("SQL error in GetAvatars exception: {message}", ex.Message);
                 return BadRequest("Unable to fetch avatars");
             }
         }
@@ -112,7 +142,7 @@ namespace almondcove.Api
                     try
                     {
                         string LoggedUser = HttpContext.Session.GetString("username").ToString();
-                        using SqlConnection connection = new(configuration.GetConnString());
+                        using SqlConnection connection = new(_configuration.GetConnString());
 
                         await connection.OpenAsync();
                         SqlCommand insertCommand = new(@"
@@ -120,7 +150,7 @@ namespace almondcove.Api
                                     where UserName = @username"
                         , connection);
                         insertCommand.Parameters.AddWithValue("@username", LoggedUser);
-                        insertCommand.Parameters.AddWithValue("@cryptedpassword", EnDcryptor.Encrypt(userProfile.Password,configuration.GetCryptKey()));
+                        insertCommand.Parameters.AddWithValue("@cryptedpassword", EnDcryptor.Encrypt(userProfile.Password,_configuration.GetCryptKey()));
                         insertCommand.Parameters.Add("@dateupdated", SqlDbType.DateTime).Value = DateTime.Now;
 
                         await insertCommand.ExecuteNonQueryAsync();
@@ -130,7 +160,7 @@ namespace almondcove.Api
                     }
                     catch (Exception ex)
                     {
-                        logger.LogError("error updating profile:" + ex.Message.ToString());
+                        _logger.LogError("error updating profile:" + ex.Message.ToString());
                         return BadRequest("Something went wrong");
                     }
                 }
@@ -154,7 +184,7 @@ namespace almondcove.Api
 
             try
             {
-                using var connection = new SqlConnection(configuration.GetConnString());
+                using var connection = new SqlConnection(_configuration.GetConnString());
                 await connection.OpenAsync();
 
                 using var transaction = connection.BeginTransaction();
@@ -177,7 +207,7 @@ namespace almondcove.Api
             }
             catch (Exception ex)
             {
-                 logger.LogError("Error updating profile exception {exc}", ex.Message);
+                 _logger.LogError("Error updating profile exception {exc}", ex.Message);
                 return BadRequest("Something went wrong");
             }
         }
@@ -216,7 +246,7 @@ namespace almondcove.Api
 
         private string GetAvatar(int avatarId)
         {
-            using var connection = new SqlConnection(configuration.GetConnString());
+            using var connection = new SqlConnection(_configuration.GetConnString());
             connection.Open();
 
             var sql = "SELECT Image FROM TblAvatarMaster WHERE Id = @avtrid";

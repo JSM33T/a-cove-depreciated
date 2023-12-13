@@ -18,7 +18,7 @@ namespace almondcove.Api
         private readonly IMailingListRepository _mailRepo = mailRepo;
 
         [HttpPost("/api/mailinglist/subscribe")]
-        [IgnoreAntiforgeryToken]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> PostMail(MailDTO mailDTO)
         {
             try

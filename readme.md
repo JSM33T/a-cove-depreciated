@@ -61,8 +61,4 @@ The `global.ts` file serves as a central location for common functionalities and
 
 export const API_BASE_URL = 'https://api.example.com';
 
-export function logMessage(message: string): void {
-  console.log(`[LOG]: ${message}`);
-}
-
 // Other common functions and constants

@@ -1,13 +1,13 @@
-﻿using almondcove.Interefaces.Services;
+﻿using almondcove.Interefaces.Repositories;
+using almondcove.Interefaces.Services;
 using Microsoft.Data.SqlClient;
 
 namespace almondcove.Middlewares
 {
-    public class SessionManager(RequestDelegate next, IConfigManager configManager)
+    public class SessionManager(RequestDelegate next,IConfigManager configManager)
     {
         private readonly RequestDelegate _next = next;
         private readonly IConfigManager _configManager = configManager;
-
         public async Task InvokeAsync(HttpContext context)
         {
             if (context.Session.GetString("username") == null)
@@ -20,11 +20,11 @@ namespace almondcove.Middlewares
                     SqlCommand checkcommand =
                         new(
                             @"select p.*,a.Image 
-                        from TblUserProfile p,TblAvatarMaster a 
-                        WHERE SessionKey = @sessionkey
-                        and p.IsActive= 1
-                        and p.IsVerified = 1
-                        and p.AvatarId = a.Id ",
+                         from TblUserProfile p,TblAvatarMaster a 
+                         WHERE SessionKey = @sessionkey
+                         and p.IsActive= 1
+                         and p.IsVerified = 1
+                         and p.AvatarId = a.Id ",
                             connection
                         );
                     checkcommand.Parameters.AddWithValue("@sessionkey", cookieValue);
@@ -34,10 +34,7 @@ namespace almondcove.Middlewares
                         var username = reader.GetString(reader.GetOrdinal("UserName"));
                         var user_id = reader.GetInt32(reader.GetOrdinal("Id"));
                         var firstname = reader.GetString(reader.GetOrdinal("FirstName"));
-                        var fullname =
-                            reader.GetString(reader.GetOrdinal("FirstName"))
-                            + " "
-                            + reader.GetString(reader.GetOrdinal("LastName"));
+                        var fullname = firstname + " " + reader.GetString(reader.GetOrdinal("LastName"));
                         var role = reader.GetString(reader.GetOrdinal("Role"));
                         var avatar = reader.GetString(reader.GetOrdinal("Image"));
                         //set session
@@ -57,5 +54,6 @@ namespace almondcove.Middlewares
 
             await _next(context);
         }
+
     }
 }

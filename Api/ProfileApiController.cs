@@ -1,6 +1,7 @@
 ﻿using almondcove.Interefaces.Repositories;
 using almondcove.Interefaces.Services;
 using almondcove.Models.Domain;
+using almondcove.Models.DTO.Profile;
 using almondcove.Modules;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,54 +13,6 @@ namespace almondcove.Api
     [ApiController]
     public class ProfileApiController(IConfigManager _configuration, ILogger<ProfileApiController> _logger,IProfileRepository _profileRepo) : ControllerBase
     {
-        //[HttpGet]
-        //[Route("/api/profile/getdetails")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Index()
-        //{
-        //    UserProfile userProfile = null;
-        //    string connectionString = configuration.GetConnString();
-        //    var sessionStat = HttpContext.Session.GetString("role");
-
-        //    if (sessionStat != null && (sessionStat == "user" || sessionStat == "admin"))
-        //    {
-        //        using var connection = new SqlConnection(connectionString);
-        //        await connection.OpenAsync();
-        //        var command = new SqlCommand(@"
-        //                        SELECT a.FirstName,a.LastName,a.UserName,a.Role,a.Gender,a.Bio,a.DateJoined,a.EMail, b.Image 
-        //                        FROM TblUserProfile a, TblAvatarMaster b 
-        //                        WHERE UserName = @username and a.AvatarId = b.Id
-        //        ", connection);
-        //        command.Parameters.AddWithValue("@username", HttpContext.Session.GetString("username"));
-        //        var reader = await command.ExecuteReaderAsync();
-
-        //        if (await reader.ReadAsync())
-        //        {
-        //            userProfile = new UserProfile()
-        //            {
-        //                FirstName = reader.GetString(0),
-        //                LastName = reader.GetString(1),
-        //                UserName = reader.GetString(2),
-        //                Role = reader.GetString(3),
-        //                Gender = reader.GetString(4),
-        //                Bio = reader.GetString(5),
-        //                DateElement = reader.GetDateTime(6).ToString("yyyy-MM-dd"),
-        //                EMail = reader.GetString(7),
-        //                AvatarImg = reader.GetString(8),
-
-        //            };
-        //        }
-
-        //        await reader.CloseAsync();
-        //        await connection.CloseAsync();
-
-        //        return Ok(userProfile);
-        //    }
-        //    else
-        //    {
-        //        return BadRequest("Access denied" );
-        //    }
-        //}
 
         [HttpGet]
         [Route("/api/profile/getdetails")]
@@ -70,11 +23,9 @@ namespace almondcove.Api
 
             if (sessionStat != null && (sessionStat == "user" || sessionStat == "admin"))
             {
-                try
-                {
-                    return Ok(
-                        await _profileRepo.GetProfileByUsername(HttpContext.Session.GetString("username"))
-                        ); 
+                try 
+                { 
+                    return Ok( await _profileRepo.GetProfileByUsername(HttpContext.Session.GetString("username")) ); 
                 }
                 catch(Exception ex)
                 {
@@ -90,93 +41,75 @@ namespace almondcove.Api
             }
         }
 
-        [HttpGet]
-        [Route("/api/getavatars")]
+        [HttpGet("/api/getavatars")]
         public async Task<IActionResult> GetAvatars()
         {
             try
             {
-                using SqlConnection connection = new(_configuration.GetConnString());
-                await connection.OpenAsync();
-
-                string sql = "SELECT * FROM TblAvatarMaster";
-
-                using SqlCommand command = new(sql, connection);
-                using SqlDataReader dataReader = await command.ExecuteReaderAsync().ConfigureAwait(false);
-
-                List<Avatar> entries = new();
-
-                while (await dataReader.ReadAsync())
-                {
-                    Avatar entry = new()
-                    {
-                        Id = dataReader["Id"] as int? ?? 0,
-                        Title = dataReader["Title"] as string ?? "",
-                        Image = dataReader["Image"] as string ?? ""
-                    };
-                    entries.Add(entry);
-                }
+                List<Avatar> entries = await _profileRepo.GetAvatarsAsync();
 
                 return Ok(entries);
             }
-            catch (SqlException ex)
+            catch (Exception ex)
             {
-                _logger.LogError("SQL error in GetAvatars exception: {message}", ex.Message);
+                _logger.LogError("error fetching avatars with msg: {msg}", ex.Message);
                 return BadRequest("Unable to fetch avatars");
             }
         }
 
         [HttpPost]
-        [Route("api/profile/password/update")]
+        [Route("/api/profile/password/update")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdatePassword([FromBody] UserProfile userProfile)
+        public async Task<IActionResult> UpdatePassword(PasswordUpdateDTO passwordUpdateDTO)
         {
-            if (ModelState.IsValid)
-            {
-                if (userProfile.Password == HttpContext.Session.GetString("username").ToString())
-                {
-                    return BadRequest("Password can't be similar to your username");
-                }
-                else
-                {
-                    try
-                    {
-                        string LoggedUser = HttpContext.Session.GetString("username").ToString();
-                        using SqlConnection connection = new(_configuration.GetConnString());
-
-                        await connection.OpenAsync();
-                        SqlCommand insertCommand = new(@"
-                                    UPDATE TblUserProfile SET CryptedPassword = @cryptedpassword,DateUpdated = @dateupdated 
-                                    where UserName = @username"
-                        , connection);
-                        insertCommand.Parameters.AddWithValue("@username", LoggedUser);
-                        insertCommand.Parameters.AddWithValue("@cryptedpassword", EnDcryptor.Encrypt(userProfile.Password,_configuration.GetCryptKey()));
-                        insertCommand.Parameters.Add("@dateupdated", SqlDbType.DateTime).Value = DateTime.Now;
-
-                        await insertCommand.ExecuteNonQueryAsync();
-                        await connection.CloseAsync();
-                        // // Log.Information(LoggedUser + " changed their password");
-                        return Ok("Changes Saved");
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError("error updating profile:" + ex.Message.ToString());
-                        return BadRequest("Something went wrong");
-                    }
-                }
-
-            }
-            else
+            if (!ModelState.IsValid)
             {
                 return BadRequest("Invalid Password Format");
+            }
+
+            string username = HttpContext.Session.GetString("username");
+
+            if (passwordUpdateDTO.Password == username)
+            {
+                return BadRequest("Password can't be similar to your username");
+            }
+
+            try
+            {
+                bool updateResult = await _profileRepo.UpdatePassword(username, passwordUpdateDTO.Password);
+
+                if (updateResult)
+                {
+                    return Ok("Changes Saved");
+                }
+
+                _logger.LogError("Failed to update password");
+                return StatusCode(500, "Something went wrong");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error updating password. Message: {msg}", ex.Message);
+                return StatusCode(500, "Something went wrong");
             }
         }
 
         [HttpPost]
         [Route("/api/profile/update")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SaveProfile([FromBody] UserProfile userProfile)
+        public async Task<IActionResult> SaveProfile(ProfileUpdateDTO userProfileDTO)
         {
+            UserProfile userProfile = new()
+            {
+                UserName = userProfileDTO.UserName,
+                FirstName = userProfileDTO.FirstName,
+                LastName = userProfileDTO.LastName,
+                Gender = userProfileDTO.Gender,
+                Bio = userProfileDTO.Bio,
+                EMail = userProfileDTO.EMail,
+                AvatarId = userProfileDTO.AvatarId
+                
+            };
+
             if (!ModelState.IsValid)
             {
                 return BadRequest("Invalid Data");
@@ -223,11 +156,12 @@ namespace almondcove.Api
 
         private async Task UpdateUserProfileAsync(SqlConnection connection, UserProfile userProfile, SqlTransaction transaction)
         {
-            var sql = "UPDATE TblUserProfile SET UserName = @UserName, FirstName = @FirstName, LastName = @LastName, AvatarId = @AvatarId, Gender = @Gender, Bio = @Bio, dateupdated = @dateupdated WHERE Id = @userid";
+            var sql = "UPDATE TblUserProfile SET UserName = @UserName, FirstName = @FirstName, LastName = @LastName, AvatarId = @AvatarId, Gender = @Gender, Bio = @Bio,EMail = @EmailId, dateupdated = @dateupdated WHERE Id = @userid";
             using var command = new SqlCommand(sql, connection, transaction);
             command.Parameters.AddWithValue("@FirstName", userProfile.FirstName.Trim());
             command.Parameters.AddWithValue("@LastName", userProfile.LastName.Trim());
-            command.Parameters.AddWithValue("@Gender", userProfile.Gender.Trim());
+            command.Parameters.AddWithValue("@Gender", userProfile.Gender?.Trim() ?? "");
+            command.Parameters.AddWithValue("@EmailId", userProfile.EMail.Trim());
             command.Parameters.AddWithValue("@AvatarId", userProfile.AvatarId);
             command.Parameters.AddWithValue("@dateupdated", DateTime.Now);
             command.Parameters.AddWithValue("@UserName", userProfile.UserName.Trim());

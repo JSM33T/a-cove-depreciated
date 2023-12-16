@@ -4,7 +4,6 @@ using almondcove.Models.DTO;
 using almondcove.Modules;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
-using System.ComponentModel.DataAnnotations;
 using System.Data;
 
 namespace almondcove.Api
@@ -19,7 +18,7 @@ namespace almondcove.Api
 
         [HttpPost("/api/account/login")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UserLogin([FromBody] LoginCreds loginCreds)
+        public async Task<IActionResult> UserLogin(LoginCreds loginCreds)
         {
             if (ModelState.IsValid)
             {
@@ -286,7 +285,7 @@ namespace almondcove.Api
 
         [HttpPost("/api/account/recover")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RecoverAccount([FromBody] Recovery recovery)
+        public async Task<IActionResult> RecoverAccount(RecoveryDTO recovery)
         {
             if (!ModelState.IsValid)
             {

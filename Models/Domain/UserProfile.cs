@@ -27,13 +27,15 @@ namespace almondcove.Models.Domain
         public int AvatarId { get; set; }
         
         public string Bio { get; set; }
-        
+
+        [Required]
         public DateTime DateJoined { get; set; }
         
         public string DateElement { get; set; }
         
         public DateTime DateEdited { get; set; }
-        
+
+        [Required]
         public string Role { get; set; }
         
         [MinLength(6)]
@@ -43,7 +45,8 @@ namespace almondcove.Models.Domain
         [MinLength(6)]
         [MaxLength(20)]
         public string ConfirmPassword { get; set; }
-        
+
+        [Required]
         public string AvatarImg { get; set; }
         
         public string Badges { get; internal set; }

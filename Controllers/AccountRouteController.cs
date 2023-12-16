@@ -31,15 +31,16 @@ namespace almondcove.Controllers
         [Route("/account/recover-account")]
         public IActionResult AccountRecovery()
         {
-            _logger.LogError("derived: {something} and real: {sasas}",GetUserRole().ToString(), HttpContext.Session.GetString("role").ToString());
+           // _logger.LogError("derived: {something} and real: {sasas}",GetUserRole().ToString(), HttpContext.Session.GetString("role").ToString());
             
-            if (PermissionHelper.HasPermission(GetUserRole(), Perm.Guest))
-            {
-                return View("Views/Account/AccountRecovery.cshtml");
-            }
-            else
-            { return Redirect("/"); }
-            
+            //if (PermissionHelper.HasPermission(GetUserRole(), Perm.Guest))
+            //{
+            //    return View("Views/Account/AccountRecovery.cshtml");
+            //}
+            //else
+            //{ return Redirect("/"); }
+            return View("Views/Account/AccountRecovery.cshtml");
+
         }
 
         [Route("/account/logout")]

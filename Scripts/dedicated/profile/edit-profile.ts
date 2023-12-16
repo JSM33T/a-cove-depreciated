@@ -1,5 +1,5 @@
 
-import { acFormHandler, acGetData, acInit, acPostData, prettifyDate } from '../../global.js'
+import { acFormHandler, acGetData, acInit, acPostData, acToast, prettifyDate } from '../../global.js'
 import { IProfile } from '../../Interfaces/profile.interface.js';
 
 const firstName = document.getElementById("firstName") as HTMLInputElement;
@@ -16,37 +16,39 @@ const avatarDdl = document.getElementById("avatarDdl") as HTMLSelectElement;
 
 
 acInit([
-    fetchDetails,
-    loadavatarDdl,
     onAvatarChangeEvent,
-    () => acFormHandler('basicInfoForm', submitDetails),
-    () => acFormHandler('passForm', submitPass)
+    async () => {
+        await loadavatarDdl();
+        await fetchDetails();
+    },
+    async () => acFormHandler('basicInfoForm', submitDetails),
+    async () => acFormHandler('passForm', submitPass)
 ])
 
 
 async function onAvatarChangeEvent() {
 
-
-    // Attach the event listener to the dropdown
-    //avatarDdl.addEventListener("change", function () {
-
-    //    Avatar.style.backgroundImage = 'url(/assets/images/avatars/default/' + avatarDdl.dataset.img + '.png)' 
-    //});
-
-
     avatarDdl!.addEventListener("change", function () {
-        // Get the selected option
+
         var selectedOption = avatarDdl!.options[avatarDdl!.selectedIndex];
 
-        // Get the value of the data-img attribute
         var imgValue = selectedOption.dataset.img;
-
-        // Update the background image of the Avatar element
 
         Avatar!.style.backgroundImage = 'url(/assets/images/avatars/default/' + imgValue + '.png)';
     });
+}
 
 
+async function getCheckedRadioButton() {
+    //var genderRadios = document.getElementsByName('gender');
+
+    //for (var i = 0; i < genderRadios.length; i++) {
+    //    if (genderRadios[i].checked) {
+    //        return genderRadios[i];
+    //    }
+    //}
+    //return null;
+    return "m";
 }
 
 async function fetchDetails() {
@@ -58,10 +60,10 @@ async function fetchDetails() {
     emailId.value = resp.eMail;
     bio.value = resp.bio;
     avatarDdl.value = resp.avatarId!.toString();
-    Avatar.style.backgroundImage = 'url(/assets/images/avatars/default/' + resp.avatarImg + '.png)'
-
+    Avatar.style.backgroundImage = 'url(/assets/images/avatars/default/' + resp.avatarImg + '.png)';
+    console.log(response);
 }
-
+    
 async function loadavatarDdl() {
     const optns = await acGetData("/api/getavatars");
     let options = ` <option value="" selected disabled>Select avatar</option>`;
@@ -77,15 +79,41 @@ async function submitDetails() {
         firstName: firstName.value,
         lastName: lastName.value,
         bio: bio.value,
-        avatarId: parseInt(avatarDdl.value) || 0,
+        avatarId: parseInt(avatarDdl.value) || 1,
         eMail: emailId.value,
         gender: "m",
         userName: userName.value
     }
-    //const resp = acPostData('/api/profile/update', data)
-    console.log(data);
+    const resp = await acPostData('/api/profile/update', data);
+    acToast(resp.type, resp.data)
 }
 
 
 async function submitPass() {
+    const newpass = document.getElementById('new-pass') as HTMLInputElement;
+    const confirmpass = document.getElementById('confirm-pass') as HTMLInputElement;
+    if (newpass.value == "" || newpass.value.length < 6) {
+        acToast('validation issue', 'password too short');
+        return
+    }
+    if (newpass.value != confirmpass.value) {
+        acToast('error', 'Passwords don\'t match');
+        return;
+    }
+
+    const data = {
+        password: newpass.value
+    };
+    const res = await acPostData('/api/profile/password/update', data);
+    console.log(res);
+    if (res.type == "ok") {
+        acToast('success', res.data);
+    }
+    else {
+        acToast('error', res.data);
+    }
+}
+async function logOutFromAll() {
+}
+async function clearPreferences() {
 }

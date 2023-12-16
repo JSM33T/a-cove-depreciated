@@ -220,19 +220,20 @@ async function loadComments() {
             const comment = response.data[i];
             c = i + 1;
             commentsHTML += `<div class="border-bottom py-4 mt-2 mb-4">
-                                            <div class="d-flex align-items-center pb-1 mb-3">
-                                                <img class="rounded-circle" src="/assets/images/avatars/default/${comment.avatar}.png" width="48" alt="Comment author">
-                                                <div class="ps-3">
-                                                    <h6 class="mb-0">${comment.fullname}</h6><span class="fs-sm text-muted">${comment.date}</span>
-                                                </div>
-                                            </div>
-                                            <div class="btn-group-sm me-2 ml-2 mx-2" style="float:right;" role="group" aria-label="Settings group">
-                                                ${roleData !== 'guest' ? `<button type="button" data-contentid="${comment.id}" class="replyto btn btn-secondary btn-icon px-2"><i class="ai-redo"></i></button>&nbsp;` : ''}
-                                                ${comment.edit ? `<button type="button" data-type="comment" data-contentid="${comment.id}" class="editcontent btn btn-secondary btn-icon px-2"><i class="ai-edit"></i></button>&nbsp;` : ''}
-                                                ${comment.edit ? `<button type="button" data-type="comment" data-contentid="${comment.id}" class="deletecontent btn btn-secondary btn-icon px-2"><i class="ai-trash"></i></button>&nbsp;` : ''}
-                                            </div>
-                                            <span class="pb-2 mb-0" id="comment_${comment.id}">${comment.comment}</span>
-                                        </div>`;
+                                <div class="d-flex align-items-center pb-1 mb-3">
+                                    <img class="rounded-circle" src="/assets/images/avatars/default/${comment.avatar}.png" width="48" alt="Comment author">
+                                    <div class="ps-3">
+                                        <h6 class="mb-0">${comment.fullname}</h6><span class="fs-sm text-muted">${comment.date}</span>
+                                    </div>
+                                </div>
+                                <div class="btn-group-sm me-2 ml-2 mx-2" style="float:right;" role="group" aria-label="Settings group">
+                                    ${roleData !== 'guest' ? `<button type="button" data-contentid="${comment.id}" class="replyto btn btn-secondary btn-icon px-2"><i class="ai-redo"></i></button>&nbsp;` : ''}
+                                    ${comment.edit ? `<button type="button" data-type="comment" data-contentid="${comment.id}" class="editcontent btn btn-secondary btn-icon px-2"><i class="ai-edit"></i></button>&nbsp;` : ''}
+                                    ${comment.edit ? `<button type="button" data-type="comment" data-contentid="${comment.id}" class="deletecontent btn btn-secondary btn-icon px-2"><i class="ai-trash"></i></button>&nbsp;` : ''}
+                                </div>
+                                <span class="pb-2 mb-0" id="comment_${comment.id}">${comment.comment}</span>
+                            </div>
+                            `;
 
 
             if (comment.replies && comment.replies.length > 0) {
@@ -241,20 +242,21 @@ async function loadComments() {
                     const reply = comment.replies[j];
                     commentsHTML +=
                         `   <div class="card card-body border-0 bg-secondary mt-4">
-                                          <div class="d-flex align-items-center pb-1 mb-3">
-                                              <img class="rounded-circle" src="/assets/images/avatars/default/${reply.replyAvatar}.png" width="48" alt="Comment author">
-                                              <div class="ps-3">
-                                                  <h6 class="mb-0">${reply.replyFullName}</h6><span class="fs-sm text-muted">${reply.replyDate}</span>
-                                              </div>
-                                          </div>
-                                          <div class="d-flex align-items-center justify-content-between mb-3" role="group" aria-label="Settings group">
-                                              <p class="mb-0"><a class="fw-bold text-decoration-none" href="#">@${comment.username}</a>&nbsp;&nbsp;<span id="reply_${reply.replyId}">${reply.replyComment}</span></p>
-                                              <div>
-                                                  ${reply.replyEdit ? `<button type="button" data-type="reply" data-contentid="${reply.replyId}" data-action="edit" class="editcontent btn btn-sm btn-secondary btn-icon px-2"><i class="ai-edit"></i></button>&nbsp;` : ''}
-                                                  ${reply.replyEdit ? `<button type="button" data-type="reply" data-contentid="${reply.replyId}" class="deletecontent btn btn-sm btn-secondary btn-icon px-2"><i class="ai-trash"></i></button>&nbsp;` : ''}
-                                              </div>
-                                          </div>
-                                      </div>`;
+                                <div class="d-flex align-items-center pb-1 mb-3">
+                                    <img class="rounded-circle" src="/assets/images/avatars/default/${reply.replyAvatar}.png" width="48" alt="Comment author">
+                                    <div class="ps-3">
+                                        <h6 class="mb-0">${reply.replyFullName}</h6><span class="fs-sm text-muted">${reply.replyDate}</span>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-between mb-3" role="group" aria-label="Settings group">
+                                    <p class="mb-0"><a class="fw-bold text-decoration-none" href="#">@${comment.username}</a>&nbsp;&nbsp;<span id="reply_${reply.replyId}">${reply.replyComment}</span></p>
+                                    <div>
+                                        ${reply.replyEdit ? `<button type="button" data-type="reply" data-contentid="${reply.replyId}" data-action="edit" class="editcontent btn btn-sm btn-secondary btn-icon px-2"><i class="ai-edit"></i></button>&nbsp;` : ''}
+                                        ${reply.replyEdit ? `<button type="button" data-type="reply" data-contentid="${reply.replyId}" class="deletecontent btn btn-sm btn-secondary btn-icon px-2"><i class="ai-trash"></i></button>&nbsp;` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                            `;
                 }
             }
             commentsHTML += `</div>`;

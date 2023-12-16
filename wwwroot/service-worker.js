@@ -1,6 +1,5 @@
 ﻿const CACHE_NAME = 'almond-cache-v3';
 const cacheUrls = [
-    // Add more URLs to cache here
     '/assets/css/theme.min.css',
     '/assets/js/theme.min.js'
 ];

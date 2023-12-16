@@ -1,0 +1,23 @@
+[
+  {
+    "inputfile": "wwwroot/assets/js/main.js",
+    "outputfile": "wwwroot/assets/js/main.min.js"
+  },
+  {
+    "inputfile": "wwwroot/assets/js/theme-switcher.js",
+    "outputfile": "wwwroot/assets/js/theme-switcher.min.js"
+  },
+  {
+    "inputfile": "wwwroot/assets/js/global.js",
+    "outputfile": "wwwroot/assets/js/global.min.js"
+  },
+  {
+    "inputfile": "wwwroot/assets/js/dedicated/home.js",
+    "outputfile": "wwwroot/assets/js/dedicated/home.js"
+  },
+  {
+    "inputfile": "wwwroot/assets/js/dedicated/personalize.js",
+    "outputfile": "wwwroot/assets/js/dedicated/personalize.js"
+  }
+]
+      

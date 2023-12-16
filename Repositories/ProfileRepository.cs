@@ -1,7 +1,10 @@
 ﻿using almondcove.Interefaces.Repositories;
 using almondcove.Interefaces.Services;
 using almondcove.Models.Domain;
+using almondcove.Modules;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using System.Data;
 
 namespace almondcove.Repositories
 {
@@ -22,7 +25,7 @@ namespace almondcove.Repositories
                     await connection.OpenAsync();
 
                     using var command = new SqlCommand(@"
-                            SELECT a.FirstName, a.LastName, a.UserName, a.Role, a.Gender, a.Bio, a.DateJoined, a.EMail, b.Image 
+                            SELECT a.FirstName, a.LastName, a.UserName, a.Role, a.Gender, a.Bio, a.DateJoined, a.EMail, b.Image ,b.Id
                             FROM TblUserProfile a
                             JOIN TblAvatarMaster b ON a.AvatarId = b.Id
                             WHERE a.UserName = @username
@@ -32,7 +35,7 @@ namespace almondcove.Repositories
                     using var reader = await command.ExecuteReaderAsync();
                     if (await reader.ReadAsync())
                     {
-                        UserProfile userProfile = new UserProfile
+                        UserProfile userProfile = new()
                         {
                             FirstName = reader.IsDBNull(0) ? null : reader.GetString(0),
                             LastName = reader.IsDBNull(1) ? null : reader.GetString(1),
@@ -43,6 +46,7 @@ namespace almondcove.Repositories
                             DateElement = reader.IsDBNull(6) ? null : reader.GetDateTime(6).ToString("yyyy-MM-dd"),
                             EMail = reader.IsDBNull(7) ? null : reader.GetString(7),
                             AvatarImg = reader.IsDBNull(8) ? null : reader.GetString(8),
+                            AvatarId = reader.IsDBNull(9) ? 0 : reader.GetInt32(9),
                         };
 
                         return userProfile;
@@ -96,6 +100,67 @@ namespace almondcove.Repositories
             }
 
             return null;
+        }
+
+        public async Task<List<Avatar>> GetAvatarsAsync()
+        {
+            try
+            {
+                using SqlConnection connection = new(_configManager.GetConnString());
+                await connection.OpenAsync();
+
+                string sql = "SELECT Id, Title, Image FROM TblAvatarMaster";
+
+                using SqlCommand command = new SqlCommand(sql, connection);
+                using SqlDataReader dataReader = await command.ExecuteReaderAsync().ConfigureAwait(false);
+
+                List<Avatar> entries = new List<Avatar>();
+
+                while (await dataReader.ReadAsync())
+                {
+                    Avatar entry = new Avatar
+                    {
+                        Id = dataReader["Id"] as int? ?? 0,
+                        Title = dataReader["Title"] as string ?? "",
+                        Image = dataReader["Image"] as string ?? ""
+                    };
+                    entries.Add(entry);
+                }
+
+                return entries;
+            }
+            catch (SqlException ex)
+            {
+                // Log the exception or handle it as needed
+                throw;
+            }
+        }
+
+        public async Task<bool> UpdatePassword(string username, string newPassword)
+        {
+            try
+            {
+                using SqlConnection connection = new(_configManager.GetConnString());
+                await connection.OpenAsync();
+
+                SqlCommand updateCommand = new(@"
+                UPDATE TblUserProfile SET CryptedPassword = @cryptedpassword, DateUpdated = @dateupdated 
+                WHERE UserName = @username", connection);
+
+                updateCommand.Parameters.AddWithValue("@username", username);
+                updateCommand.Parameters.AddWithValue("@cryptedpassword", EnDcryptor.Encrypt(newPassword, _configManager.GetCryptKey()));
+                updateCommand.Parameters.Add("@dateupdated", SqlDbType.DateTime).Value = DateTime.Now;
+
+                await updateCommand.ExecuteNonQueryAsync();
+                await connection.CloseAsync();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it appropriately
+                return false;
+            }
         }
     }
 }

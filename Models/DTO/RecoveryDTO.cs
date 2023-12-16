@@ -2,7 +2,7 @@
 
 namespace almondcove.Models.DTO
 {
-    public class Recovery
+    public class RecoveryDTO
     {
         [Required]
         public string UserName { get; set; }

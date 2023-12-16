@@ -10,7 +10,8 @@
 
 	MetaProps meta = new()
 			{
-				Title = "Home",
+				Title = "Edit profile",
+				Description = "Edit your almondcove profile"
 			};
 
 	ViewData["HtmlProps"] = props;
@@ -18,7 +19,7 @@
 }
 
 @section Scripts {
-	<script src="~/assets/js/dedicated/profile/edit-profile.js" type="module"></script>
+	<script src="~/assets/js/dedicated/profile/edit-profile.js" type="module" asp-append-version="true"></script>
 }
 <!-- Basic info -->
 @Html.AntiForgeryToken()
@@ -103,19 +104,6 @@
 									<label class="form-check-label" for="other">Other</label>
 								</div>
 							</div>
-							<div class="col-12 d-sm-flex align-items-center">
-								<div class="form-label text-body-secondary mb-2 mb-sm-0 me-sm-4">Communication:</div>
-								<div class="form-check form-check-inline mb-0">
-									<input class="form-check-input" type="checkbox" name="com-email" value="Email"
-										checked id="c-email">
-									<label class="form-check-label" for="c-email">Email</label>
-								</div>
-								<div class="form-check form-check-inline mb-0">
-									<input class="form-check-input" type="checkbox" name="com-phone" value="Phone"
-										id="c-phone">
-									<label class="form-check-label" for="c-phone">Phone</label>
-								</div>
-							</div>
 							<div class="col-12 d-flex justify-content-end pt-3">
 								<button class="btn btn-secondary" type="button">Cancel</button>
 								<button class="btn btn-primary ms-3" type="submit">Save changes</button>
@@ -137,7 +125,7 @@
 								<label class="form-label" for="new-pass">New password</label>
 								<div class="password-toggle">
 									<input class="form-control" type="password" id="new-pass">
-									<label class="password-toggle-btn" aria-label="Show/hide password">
+									<label class="password-toggle-btn" aria-label="Show/hide password" tabindex="-1">
 										<input class="password-toggle-check" type="checkbox">
 										<span class="password-toggle-indicator"></span>
 									</label>
@@ -147,7 +135,7 @@
 								<label class="form-label" for="confirm-pass">Confirm new password</label>
 								<div class="password-toggle">
 									<input class="form-control" type="password" id="confirm-pass">
-									<label class="password-toggle-btn" aria-label="Show/hide password">
+									<label class="password-toggle-btn" aria-label="Show/hide password" tabindex="-1">
 										<input class="password-toggle-check" type="checkbox"><span
 											class="password-toggle-indicator"></span>
 									</label>

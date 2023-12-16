@@ -15,7 +15,7 @@ if (mySessionVariable != null)
 }
 else
 {
-    ViewData["first_name"] = "guest";
+    ViewData["first_name"] = "guest2";
     ViewData["role"] = "guest";
     ViewData["avatar"] = "default";
     ViewData["user_id"] = "0";
@@ -31,7 +31,7 @@ _____  |  |   _____   ____   ____    __| _/____  _______  __ ____      |__| ____
 (____  /____/__|_|  /\____/|___|  /\____ |\___  >____/ \_/  \___  > /\ |__|___|  /
      \/           \/            \/      \/    \/                \/  \/         \/
 
- v.0.8.0
+ v.1.0.0
 
 
 -->
@@ -45,19 +45,36 @@ _____  |  |   _____   ____   ____    __| _/____  _______  __ ____      |__| ____
          content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover">
       <!-- SEO meta tags -->
       <title>@metaProps.Title | AlmondCove</title>
-      <meta name="description" content="@metaProps.Description">
-      <meta name="keywords" content="@metaProps.Tags">
-      <meta name="author" content="@metaProps.Author">
-      <!-- Webmanifest + Favicon / App icons -->
-      <link rel="icon" type="image/png" href="/assets/app-icons/icon-32x32.png" sizes="32x32">
-      <link rel="apple-touch-icon" href="/assets/app-icons/icon-180x180.png">
-      <!-- Theme switcher (color modes) -->
+   <meta name="description" content="@metaProps.Description" />
+   <meta name="keywords" content="@metaProps.Tags">
+   <meta name="author" content="@metaProps.Author">
+   <link rel="canonical" href="https://almondcove.in" />
+   <meta property="og:title" content="@metaProps.Title" />
+   <meta property="og:description" content="@metaProps.Description" />
+   <meta property="og:url" content="https://almondcove.in" />
+   <meta property="og:image" content="https://www.lexingtonthemes.com/opengraph/social-og.jpg" />
+   <meta property="og:image:alt" content="Almondcove Banner" />
+   <meta property="og:image:type" content="image/jpeg" />
+   <meta property="og:image:width" content="1200" />
+   <meta property="og:image:height" content="630" />
+   <meta property="og:image" content="https://www.lexingtonthemes.com/opengraph/twitter-og.jpg" />
+   <meta property="og:image:alt" content="Almondcove banner" />
+   <meta property="og:image:type" content="image/jpeg" />
+   <meta property="og:image:width" content="4096" />
+   <meta property="og:image:height" content="4096" />
+   <meta property="og:image" content="https://www.almondcove.in/assets/images/meta/social-og.jpg" />
+   <meta property="og:image" content="https://www.lexingtonthemes.com/opengraph/twitter-og.jpg" />
+
+   <meta property="og:site_name" content="Almondcove.in" />
+   <meta name="twitter:card" content="summary_large_image" />
+   <meta name="twitter:site" content="@@jsm33t" />
+   <meta name="twitter:creator" content="@@jsm33t" /> 
+
       <script src="/assets/js/theme-switcher.js"></script>
       <!-- Import Google font (Inter) -->
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300&display=swap" rel="stylesheet" id="google-font">
-      <link rel="manifest" href="/manifest.json">
       <!-- Vendor styles -->
       @await RenderSectionAsync("Styles", required: false)
       <!-- Font icons -->
@@ -175,7 +192,6 @@ _____  |  |   _____   ____   ____    __| _/____  _______  __ ____      |__| ____
            localStorage.setItem("prev_link", localStorage.getItem("curr_link"));
            localStorage.setItem("curr_link", window.location.pathname);
          }
-         
          
          if ('serviceWorker' in navigator) {
            navigator.serviceWorker.register('/service-worker.js')

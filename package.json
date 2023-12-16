@@ -1,9 +1,14 @@
-{"name": "almondcove",
-"version": "1.1.0",
+{
+  "name": "almondcove",
+  "version": "1.1.0",
   "scripts": {
     "tsserve": "tsc",
+    "minify": "node wwwroot/assets/js/minifier.js",
     "serve": "dotnet watch",
     "arrangets": "tsc && copyfiles -u 1 Scripts/**/*.ts wwwroot/assets/js",
     "publish64": "dotnet publish -c Release -r win-x64 --self-contained false"
+  },
+  "dependencies": {
+    "uglify-js": "^3.17.4"
   }
 }

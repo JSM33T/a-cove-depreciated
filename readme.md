@@ -38,11 +38,6 @@ This repository contains the source code for a community website project made wi
 
 - **project.csproj:** The .NET project file specifying dependencies, references, and other project-related configurations.
 
-Feel free to explore and customize the project structure according to your specific requirements. If you have any questions or need further clarification, please don't hesitate to reach out.
-
-Happy coding!
-
-
 ### Components/File types
 
 - **Scripts (Typescript):** Contains all TypeScript source files.
@@ -52,13 +47,11 @@ Happy coding!
 
 - **tsconfig.json:** TypeScript configuration file.
 
-## Global TypeScript File (`global.ts`)
+## Tech stack used 
 
-The `global.ts` file serves as a central location for common functionalities and constants used throughout the project. For example:
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)![.NET](https://img.shields.io/badge/.NET-%235C2D91.svg?style=for-the-badge&logo=.net&logoColor=white)![C#](https://img.shields.io/badge/csharp-%23000000.svg?style=for-the-badge&logo=csharp&logoColor=violet)
 
-```typescript
-// global.ts
 
-export const API_BASE_URL = 'https://api.example.com';
+![PWA](https://img.shields.io/badge/pwa-%232496ED.svg?style=for-the-badge&logo=pwa&logoColor=white)
+![SWC](https://img.shields.io/badge/swc-%23000000.svg?style=for-the-badge&logo=swc&logoColor=white)
 
-// Other common functions and constants

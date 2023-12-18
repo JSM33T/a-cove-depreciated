@@ -4,7 +4,7 @@ const UglifyJS = require('uglify-js');
 
 function minifyFile(inputFile, outputFile) {
     const code = fs.readFileSync(inputFile, 'utf8');
-    const result = UglifyJS.minify(code, { compress: true, mangle: true });
+    const result = UglifyJS.minify(code, { compress: false, mangle: true });
 
     if (result.error) {
         console.error(`Error minifying ${inputFile}: ${result.error.message}`);
@@ -29,7 +29,7 @@ function processFiles(files) {
 }
 
 function main() {
-    const inputJsonFile = 'minifymapping.json';
+    const inputJsonFile = 'wwwroot/minifymapping.json';
     const jsonData = fs.readFileSync(inputJsonFile, 'utf8');
 
     try {

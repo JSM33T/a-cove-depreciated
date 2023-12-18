@@ -1,11 +1,11 @@
 [
   {
-    "inputfile": "assets/js/main.js",
-    "outputfile": "assets/js/main.prod.js"
+    "inputfile": "./wwwroot/assets/js/main.js",
+    "outputfile": "./wwwroot/assets/js/main.prod.js"
   },
   {
-    "inputfile": "assets/js/global.js",
-    "outputfile": "assets/js/global.prod.js"
+    "inputfile": "./assets/js/global.js",
+    "outputfile": "./assets/js/global.prod.js"
   },
   {
     "inputfile": "assets/js/dedicated/home.js",

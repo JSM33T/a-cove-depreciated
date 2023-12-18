@@ -85,7 +85,14 @@ async function submitDetails() {
         userName: userName.value
     }
     const resp = await acPostData('/api/profile/update', data);
-    acToast(resp.type, resp.data)
+        if(resp.type == "ok")
+        {
+            acToast(resp.type, resp.data)
+        }
+        else
+        {
+            acToast("error",resp.data);
+        }    
 }
 
 

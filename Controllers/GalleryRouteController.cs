@@ -21,6 +21,7 @@ namespace almondcove.Controllers
                 List<AlbumDTO> albumModel = JsonSerializer.Deserialize<List<AlbumDTO>>(jsonContent);
                 _logger.LogError(albumModel.ToString());
                 return View("Views/Gallery/Index.cshtml", albumModel);
+                
             }
             else
             {
@@ -39,7 +40,7 @@ namespace almondcove.Controllers
             {
                 // Read the JSON file content
                 string jsonContent = System.IO.File.ReadAllText(jsonFilePath);
-
+                ViewData["gallery_slug"] = Slug;
                 List<AlbumItemsDTO> albumModel = JsonSerializer.Deserialize<List<AlbumItemsDTO>>(jsonContent);
                 return View("Views/Gallery/Viewer.cshtml", albumModel);
             }

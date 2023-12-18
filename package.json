@@ -3,6 +3,7 @@
   "version": "1.1.0",
   "scripts": {
     "swc": "swc --source-maps --out-dir wwwroot/assets/js Scripts",
+    "tsc":"tsc",
     "serve": "dotnet watch",
     "publish64": "dotnet publish -c Release -r win-x64 --self-contained false"
   },

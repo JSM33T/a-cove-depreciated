@@ -305,10 +305,10 @@ async function saveEdits() {
     let type = localStorage.getItem('type');
     let url = "/api/blog/" + type + "/edit";
     const data = {
-        Id : contentid,
-        comment : ipedits.value
+        Id: contentid,
+        comment: ipedits.value
     }
-    let resp =await acPostData(url,data);
+    let resp = await acPostData(url, data);
     console.log(data);
     console.log(resp);
     await loadComments();
@@ -338,7 +338,7 @@ async function postReply() {
     }
     finally {
         replyModal!.hide();
-        something.value="";
+        something.value = "";
         loadComments();
     }
 }

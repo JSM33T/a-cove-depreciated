@@ -19,35 +19,48 @@
 }
 
 @section Styles{
-     <link rel="stylesheet" media="screen" href="/assets/vendor/swiper/swiper-bundle.min.css">
+     <link rel="stylesheet" media="screen" href="~/lib/lightgallery/css/lightgallery-bundle.min.css">
 }
 @section Scripts
 {
-     <script src="/assets/vendor/swiper/swiper-bundle.min.js"></script>
+     <script src="/lib/lightgallery/lightgallery.min.js"></script>
+     <script src="/lib/lightgallery/lightgallery.min.js"></script>
+     <script src="/lib/shufflejs/dist/shuffle.min.js"></script>
+     <script src="/lib/imagesloaded/imagesloaded.pkgd.min.js"></script>
+     <script src="~/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script>
+    <script src="~/lib/lightgallery/plugins/fullscreen/lg-fullscreen.min.js"></script>
+    @* <script src="~/lib/lightgallery/plugins/"></script> *@
+
+     
 }
 
-<section class="container pt-5 pb-4 pb-lg-0 my-md-2 my-lg-5">
-    <h2>Album Viewer</h2>
-
-    <table>
-        <thead>
-            <tr>
-                <th>Album ID</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Category</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var album in Model)
+<section class="container py-5 my-lg-3 my-xl-4 my-xxl-5">
+    <nav aria-label="breadcrumb" class="pt-1">
+        <ol class="pb-lg-2 pb-2 pt-5 breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="/gallery">Gallery</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Garden State</li>
+        </ol>
+    </nav>
+    <div class="py-2 py-sm-3 py-md-4 my-md-2 my-xxl-3">
+        <h2 class="h1 text-center pt-xxl-1">Garden State<small class="text-muted">(2017)</small></h2>
+        <p class="fs-lg text-center pb-3 mb-lg-4">Collection of flora from my garden and beyond</p>
+        <div class="gallery row g-3 g-md-4 pb-4 masonry-grid">
+           @foreach (var album in Model)
             {
-                <tr>
-                    <td>@album.Id</td>
-                    <td>@album.Title</td>
-                    <td>@album.Desc</td>
-                    <td>@album.Slug</td>
-                </tr>
+                <div class="col-md-3 col-sm-6  masonry-grid-item shuffle-item shuffle-item--visible">
+                    <a class="gallery-item d-block card-hover zoom-effect" href="@($"/content/gallery/{ViewData["gallery_slug"]}/lossless/{album.Slug}.jpg")"
+                       data-lg-id="565e885e-f001-4f5f-b4c0-17e97850b696">
+                        <div class="d-flex justify-content-center align-items-center position-absolute top-0 start-0 w-100 h-100 rounded-4 overflow-hidden zindex-2 opacity-0">
+                            <i class="ai-zoom-in fs-2 text-white position-relative zindex-2"></i>
+                            <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-40"></div>
+                        </div>
+                        <div class="zoom-effect-wrapper rounded-4">
+                            <img class="zoom-effect-img" data-sub-html="<h4>Photo by - <a href='https://unsplash.com/therawhunter' >Massimiliano Morosinotto </a></h4><p> Location - <a href='https://unsplash.com/s/photos/tre-cime-di-lavaredo%2C-italia'>Tre Cime di Lavaredo, Italia</a>This is the Way</p>" src="@($"/content/gallery/{ViewData["gallery_slug"]}/thumbs/{album.Slug}.jpg")" alt="@album.Desc">
+                        </div>
+                    </a>
+                </div>
             }
-        </tbody>
-    </table>
+        </div>
+    </div>
 </section>

@@ -8,3 +8,4 @@ namespace almondcove.Interefaces.Repositories
         public Task<(bool Success, string Message)> PostMail(Mail mail);
     }
 }
+    

@@ -1,6 +1,6 @@
-﻿using almondcove.Enums;
+﻿using almondcove.Filters;
 using almondcove.Models;
-using almondcove.Modules;
+using Almondcove.Interefaces.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -16,18 +16,21 @@ namespace almondcove.Controllers
             return View("Views/Account/Index.cshtml");
         }
 
+        [Perm("guest")]
         [Route("/account/login")]
         public IActionResult Login()
         {
             return View("Views/Account/Login.cshtml");
         }
 
+        [Perm("guest")]
         [Route("/account/sign-up")]
         public IActionResult SignUp()
         {
             return View("Views/Account/SignUp.cshtml");
         }
 
+        [Perm("guest")]
         [Route("/account/recover-account")]
         public IActionResult AccountRecovery()
         {

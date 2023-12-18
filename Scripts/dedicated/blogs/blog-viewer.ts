@@ -23,10 +23,6 @@ let replyModal = new bootstrap.Modal(document.getElementById('mdlReply'));
 const replySaveBtn = document.getElementById('saveReply') as HTMLButtonElement;
 
 
-//comment props
-//reply props
-//delete props
-
 const global_slug = gl_slug.value;
 const global_tags = gl_tag.value;
 
@@ -44,10 +40,7 @@ acInit([
     () => delbtn.addEventListener('click', delConfirm),
     () => replySaveBtn.addEventListener('click', postReply),
     () => editSaveBtn.addEventListener('click', saveEdits)
-
 ]);
-
-
 
 async function applyEvents() {
     let delbuttons = document.querySelectorAll('.deletecontent') as NodeListOf<HTMLButtonElement>;
@@ -55,6 +48,7 @@ async function applyEvents() {
     let replybuttons = document.querySelectorAll('.replyto') as NodeListOf<HTMLButtonElement>;
 
 
+    //assign events to all the listed comments and replies
     delbuttons.forEach(function (button) {
         button.addEventListener('click', function () {
             let dataId = button.dataset.contentid;
@@ -84,10 +78,10 @@ async function applyEvents() {
     console.log("delete events attached");
 }
 
-//check if the article is likes or not and append <i> tag's class
+
+//check if the current blog is likees by the logged in user
 async function isLiked() {
 
-    //check if its likes by the logged in user
     const data = {
         slug: global_slug
     };
@@ -110,7 +104,7 @@ async function isLiked() {
 
 }
 
-//load no of liekes
+//load no of likes
 async function loadLikes() {
     //get no of likes
 
@@ -366,7 +360,6 @@ async function delMdl(contenttype: any, contentid: any) {
 }
 
 async function delConfirm() {
-    console.log("reached");
     if (localStorage.getItem('action') == "delete") {
         let did = localStorage.getItem('content-type');
         const cid = localStorage.getItem('content-id');

@@ -4,24 +4,18 @@ using almondcove.Interefaces.Services;
 
 namespace almondcove.Services
 {
-	public class Mailer : IMailer
+	public class Mailer(IConfigManager configurationService, ILogger<Mailer> logger) : IMailer
 	{
-		private readonly IConfigManager _configManager;
-		private readonly ILogger<Mailer> _logger;
+		private readonly IConfigManager _configManager = configurationService;
+		private readonly ILogger<Mailer> _logger = logger;
 
-		public Mailer(IConfigManager configurationService, ILogger<Mailer> logger)
-		{
-			_configManager = configurationService;
-			_logger = logger;
-		}
-
-		public bool SendEmailAsync(string to, string subject, string body)
+        public bool SendEmailAsync(string to, string subject, string body)
 		{
 			try
 			{
 				MailMessage message = new()
 				{
-					From = new MailAddress("mail@almondcove.in", "AlmondCove"),
+					From = new MailAddress(_configManager.GetSmtpUsername(), "AlmondCove"),
 					Subject = subject,
 					Body = body,
 					IsBodyHtml = true

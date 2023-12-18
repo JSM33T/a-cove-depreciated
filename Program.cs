@@ -1,9 +1,11 @@
 using almondcove.Extensions;
+using almondcove.Filters;
 using almondcove.Interefaces.Repositories;
 using almondcove.Interefaces.Services;
 using almondcove.Repositories;
 using almondcove.Services;
-using Microsoft.AspNetCore.Authorization;
+using Almondcove.Interefaces.Services;
+using Almondcove.Services;
 using Microsoft.AspNetCore.Session;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +15,9 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromSeconds(3600);
 });
 builder.Services.AddControllersWithViews();
-    
+builder.Services.AddHttpContextAccessor();
+
+
 
 builder.Services.AddAuthentication("MyCookieAuthenticationScheme")
      .AddCookie("MyCookieAuthenticationScheme", options =>
@@ -29,6 +33,9 @@ builder.Services.AddSingleton<ISqlService, SqlService>();
 
 builder.Services.AddScoped<IMailingListRepository, MailingListRepository>();
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
+builder.Services.AddScoped<IPermissionService, PermissionService>();
+builder.Services.AddScoped<ISearchRepository,SearchRepository>();
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 
 
 var app = builder.Build();
@@ -39,9 +46,9 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseSession();
 app.UseMiddleware<SessionMiddleware>();
 app.UseCookieCheckMiddleware();
-app.UseSession();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.Use(async (context, next) =>

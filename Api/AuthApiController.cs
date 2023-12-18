@@ -1,17 +1,20 @@
-﻿using almondcove.Interefaces.Services;
+﻿using almondcove.Filters;
+using almondcove.Interefaces.Repositories;
+using almondcove.Interefaces.Services;
 using almondcove.Models.Domain;
 using almondcove.Models.DTO;
 using almondcove.Modules;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Text;
 
 namespace almondcove.Api
 {
     [ApiController]
-    public class AuthApiController(IConfigManager configManager, ILogger<AuthApiController> logger, IMailer mailer) : ControllerBase
+    public class AuthApiController(IConfigManager configManager, ILogger<AuthApiController> logger, IMailer mailer,IAuthRepository authRepository) : ControllerBase
     {
-
+        private readonly IAuthRepository _authRepo = authRepository;
         private readonly IConfigManager _configManager = configManager;
         private readonly ILogger<AuthApiController> _logger = logger;
         private readonly IMailer _mailer = mailer;
@@ -86,7 +89,6 @@ namespace almondcove.Api
                         {
                             Expires = DateTime.Now.AddDays(150)
                         });
-
 
                         _logger.LogInformation("{user} logged in on {time}", loginCreds.UserName, DateTime.Now);
                         return Ok("logging in...");
@@ -198,51 +200,10 @@ namespace almondcove.Api
 
         }
 
-        //[HttpPost]
-        //[Route("/api/user/verification")]
-        //[IgnoreAntiforgeryToken]
-        //public async Task<IActionResult> UserVerification([FromBody] Verify verify)
-        //{
-        //    string connectionString = _configManager.GetConnString();
-        //    using SqlConnection connection = new(connectionString);
-
-        //    try
-        //    {
-        //        await connection.OpenAsync();
-        //        SqlCommand checkcmd = new("select IsVerified from TblUserProfile where Username ='" + verify.UserName + "' and OTP ='" + verify.OTP + "'", connection);
-        //        var Stat = await checkcmd.ExecuteScalarAsync();
-        //        if (Stat != null && Stat is bool statValue)
-        //        {
-
-        //            if (!statValue)
-        //            {
-        //                SqlCommand activatecmd = new("UPDATE TblUserProfile SET IsVerified = 1 where UserName ='" + verify.UserName + "' ", connection);
-        //                await activatecmd.ExecuteNonQueryAsync();
-        //                return Ok("User Verified!!");
-        //            }
-        //            else
-        //            {
-        //                return BadRequest("User already verified");
-        //            }
-        //        }
-        //        else
-        //        {
-        //            return BadRequest("Something Went wrong");
-        //        }
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Log.Error("Error veryfying user : " + ex.Message.ToString() );
-        //        return BadRequest("Error veryfying user");
-
-        //    }
-        //}
-
         [HttpPost]
         [Route("/api/user/verification")]
         [IgnoreAntiforgeryToken]
-        public async Task<IActionResult> UserVerification([FromBody] Verify verify)
+        public async Task<IActionResult> UserVerification(Verify verify)
         {
             try
             {
@@ -297,8 +258,7 @@ namespace almondcove.Api
                 using SqlConnection connection = new(_configManager.GetConnString());
                 await connection.OpenAsync();
 
-                // Check if a user exists with the provided username or email
-                var user = await GetUserByUsernameOrEmailAsync(connection, recovery.UserName);
+                var user = await _authRepo.GetUserByUsernameOrEmail(connection, recovery.UserName);
 
                 if (user != null)
                 {
@@ -309,33 +269,25 @@ namespace almondcove.Api
                     var otp = OTPGenerator.GenerateOTP(secret);
                     var subject = "Recover Your Account | AlmondCove";
 
-                    // Send OTP via email
-                    string body = "<h1>Hey there,</h1><br> This is for the recovery of your account \"<b>" + userEmail + "</b>\" . Your OTP is: <b>" + otp + "</b> which is valid for 30 minutes. You can use this OTP to reset your password.";
-                    //trigger mail with the otp
+                    string body = Modules.EmailBodies.RecoveryEmail.GenerateRecoveryEmailBody(userEmail, otp);
+
                     bool otpSent = _mailer.SendEmailAsync(userEmail, subject, body);
-                    //bool otpSent = true; // for testing without triggering mail
 
                     if (otpSent == true)
                     {
-                        // Save OTP in the database
-                        var saved = await SaveOTPInDatabaseAsync(connection, userId, otp);
-
-                        if (saved)
-                        {
-                            _logger.LogInformation(otp);
-                            return Ok("OTP sent to your email. Please enter the OTP to login.");
+                        if (_authRepo.SaveOTPInDatabaseAsync(connection, userId, otp)) 
+                        { 
+                            return Ok("OTP sent to your email. Please enter the OTP to login."); 
                         }
                         else
                         {
-                            // Log the error
-                            // Log.Error("Error while saving OTP to the database.");
+                            _logger.LogError("error generating otp");
                             return BadRequest("Something went wrong.");
                         }
                     }
                     else
                     {
-                        // Log the error
-                        // Log.Error("Unable to send mail.");
+                        _logger.LogError("error generating otp msg");
                         return BadRequest("Unable to send mail.");
                     }
                 }
@@ -352,45 +304,12 @@ namespace almondcove.Api
             }
         }
 
-        private async Task<UserProfile> GetUserByUsernameOrEmailAsync(SqlConnection connection, string usernameOrEmail)
+        [Perm("user","admin","editor")]
+        [HttpPost("/api/account/clearallsessions")]
+        public async Task<IActionResult> DisposeSessionKey()
         {
-            var sql = "SELECT * FROM TblUserProfile WHERE UserName = @username OR EMail = @username";
-            using var command = new SqlCommand(sql, connection);
-            command.Parameters.AddWithValue("@username", usernameOrEmail);
-            using var reader = await command.ExecuteReaderAsync();
-
-            return await reader.ReadAsync()
-                ? new UserProfile
-                {
-                    Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                    UserName = reader.GetString(reader.GetOrdinal("UserName")),
-                    EMail = reader.GetString(reader.GetOrdinal("EMail"))
-                }
-                : null;
-        }
-
-        private static async Task<bool> SaveOTPInDatabaseAsync(SqlConnection connection, int userId, string otp)
-        {
-            try
-            {
-                var maxIdCommand = new SqlCommand("SELECT ISNULL(MAX(Id), 0) + 1 FROM TblPasswordReset", connection);
-                int newId = Convert.ToInt32(await maxIdCommand.ExecuteScalarAsync());
-
-                var cmd = new SqlCommand("INSERT INTO TblPasswordReset (Id, UserId, Token, DateAdded, IsValid) VALUES (@id, @userid, @token, @dateadded, @isvalid)", connection);
-                cmd.Parameters.AddWithValue("@id", newId);
-                cmd.Parameters.AddWithValue("@userid", userId);
-                cmd.Parameters.AddWithValue("@token", otp);
-                cmd.Parameters.AddWithValue("@isvalid", true);
-                cmd.Parameters.Add("@dateadded", SqlDbType.DateTime).Value = DateTime.Now;
-
-                await cmd.ExecuteNonQueryAsync();
-
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            if (await _authRepo.DisposeSessionKey(HttpContext.Session.GetString("username"))) return Ok();
+            else return BadRequest("unable to dispose session key");
         }
 
         [HttpPost("/api/account/loginviaotp")]

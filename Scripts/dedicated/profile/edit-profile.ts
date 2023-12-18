@@ -114,6 +114,8 @@ async function submitPass() {
     }
 }
 async function logOutFromAll() {
+    const resp = acGetData('/api/account/disposekey');
+    console.log(resp);
 }
 async function clearPreferences() {
 }

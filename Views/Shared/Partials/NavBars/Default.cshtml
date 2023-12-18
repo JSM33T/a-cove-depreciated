@@ -28,6 +28,11 @@
 		<i class="ai-moon fs-lg"></i>
 	</label>
 </div>
+
+ <div class="nav align-items-center order-lg-3 ms-n1 me-3 me-sm-2">
+	<a class="nav-link fs-4 p-2 mx-sm-1" id="search_trigger_a" href="#searchModal" data-bs-toggle="modal"><i class="ai-search"></i></a>
+ </div>
+
 <!-- User signed in state. Account dropdown on screens > 576px -->
 <div class="dropdown nav d-none d-sm-block order-lg-3">
 	<a class="nav-link d-flex align-items-center p-0" href="#" data-bs-toggle="dropdown" aria-expanded="false">
@@ -61,15 +66,10 @@
 			}
 		}
 		<h6 class="dropdown-header fs-xs fw-medium text-body-secondary text-uppercase pb-1">Account</h6>
-		<a class="dropdown-item" href="/account/login">
+		<a class="dropdown-item disabled" href="">
 			<i class="ai-user-check fs-lg opacity-70 me-2"></i>
 			Theming
 		</a>
-		<a class="dropdown-item" href="/account/login">
-			<i class="ai-user-check fs-lg opacity-70 me-2"></i>
-			Preferences
-		</a>
-
 
 	</div>
 </div>
@@ -195,12 +195,36 @@
 			</a>
 			<div class="dropdown-menu dropdown-menu-end my-1">
 				<h6 class="dropdown-header fs-xs fw-medium text-muted text-uppercase pb-1">Account</h6>
-				<a class="dropdown-item next-link" href="/profile/"><i
+				@* <a class="dropdown-item next-link" href="/profile/"><i
 						class="ai-user-check fs-lg opacity-70 me-2"></i>Profile</a>
 				<a class="dropdown-item" href="javascriptVoid(0)" data-bs-toggle="modal" data-bs-target="#modalLogout"><i
-						class="ai-logout fs-lg opacity-70 me-2"></i>Log Out</a>
-				@* <h6 class="dropdown-header fs-xs fw-medium text-muted text-uppercase pb-1">Settings</h6>
-				<div class="dropdown-divider"></div> *@
+						class="ai-logout fs-lg opacity-70 me-2"></i>Log Out</a> *@
+
+				@{
+					if (UserName != null)
+					{
+						<a class="dropdown-item" href="/profile">
+							<i class="ai-logout fs-lg opacity-70 me-2"></i>
+							Profile
+						</a>
+						<a class="dropdown-item" href="javascriptVoid(0)" data-bs-toggle="modal" data-bs-target="#modalLogout">
+							<i class="ai-logout fs-lg opacity-70 me-2"></i>
+							Log Out
+						</a>
+					}
+					else
+					{
+						<a class="dropdown-item" href="/account/login">
+							<i class="ai-user-check fs-lg opacity-70 me-2"></i>
+							Sign In / Up
+						</a>
+					}
+				}
+				<h6 class="dropdown-header fs-xs fw-medium text-body-secondary text-uppercase pb-1">Account</h6>
+				<a class="dropdown-item disabled" href="#">
+					<i class="ai-user-check fs-lg opacity-70 me-2"></i>
+					Theming
+				</a>
 			</div>
 		</li>
 	</ul>

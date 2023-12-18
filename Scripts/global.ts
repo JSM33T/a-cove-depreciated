@@ -26,7 +26,6 @@ function validateEmail(email: string): boolean {
 function acSanitize(text: string) {
 
 }
-
 //===================== GET/POST via. AXIOS ====================
 
 async function acPostData(apiUrl: string, data: any) {
@@ -165,9 +164,6 @@ function acInit(functions: (() => void)[]): void {
 //    }
 //}
 
-
-
-
 function acSetEvent(trigger: string, target: (this: HTMLElement, ev: MouseEvent) => any) {
     const commentButton = document.getElementById(trigger);
     if (commentButton) {
@@ -224,7 +220,6 @@ function getQueryParameters() {
             }
         });
     }
-
     return params;
 }
 

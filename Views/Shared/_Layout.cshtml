@@ -15,7 +15,7 @@ if (mySessionVariable != null)
 }
 else
 {
-    ViewData["first_name"] = "guest2";
+    ViewData["first_name"] = "guest";
     ViewData["role"] = "guest";
     ViewData["avatar"] = "default";
     ViewData["user_id"] = "0";
@@ -52,18 +52,17 @@ _____  |  |   _____   ____   ____    __| _/____  _______  __ ____      |__| ____
    <meta property="og:title" content="@metaProps.Title" />
    <meta property="og:description" content="@metaProps.Description" />
    <meta property="og:url" content="https://almondcove.in" />
-   <meta property="og:image" content="https://www.lexingtonthemes.com/opengraph/social-og.jpg" />
+   <meta property="og:image" content="https://www.almondcove.in/assets/images/meta/ac_landscape.jpg" />
    <meta property="og:image:alt" content="Almondcove Banner" />
    <meta property="og:image:type" content="image/jpeg" />
    <meta property="og:image:width" content="1200" />
    <meta property="og:image:height" content="630" />
-   <meta property="og:image" content="https://www.lexingtonthemes.com/opengraph/twitter-og.jpg" />
+   <meta property="og:image" content="https://www.almondcove.in/assets/images/meta/ac_landscape.jpg" />
    <meta property="og:image:alt" content="Almondcove banner" />
    <meta property="og:image:type" content="image/jpeg" />
    <meta property="og:image:width" content="4096" />
    <meta property="og:image:height" content="4096" />
-   <meta property="og:image" content="https://www.almondcove.in/assets/images/meta/social-og.jpg" />
-   <meta property="og:image" content="https://www.lexingtonthemes.com/opengraph/twitter-og.jpg" />
+   <meta property="og:image" content="https://www.almondcove.in/assets/images/meta/ac_landscape.jpg" />
    <link rel="manifest" href="/manifest.json">
    <meta property="og:site_name" content="Almondcove.in" />
    <meta name="twitter:card" content="summary_large_image" />
@@ -252,6 +251,43 @@ _____  |  |   _____   ____   ____    __| _/____  _______  __ ____      |__| ____
       @await RenderSectionAsync("Scripts", required: false)
       <script src="~/lib/aos/dist/aos.min.js"></script>
       <script src="/assets/js/theme.min.js"></script>
+      <script>
+          function livesearch() {
+    const searchStat = document.getElementById('search_stat');
+    const searchResults = document.getElementById('search_results');
+    var ddr = document.getElementById("global_search");
+    if (ddr.value.length >= 2) {
+        axios.get('/api/livesearch/all/' + ddr.value)
+            .then((response) => {
+            console.log(response.data);
+            var sb = "";
+            for (var i = 0; i < response.data.length; i++) {
+                sb += `
+                    <div class="d-flex align-items-center border-bottom pb-4 mb-4 fade-in">
+                        <a class="position-relative d-inline-block flex-shrink-0 bg-secondary rounded-1" href="${response.data[i].url}">
+                        <img src="/assets/images/search_thumbs/${response.data[i].image}.svg" width="70" alt="Product" /></a>
+                        <div class="ps-3">
+                            <h4 class="h6 mb-2"><a href="${response.data[i].url}">${response.data[i].title}</a></h4>
+                            <span class="fs-sm text-muted ms-auto">${response.data[i].description}</span>'
+                        </div>
+                    </div>
+                    `;
+            }
+            searchResults.innerHTML = sb.toString();
+            searchStat.innerHTML = 'Search';
+        })
+            .catch(error => {
+            console.error('Error:', error);
+            searchStat.innerHTML = '';
+            searchResults.innerHTML = '';
+        });
+    }
+    else {
+        searchResults.innerHTML = '';
+        searchStat.innerHTML = 'Search';
+    }
+}
+          </script>
       <script type="module" src="/assets/js/main.js"></script>
    </body>
 </html>

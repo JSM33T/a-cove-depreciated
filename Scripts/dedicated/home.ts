@@ -81,13 +81,14 @@ async function constructArticles(responsedata: any) {
             </p>
             <div class="d-flex flex-wrap align-items-center pt-1 mt-n2">
                 <a class="nav-link text-muted fs-sm fw-normal p-0 mt-2 me-3" href="/blog/${post.datePosted.substring(0, 4)}/${post.urlHandle}">
-                    3!
+                ${post.likes}
                     <i class="ai-heart fs-lg ms-1"></i>
                 </a>
                 <a class="nav-link text-muted fs-sm fw-normal d-flex align-items-end p-0 mt-2" href="#">
-                    3!
+                    ${post.comments}
                     <i class="ai-message fs-lg ms-1"></i>
                 </a>
+                
                 <span class="fs-xs opacity-20 mt-2 mx-3">|</span><span class="fs-sm text-muted mt-2">${post.datePosted}</span><span class="fs-xs opacity-20 mt-2 mx-3">|</span><a class="badge bg-faded-primary text-primary fs-xs mt-2" href="/blogs/category/binge">Binge</a>
             </div>
         </article>

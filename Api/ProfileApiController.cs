@@ -2,8 +2,6 @@
 using almondcove.Interefaces.Services;
 using almondcove.Models.Domain;
 using almondcove.Models.DTO.Profile;
-using almondcove.Modules;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.Data;

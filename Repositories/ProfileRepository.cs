@@ -8,54 +8,49 @@ using System.Data;
 
 namespace almondcove.Repositories
 {
-    public class ProfileRepository : IProfileRepository
+    public class ProfileRepository(IConfigManager configManager,ILogger<ProfileRepository> logger) : IProfileRepository
     {
-        private readonly IConfigManager _configManager;
+        private readonly IConfigManager _configManager = configManager;
+        private readonly ILogger<ProfileRepository> _logger = logger;
 
-        public ProfileRepository(IConfigManager configManager)
-        {
-            _configManager = configManager;
-        }
         public async Task<UserProfile> GetProfileByUsername(string username)
         {
             try
             {
-                using (var connection = new SqlConnection(_configManager.GetConnString()))
-                {
-                    await connection.OpenAsync();
+                using var connection = new SqlConnection(_configManager.GetConnString());
+                await connection.OpenAsync();
 
-                    using var command = new SqlCommand(@"
+                using var command = new SqlCommand(@"
                             SELECT a.FirstName, a.LastName, a.UserName, a.Role, a.Gender, a.Bio, a.DateJoined, a.EMail, b.Image ,b.Id
                             FROM TblUserProfile a
                             JOIN TblAvatarMaster b ON a.AvatarId = b.Id
                             WHERE a.UserName = @username
                         ", connection);
-                    command.Parameters.AddWithValue("@username", username);
+                command.Parameters.AddWithValue("@username", username);
 
-                    using var reader = await command.ExecuteReaderAsync();
-                    if (await reader.ReadAsync())
+                using var reader = await command.ExecuteReaderAsync();
+                if (await reader.ReadAsync())
+                {
+                    UserProfile userProfile = new()
                     {
-                        UserProfile userProfile = new()
-                        {
-                            FirstName = reader.IsDBNull(0) ? null : reader.GetString(0),
-                            LastName = reader.IsDBNull(1) ? null : reader.GetString(1),
-                            UserName = reader.IsDBNull(2) ? null : reader.GetString(2),
-                            Role = reader.IsDBNull(3) ? null : reader.GetString(3),
-                            Gender = reader.IsDBNull(4) ? null : reader.GetString(4),
-                            Bio = reader.IsDBNull(5) ? null : reader.GetString(5),
-                            DateElement = reader.IsDBNull(6) ? null : reader.GetDateTime(6).ToString("yyyy-MM-dd"),
-                            EMail = reader.IsDBNull(7) ? null : reader.GetString(7),
-                            AvatarImg = reader.IsDBNull(8) ? null : reader.GetString(8),
-                            AvatarId = reader.IsDBNull(9) ? 0 : reader.GetInt32(9),
-                        };
+                        FirstName = reader.IsDBNull(0) ? null : reader.GetString(0),
+                        LastName = reader.IsDBNull(1) ? null : reader.GetString(1),
+                        UserName = reader.IsDBNull(2) ? null : reader.GetString(2),
+                        Role = reader.IsDBNull(3) ? null : reader.GetString(3),
+                        Gender = reader.IsDBNull(4) ? null : reader.GetString(4),
+                        Bio = reader.IsDBNull(5) ? null : reader.GetString(5),
+                        DateElement = reader.IsDBNull(6) ? null : reader.GetDateTime(6).ToString("yyyy-MM-dd"),
+                        EMail = reader.IsDBNull(7) ? null : reader.GetString(7),
+                        AvatarImg = reader.IsDBNull(8) ? null : reader.GetString(8),
+                        AvatarId = reader.IsDBNull(9) ? 0 : reader.GetInt32(9),
+                    };
 
-                        return userProfile;
-                    }
-                    else
-                    {
-                        // User not found, handle accordingly
-                        throw new Exception("User not found");
-                    }
+                    return userProfile;
+                }
+                else
+                {
+                    _logger.LogError("error getting profile by username");
+                    throw new Exception("User not found");
                 }
             }
             catch
@@ -111,14 +106,14 @@ namespace almondcove.Repositories
 
                 string sql = "SELECT Id, Title, Image FROM TblAvatarMaster";
 
-                using SqlCommand command = new SqlCommand(sql, connection);
+                using SqlCommand command = new(sql, connection);
                 using SqlDataReader dataReader = await command.ExecuteReaderAsync().ConfigureAwait(false);
 
-                List<Avatar> entries = new List<Avatar>();
+                List<Avatar> entries = [];
 
                 while (await dataReader.ReadAsync())
                 {
-                    Avatar entry = new Avatar
+                    Avatar entry = new()
                     {
                         Id = dataReader["Id"] as int? ?? 0,
                         Title = dataReader["Title"] as string ?? "",
@@ -131,7 +126,7 @@ namespace almondcove.Repositories
             }
             catch (SqlException ex)
             {
-                // Log the exception or handle it as needed
+                _logger.LogError("error getting avatar{message}", ex.Message);
                 throw;
             }
         }
@@ -158,6 +153,7 @@ namespace almondcove.Repositories
             }
             catch (Exception ex)
             {
+                _logger.LogError("error updating password{message}",ex.Message);
                 // Log the exception or handle it appropriately
                 return false;
             }

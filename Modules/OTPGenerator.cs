@@ -20,7 +20,8 @@ namespace almondcove.Modules
             var hmac = new HMACSHA1(key);
             var hash = hmac.ComputeHash(data);
 
-            var offset = hash[hash.Length - 1] & 0xF;
+            //var offset = hash[hash.Length - 1] & 0xF;
+            var offset = hash[^1] & 0xF;
             var truncatedHash = (hash[offset] & 0x7F) << 24 | (hash[offset + 1] & 0xFF) << 16 | (hash[offset + 2] & 0xFF) << 8 | hash[offset + 3] & 0xFF;
 
             var otp = truncatedHash % 1000000;

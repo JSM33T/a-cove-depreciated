@@ -21,10 +21,20 @@ function getUrl(url?: string) {
 function validateEmail(email: string): boolean {
     const emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
+    
 }
 
-function acSanitize(text: string) {
+function acSanitize(text: string): string {
+    // Remove leading and trailing whitespaces
+    let sanitizedText = text.trim();
 
+    // Remove quotes (single and double)
+    sanitizedText = sanitizedText.replace(/['"]/g, '');
+
+    // Remove HTML tags
+    sanitizedText = sanitizedText.replace(/<[^>]*>/g, '');
+
+    return sanitizedText;
 }
 //===================== GET/POST via. AXIOS ====================
 
@@ -445,6 +455,7 @@ export {
     acTemplate, //use a template,morph it using data
     acSetEvent, // event handler (ID)
     asBinder,
+    acSanitize,//sanitize white space and tags
     acQueryParams, // set query params 
     acClearParams, // clear query params
     getQueryParameters, //get query param(s)

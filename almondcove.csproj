@@ -32,26 +32,11 @@
     <None Remove="wwwroot\content\gallery\backyard-birdies\assets\**" />
     <None Remove="wwwroot\content\gallery\garden-state\assets\**" />
     <None Remove="wwwroot\lib\vendor\**" />
-    <TypeScriptCompile Remove="Build\**" />
-    <TypeScriptCompile Remove="node_modules\**" />
-    <TypeScriptCompile Remove="wwwroot\content\blogs\html\**" />
-    <TypeScriptCompile Remove="wwwroot\content\blogs\markdown\**" />
-    <TypeScriptCompile Remove="wwwroot\content\gallery\backyard-birdies\assets\**" />
-    <TypeScriptCompile Remove="wwwroot\content\gallery\garden-state\assets\**" />
-    <TypeScriptCompile Remove="wwwroot\lib\vendor\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Scripts\global.ts" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Markdig" Version="0.34.0" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <TypeScriptCompile Include="Scripts\global.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -72,25 +57,5 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <TypeScriptCompile Update="Scripts\dedicated\account\login.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Update="Scripts\dedicated\account\recovery.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Update="Scripts\dedicated\account\signup.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Update="Scripts\dedicated\blogs\blog-viewer.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Update="Scripts\dedicated\blogs\index.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-    <TypeScriptCompile Update="Scripts\theme-switcher.ts">
-      <SubType>Code</SubType>
-    </TypeScriptCompile>
-  </ItemGroup>
 
 </Project>

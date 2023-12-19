@@ -1,6 +1,8 @@
-﻿namespace almondcove.Modules
+﻿using System.Text.RegularExpressions;
+
+namespace almondcove.Modules
 {
-    public class StringProcessors
+    public partial class StringProcessors
     {
         public static string GetFirstWord(string ipname)
         {
@@ -17,6 +19,18 @@
             return "something";
         }
 
+        public static string Sanitize(string input)
+        {
+            string sanitizedText = input.Trim();
+
+            // Remove quotes (single and double)
+            sanitizedText = MyRegex().Replace(sanitizedText, "");
+
+            // Remove HTML tags
+            sanitizedText = MyRegex1().Replace(sanitizedText, "");
+
+            return sanitizedText;
+        }
         public static string GenerateRandomString(int length)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -40,5 +54,10 @@
             }
             return new string(result);
         }
+
+        [GeneratedRegex("[\"']")]
+        private static partial Regex MyRegex();
+        [GeneratedRegex("<[^>]*>")]
+        private static partial Regex MyRegex1();
     }
 }

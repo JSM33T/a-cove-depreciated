@@ -36,6 +36,7 @@ builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<ISearchRepository,SearchRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+builder.Services.AddScoped<IBlogRepository, BlogRepository>();
 
 
 var app = builder.Build();

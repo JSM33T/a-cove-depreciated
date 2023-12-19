@@ -3,11 +3,11 @@
   "version": "1.1.0",
   "scripts": {
     "swc": "swc --source-maps --out-dir wwwroot/assets/js Scripts",
-    "tsc":"tsc",
     "serve": "dotnet watch",
     "publish64": "dotnet publish -c Release -r win-x64 --self-contained false"
   },
   "dependencies": {
+    "@swc/types": "^0.1.5"
   },
   "devDependencies": {
     "@swc/cli": "^0.1.63",

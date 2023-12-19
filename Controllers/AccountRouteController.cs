@@ -6,10 +6,11 @@ using System.Diagnostics;
 
 namespace almondcove.Controllers
 {
-    public class AccountRouteController(ILogger<AccountRouteController> logger) : RootController
+    public class AccountRouteController(ILogger<AccountRouteController> logger) : Controller
     {
         private readonly ILogger<AccountRouteController> _logger = logger;
 
+        [Perm("guest")]
         [Route("/account")]
         public IActionResult Index()
         {
@@ -34,16 +35,7 @@ namespace almondcove.Controllers
         [Route("/account/recover-account")]
         public IActionResult AccountRecovery()
         {
-           // _logger.LogError("derived: {something} and real: {sasas}",GetUserRole().ToString(), HttpContext.Session.GetString("role").ToString());
-            
-            //if (PermissionHelper.HasPermission(GetUserRole(), Perm.Guest))
-            //{
-            //    return View("Views/Account/AccountRecovery.cshtml");
-            //}
-            //else
-            //{ return Redirect("/"); }
             return View("Views/Account/AccountRecovery.cshtml");
-
         }
 
         [Route("/account/logout")]

@@ -19,9 +19,9 @@ namespace almondcove.Controllers
         }
 
         [Route("/resources/view/{slug}")]
-        public IActionResult Viewer()
+        public IActionResult Viewer(string Slug)
         {
-            return View("Views/Gallery/Index.cshtml");
+            return View("Views/Gallery/Index.cshtml",Slug);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -1,5 +1,4 @@
 using almondcove.Extensions;
-using almondcove.Filters;
 using almondcove.Interefaces.Repositories;
 using almondcove.Interefaces.Services;
 using almondcove.Repositories;
@@ -37,7 +36,6 @@ builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<ISearchRepository,SearchRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IBlogRepository, BlogRepository>();
-
 
 var app = builder.Build();
 

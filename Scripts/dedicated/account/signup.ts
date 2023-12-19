@@ -56,6 +56,7 @@ async function postToSignUpApi(signupdata: any) {
                         otpModal!.show();
                 }
         } catch (error) {
+            console.log("typescirpt side error")
                 console.error('Error during login:', error);
         } finally {
                 signupBtn.innerHTML = "Log In";

@@ -25,7 +25,6 @@
     <EmbeddedResource Remove="wwwroot\content\blogs\markdown\**" />
     <EmbeddedResource Remove="wwwroot\content\gallery\backyard-birdies\assets\**" />
     <EmbeddedResource Remove="wwwroot\content\gallery\garden-state\assets\**" />
-    <EmbeddedResource Remove="wwwroot\lib\vendor\**" />
     <None Remove="Build\**" />
     <None Remove="wwwroot\content\blogs\html\**" />
     <None Remove="wwwroot\content\blogs\markdown\**" />

@@ -5,7 +5,7 @@ const gl_slug = document.getElementById("ip_slug") as HTMLInputElement;
 const gl_tag = document.getElementById("ip_tags") as HTMLInputElement;
 
 const likeStat = document.getElementById("likesStat") as HTMLElement;
-const commentStat = document.getElementById("commentStat") as HTMLElement;
+//const commentStat = document.getElementById("commentStat") as HTMLElement;
 const likeIcon = document.getElementById("likeIcon") as HTMLElement;
 const likeBtn = document.getElementById("likeBtn") as HTMLButtonElement;
 

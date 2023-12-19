@@ -35,7 +35,6 @@ namespace almondcove.Models.Domain
         
         public DateTime DateEdited { get; set; }
 
-        [Required]
         public string Role { get; set; }
         
         [MinLength(6)]
@@ -46,7 +45,6 @@ namespace almondcove.Models.Domain
         [MaxLength(20)]
         public string ConfirmPassword { get; set; }
 
-        [Required]
         public string AvatarImg { get; set; }
         
         public string Badges { get; internal set; }

@@ -23,100 +23,98 @@ namespace almondcove.Api
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UserLogin(LoginCreds loginCreds)
         {
-            if (ModelState.IsValid)
+            if(!ModelState.IsValid) return BadRequest("validation error");
+
+            try
             {
-                try
+                using SqlConnection connection = new(_configManager.GetConnString());
+                await connection.OpenAsync();
+                SqlCommand checkcommand = new("select p.*,a.Image " +
+                    "from TblUserProfile p,TblAvatarMaster a " +
+                    "where (p.UserName = @username OR p.email = @username)" +
+                    " and CryptedPassword =@password" +
+                    " and p.IsActive= 1 " +
+                    " and p.IsVerified = 1 " +
+                    " and p.AvatarId = a.Id", connection);
+                checkcommand.Parameters.AddWithValue("@username", loginCreds.UserName.ToLower());
+                checkcommand.Parameters.AddWithValue("@password", EnDcryptor.Encrypt(loginCreds.Password, _configManager.GetCryptKey()));
+                // TEST
+                //_logger.LogCritical( "{cryptkey}" ,EnDcryptor.Encrypt(loginCreds.Password, _configManager.GetCryptKey()));
+                using var reader = await checkcommand.ExecuteReaderAsync();
+                if (reader.Read())
                 {
-                    using SqlConnection connection = new(_configManager.GetConnString());
-                    await connection.OpenAsync();
-                    SqlCommand checkcommand = new("select p.*,a.Image " +
-                        "from TblUserProfile p,TblAvatarMaster a " +
-                        "where (p.UserName = @username OR p.email = @username)" +
-                        " and CryptedPassword =@password" +
-                        " and p.IsActive= 1 " +
-                        " and p.IsVerified = 1 " +
-                        " and p.AvatarId = a.Id", connection);
-                    checkcommand.Parameters.AddWithValue("@username", loginCreds.UserName.ToLower());
-                    checkcommand.Parameters.AddWithValue("@password", EnDcryptor.Encrypt(loginCreds.Password, _configManager.GetCryptKey()));
-                    // TEST
-                    //_logger.LogCritical( "{cryptkey}" ,EnDcryptor.Encrypt(loginCreds.Password, _configManager.GetCryptKey()));
-                    using var reader = await checkcommand.ExecuteReaderAsync();
-                    if (reader.Read())
+                    var username = reader.GetString(reader.GetOrdinal("UserName"));
+                    var user_id = reader.GetInt32(reader.GetOrdinal("Id"));
+                    var firstname = reader.GetString(reader.GetOrdinal("FirstName"));
+                    var fullname = reader.GetString(reader.GetOrdinal("FirstName")) + " " + reader.GetString(reader.GetOrdinal("LastName"));
+                    var role = reader.GetString(reader.GetOrdinal("Role"));
+                    var avatar = reader.GetString(reader.GetOrdinal("Image"));
+                    //NULL ISSUE - BUG IN V1
+                    // var sessionKeyOld = reader.GetString(reader.GetOrdinal("SessionKey"));
+                    var sessionKeyOrdinal = reader.GetOrdinal("SessionKey");
+                    // Check if the value is DBNull before trying to retrieve it
+                    var sessionKeyOld = reader.IsDBNull(sessionKeyOrdinal) ? null : reader.GetString(reader.GetOrdinal("SessionKey"));
+                    // Now you can use sessionKeyOld without the risk of a NullReferenceException
+
+                    //set session
+                    HttpContext.Session.SetString("user_id", user_id.ToString());
+                    HttpContext.Session.SetString("username", username);
+                    HttpContext.Session.SetString("first_name", firstname);
+                    HttpContext.Session.SetString("role", role);
+                    HttpContext.Session.SetString("fullname", fullname);
+                    HttpContext.Session.SetString("avatar", avatar.ToString());
+                    var sessionKeyNew = "";
+
+                    if (sessionKeyOld == null)
                     {
-                        var username = reader.GetString(reader.GetOrdinal("UserName"));
-                        var user_id = reader.GetInt32(reader.GetOrdinal("Id"));
-                        var firstname = reader.GetString(reader.GetOrdinal("FirstName"));
-                        var fullname = reader.GetString(reader.GetOrdinal("FirstName")) + " " + reader.GetString(reader.GetOrdinal("LastName"));
-                        var role = reader.GetString(reader.GetOrdinal("Role"));
-                        var avatar = reader.GetString(reader.GetOrdinal("Image"));
-                        //NULL ISSUE - BUG IN V1
-                        // var sessionKeyOld = reader.GetString(reader.GetOrdinal("SessionKey"));
-                        var sessionKeyOrdinal = reader.GetOrdinal("SessionKey");
-                        // Check if the value is DBNull before trying to retrieve it
-                        var sessionKeyOld = reader.IsDBNull(sessionKeyOrdinal) ? null : reader.GetString(reader.GetOrdinal("SessionKey"));
-                        // Now you can use sessionKeyOld without the risk of a NullReferenceException
+                        string SessionKey = StringProcessors.GenerateRandomString(20);
 
-                        //set session
-                        HttpContext.Session.SetString("user_id", user_id.ToString());
-                        HttpContext.Session.SetString("username", username);
-                        HttpContext.Session.SetString("first_name", firstname);
-                        HttpContext.Session.SetString("role", role);
-                        HttpContext.Session.SetString("fullname", fullname);
-                        HttpContext.Session.SetString("avatar", avatar.ToString());
-                        var sessionKeyNew = "";
-
-                        if (sessionKeyOld == null)
+                        await reader.CloseAsync();
+                        SqlCommand setKey = new()
                         {
-                            string SessionKey = StringProcessors.GenerateRandomString(20);
-
-                            await reader.CloseAsync();
-                            SqlCommand setKey = new()
-                            {
-                                CommandText = "UPDATE TblUserProfile SET SessionKey = @sessionkey WHERE Id = @userid",
-                                Connection = connection
-                            };
-                            setKey.Parameters.AddWithValue("@sessionkey", SessionKey);
-                            setKey.Parameters.AddWithValue("@userid", user_id);
-                            await setKey.ExecuteNonQueryAsync();
-                            sessionKeyNew = SessionKey;
-                        }
-                        else
-                        {
-                            sessionKeyNew = sessionKeyOld;
-                        }
-
-                        Response.Cookies.Append("SessionKey", sessionKeyNew, new CookieOptions
-                        {
-                            Expires = DateTime.Now.AddDays(150)
-                        });
-
-                        _logger.LogInformation("{user} logged in on {time}", loginCreds.UserName, DateTime.Now);
-                        return Ok("logging in...");
-
+                            CommandText = "UPDATE TblUserProfile SET SessionKey = @sessionkey WHERE Id = @userid",
+                            Connection = connection
+                        };
+                        setKey.Parameters.AddWithValue("@sessionkey", SessionKey);
+                        setKey.Parameters.AddWithValue("@userid", user_id);
+                        await setKey.ExecuteNonQueryAsync();
+                        sessionKeyNew = SessionKey;
                     }
                     else
                     {
-                        _logger.LogError("invalid creds by username {username}", loginCreds.UserName);
-                        return BadRequest("Invalid Credentials");
+                        sessionKeyNew = sessionKeyOld;
                     }
+
+                    Response.Cookies.Append("SessionKey", sessionKeyNew, new CookieOptions
+                    {
+                        Expires = DateTime.Now.AddDays(150)
+                    });
+
+                    _logger.LogInformation("{user} logged in on {time}", loginCreds.UserName, DateTime.Now);
+                    return Ok("logging in...");
+
                 }
-                catch (Exception ex)
+                else
                 {
-                    _logger.LogError("Error in login form, message : {exmessage}, user : {user} ", ex.Message.ToString(), loginCreds.UserName);
-                    
-                    return StatusCode(500, "something went wrong");
+                    _logger.LogError("invalid creds by username {username}", loginCreds.UserName);
+                    return BadRequest("Invalid Credentials");
                 }
             }
-            return BadRequest("Invalid Credentials");
+            catch (Exception ex)
+            {
+                _logger.LogError("Error in login form, message : {exmessage}, user : {user} ", ex.Message.ToString(), loginCreds.UserName);
+                    
+                return StatusCode(500, "something went wrong");
+            }
         }
 
         [HttpPost("/api/account/signup")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UserSignUp(UserProfile userProfile)
         {
-            if (!ModelState.IsValid) return BadRequest("invalid state");
+            if (!ModelState.IsValid) { return BadRequest("invalid state"); }
             string body, subject;
-            { 
+             
             try
             {
                 string FilteredUsername = userProfile.UserName.Trim().ToLower().ToString();
@@ -157,7 +155,7 @@ namespace almondcove.Api
                                 cmd.Parameters.Add("@datejoined", SqlDbType.DateTime).Value = DateTime.Now;
 
                                 await cmd.ExecuteNonQueryAsync();
-                                _logger.LogInformation(userProfile.FirstName + " registered, Email: " + userProfile.EMail);
+                                _logger.LogInformation("{user} registered,with Email:{email} ", userProfile.FirstName, userProfile.EMail);
                                 return Ok("verification email send please verify your account");
 
 
@@ -197,8 +195,6 @@ namespace almondcove.Api
                 _logger.LogError("error while signup exception: {exmessage}", ex.Message.ToString());
                 return BadRequest("something went wrong");
             }
-        }
-
         }
 
         [HttpPost]

@@ -28,7 +28,6 @@ namespace almondcove.Repositories
                 cmd.Parameters.AddWithValue("@token", otp);
                 cmd.Parameters.AddWithValue("@isvalid", true);
                 cmd.Parameters.Add("@dateadded", SqlDbType.DateTime).Value = DateTime.Now;
-
                 cmd.ExecuteNonQuery();
 
                 return true;

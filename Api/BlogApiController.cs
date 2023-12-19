@@ -461,7 +461,7 @@ namespace almondcove.Api
         [HttpPost]
         [Route("/api/blog/comments/load")]
         [IgnoreAntiforgeryToken]
-        public async Task<IActionResult> LoadComments([FromBody] BlogCommentDTO blogComment)
+        public async Task<IActionResult> LoadComments(BlogCommentDTO blogComment)
         {
 
             Dictionary<int, dynamic> comments = [];
@@ -511,12 +511,19 @@ namespace almondcove.Api
                         user = "yes";
                         try
                         {
-                            editable = (reader.GetString(5) == SessionUser);
-                            replyeditable = (reader.GetString(16) == SessionUser);
+                            editable = !string.IsNullOrEmpty(reader.GetString(5)) && (reader.GetString(5) == SessionUser);
                         }
-                        catch
+                        catch (Exception ex)
                         {
                             editable = false;
+                        }
+                        try
+                        {
+                            replyeditable = !string.IsNullOrEmpty(reader.GetString(16)) && (reader.GetString(16) == SessionUser);
+
+                        }
+                        catch (Exception ex)
+                        {   
                             replyeditable = false;
                         }
                     }

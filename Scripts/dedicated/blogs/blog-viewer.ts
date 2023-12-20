@@ -331,7 +331,8 @@ async function postReply() {
             ReplyText: something.value.trim(),
             Reply: something.value.trim()
         });
-        acToast(resp.type, resp.data);
+        //acToast(resp.type, resp.data);
+        acToast("Success", resp.data);
     }
     catch {
         acToast('error', 'something went wrong');
@@ -368,14 +369,14 @@ async function delConfirm() {
                 id: cid
             })
             delModal.hide();
-            acToast(resp.type, resp.data)
+            acToast("Success", resp.data)
         }
         else if (did == "reply") {
             const resp = await acPostData('/api/blog/reply/delete', {
                 replyid: cid
             })
             delModal.hide();
-            acToast(resp.type, resp.data)
+            acToast("Success", resp.data)
         }
     }
     loadComments();

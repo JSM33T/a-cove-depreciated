@@ -15,6 +15,16 @@ builder.Services.AddSession(options =>
 });
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        builder =>
+        {
+                builder.WithOrigins("https://laymaann.in", "https://jsm33t.in")
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+        });
+});
 
 
 
@@ -60,6 +70,14 @@ app.Use(async (context, next) =>
     }
 });
 app.UseRouting();
+app.UseCors(builder =>
+{
+    builder
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader();
+});
+
 app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",

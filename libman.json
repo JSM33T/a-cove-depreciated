@@ -117,7 +117,9 @@
       "destination": "wwwroot/lib/jarallax/",
       "files": [
         "dist/jarallax.min.css",
-        "dist/jarallax.min.js"
+        "dist/jarallax.min.js",
+        "dist/jarallax-video.min.js"
+
       ]
     }
   ]

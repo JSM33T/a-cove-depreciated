@@ -38,7 +38,7 @@
 <!-- User signed in state. Account dropdown on screens > 576px -->
 <div class="dropdown nav d-none d-sm-block order-lg-3">
 	<a class="nav-link d-flex align-items-center p-0" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-		<img class="border rounded-circle" src="@Avatar" width="48" alt="@ViewData["first_name"]">
+		<img class="border rounded-circle avatar-placeholder" src="@Avatar" width="48" alt="@ViewData["first_name"]">
 		<div class="ps-2">
 			<div class="fs-xs lh-1 opacity-60">Hello,</div>
 			<div class="fs-sm dropdown-toggle">@ViewData["first_name"]</div>
@@ -155,10 +155,9 @@
 					<a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown"
 						aria-expanded="false">Music</a>
 					<ul class="dropdown-menu">
-						<li><a class="dropdown-item" href="/music">Showcase</a></li>
-						<li><a class="dropdown-item disabled" href="">Singles</a></li>
-						<li><a class="dropdown-item disabled" href="">Albums</a></li>
-						<li><a class="dropdown-item disabled" href="">Features</a></li>
+						<li><a class="dropdown-item disabled" href="#">Showcase</a></li>
+						<li><a class="dropdown-item" href="/music">Browse</a></li>
+						
 					</ul>
 				</li>
 				<li class="dropdown">
@@ -198,7 +197,7 @@
 		<!-- User signed in state. Account dropdown on screens > 576px -->
 		<li class="nav-item dropdown d-sm-none border-top mt-2 pt-2">
 			<a class="nav-link" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-				<img class="border rounded-circle" src="@Avatar" width="48"
+				<img class="border rounded-circle avatar-placeholder" src="@Avatar" width="48"
 					alt="@ViewData["first_name"]">
 				<div class="ps-2">
 					<div class="fs-xs lh-1 opacity-60">Hello,</div>

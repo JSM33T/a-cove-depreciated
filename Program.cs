@@ -20,7 +20,7 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(
         builder =>
         {
-                builder.WithOrigins("https://laymaann.in", "https://jsm33t.in")
+                builder.WithOrigins("https://jsm33t.in")
                                 .AllowAnyHeader()
                                 .AllowAnyMethod();
         });

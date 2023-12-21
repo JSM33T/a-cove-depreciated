@@ -16,7 +16,7 @@ acInit([
 ])
 
 
-async function fetchDetails() {
+async function fetchDetails(){
     const response = acGetData('api/profile/getdetails');
     console.log(response);
     const resp: IProfile = (await response).data;
@@ -27,5 +27,4 @@ async function fetchDetails() {
     DateJoined.innerHTML = prettifyDate(resp.dateElement);
     UserName.innerHTML = "@" + resp.userName.trim();
     Avatar.style.backgroundImage = 'url(/assets/images/avatars/default/' + resp.avatarImg + '.png)'
-
 }

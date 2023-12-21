@@ -1,5 +1,5 @@
 
-import { acFormHandler, acGetData, acInit, acPostData, acToast, prettifyDate } from '../../global.js'
+import { acFormHandler, acGetData, acInit, acPostData, acToast } from '../../global.js'
 import { IProfile } from '../../Interfaces/profile.interface.js';
 
 const firstName = document.getElementById("firstName") as HTMLInputElement;
@@ -87,7 +87,9 @@ async function submitDetails() {
     const resp = await acPostData('/api/profile/update', data);
         if(resp.type == "ok")
         {
-            acToast(resp.type, resp.data)
+            acToast("Success", resp.data);
+
+
         }
         else
         {

@@ -88,7 +88,7 @@ async function submitDetails() {
         if(resp.type == "ok")
         {
             acToast("Success", resp.data);
-
+            await updatePfp();
 
         }
         else
@@ -97,6 +97,23 @@ async function submitDetails() {
         }    
 }
 
+async function updatePfp() {
+
+    var selectedOption = avatarDdl.options[avatarDdl.selectedIndex];
+    var dataImgValue = selectedOption.getAttribute("data-img");
+
+    console.log(dataImgValue);
+    
+    var imgElements = document.getElementsByClassName("avatar-placeholder") as HTMLCollectionOf<HTMLImageElement>;
+
+    for (var i = 0; i < imgElements.length; i++) {
+
+        imgElements[i].src = "/assets/images/avatars/default/" + dataImgValue + ".png";
+        console.log(imgElements[i].src);
+    }
+
+
+}
 
 async function submitPass() {
     const newpass = document.getElementById('new-pass') as HTMLInputElement;

@@ -13,11 +13,11 @@
       "compress": {
         "unused": false
       },
-      "mangle": true
+      "mangle": false
     }
   },
     "module": {
         "type": "es6"
     },
-    "minify": true
+    "minify": false
 }

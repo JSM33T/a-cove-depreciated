@@ -77,33 +77,6 @@ async function acGetData(apiUrl: string) {
     }
 }
 
-//async function acGetData(apiUrl: string) {
-//  try {
-//    if (!tokenElement) {
-//      return { type: 'error', message: 'Anti-forgery token element not found' };
-//    }
-
-//    const token = tokenElement.value;
-
-//    const response = await fetch(apiUrl, {
-//      method: 'GET',
-//      headers: {
-//        'RequestVerificationToken': token,
-//      },
-//    });
-
-//    if (!response.ok) {
-//      const errorData = await response.json();
-//      return { type: 'error', data: errorData };
-//    }
-
-//    const responseData = await response.json();
-//    return { type: 'ok', data: responseData };
-//  } catch (error: any) {
-//    return { type: 'error', data: error.message || 'Something went wrong' };
-//  }
-//}
-
 //===================== DOM UTILS ====================
 
 function classesToTags(tag: string, classes: string) {

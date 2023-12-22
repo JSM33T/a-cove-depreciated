@@ -1,6 +1,6 @@
 ﻿using almondcove.Interefaces.Repositories;
 using almondcove.Interefaces.Services;
-using almondcove.Models.DTO;
+using almondcove.Models.DTO.BlogDTOs;
 using almondcove.Modules;
 using Microsoft.Data.SqlClient;
 

@@ -1,7 +1,7 @@
 ﻿using almondcove.Filters;
 using almondcove.Interefaces.Repositories;
 using almondcove.Interefaces.Services;
-using almondcove.Models.DTO;
+using almondcove.Models.DTO.BlogDTOs;
 using almondcove.Modules;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

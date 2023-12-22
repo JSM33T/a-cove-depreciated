@@ -1,7 +1,7 @@
 ﻿using almondcove.Api;
 using almondcove.Interefaces.Services;
 using almondcove.Models;
-using almondcove.Models.DTO;
+using almondcove.Models.DTO.BlogDTOs;
 using Markdig;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
@@ -9,7 +9,7 @@ using System.Diagnostics;
 
 namespace almondcove.Controllers
 {
-    
+
     public class BlogsRouteController(IWebHostEnvironment hostingEnvironment, IConfigManager configManager) : Controller
     {
         private readonly IWebHostEnvironment _hostingEnvironment = hostingEnvironment;

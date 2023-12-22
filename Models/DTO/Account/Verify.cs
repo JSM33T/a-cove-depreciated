@@ -1,4 +1,4 @@
-﻿namespace almondcove.Models.DTO
+﻿namespace almondcove.Models.DTO.Account
 {
     public class Verify
     {

@@ -2,7 +2,7 @@
 using almondcove.Interefaces.Repositories;
 using almondcove.Interefaces.Services;
 using almondcove.Models.Domain;
-using almondcove.Models.DTO;
+using almondcove.Models.DTO.Account;
 using almondcove.Modules;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;

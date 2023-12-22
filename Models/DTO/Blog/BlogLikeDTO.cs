@@ -1,4 +1,4 @@
-﻿namespace almondcove.Models.DTO
+﻿namespace almondcove.Models.DTO.BlogDTOs
 {
     public class BlogLikeDTO
     {

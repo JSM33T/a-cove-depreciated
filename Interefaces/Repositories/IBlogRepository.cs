@@ -1,4 +1,4 @@
-﻿using almondcove.Models.DTO;
+﻿using almondcove.Models.DTO.BlogDTOs;
 
 namespace almondcove.Interefaces.Repositories
 {

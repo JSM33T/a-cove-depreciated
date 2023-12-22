@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace almondcove.Models.DTO
+namespace almondcove.Models.DTO.Account
 {
     public class RecoveryDTO
     {

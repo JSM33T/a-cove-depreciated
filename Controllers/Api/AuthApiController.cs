@@ -9,21 +9,22 @@ using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Text;
 
-namespace almondcove.Api
+namespace almondcove.Controllers.Api
 {
     [ApiController]
-    public class AuthApiController(IConfigManager configManager, ILogger<AuthApiController> logger, IMailer mailer,IAuthRepository authRepository) : ControllerBase
+    public class AuthApiController(IConfigManager configManager, ILogger<AuthApiController> logger, IMailer mailer, IAuthRepository authRepository) : ControllerBase
     {
         private readonly IAuthRepository _authRepo = authRepository;
         private readonly IConfigManager _configManager = configManager;
         private readonly ILogger<AuthApiController> _logger = logger;
         private readonly IMailer _mailer = mailer;
 
+        [Perm("guest")]
         [HttpPost("/api/account/login")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UserLogin(LoginCreds loginCreds)
         {
-            if(!ModelState.IsValid) return BadRequest("validation error");
+            if (!ModelState.IsValid) return BadRequest("validation error");
 
             try
             {
@@ -103,18 +104,19 @@ namespace almondcove.Api
             catch (Exception ex)
             {
                 _logger.LogError("Error in login form, message : {exmessage}, user : {user} ", ex.Message.ToString(), loginCreds.UserName);
-                    
+
                 return StatusCode(500, "something went wrong");
             }
         }
 
+        [Perm("guest")]
         [HttpPost("/api/account/signup")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UserSignUp(UserProfile userProfile)
         {
             if (!ModelState.IsValid) { return BadRequest("invalid state"); }
             string body, subject;
-             
+
             try
             {
                 string FilteredUsername = userProfile.UserName.Trim().ToLower().ToString();
@@ -135,7 +137,7 @@ namespace almondcove.Api
                         // body = "<!DOCTYPE html><html><head><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Verification</title></head><body style=\"margin:0;padding:0;font-family:Arial,sans-serif;line-height:1.4;color:#111;background-color:#fff\"><div style=\"max-width:600px;margin:0 auto;background-color:#fff;padding:20px;border-radius:5px\"><h1 style=\"color:#111;margin-bottom:20px;font-size:24px\">Complete Signup</h1><p>Hey there,</p><div style=\"text-align:center;margin-bottom:20px\"><img src=\"https://almondcove.in/assets/favicon/apple-touch-icon.png\" width=\"100\" alt=\"Image\" style=\"max-width:100%;height:auto;border-radius:5px\"></div><p>Welcome to the AlmondCove.Your OTP is <h2><b>" + otp + " </b></h2> .You can verify your account from the following button too.</p><p>" +
                         //         "<a href=\"https://almondcove.in/account/verification/" + FilteredUsername + "/" + otp + "\"" +
                         //         " style=\"display:inline-block;padding:10px 20px;background-color:#111;color:#fff;text-decoration:none;border-radius:4px\">Verify Email</a></p><p>If you did not sign up for this account, please ignore this email.</p><div style=\"margin-top:20px;text-align:center;font-size:12px;color:#999\"><p>This is an automated email, please do not reply.</p></div></div></body></html>";
-                        body = Modules.EmailBodies.SignUpEmail.SignUpEmailBody(FilteredUsername,otp);
+                        body = Modules.EmailBodies.SignUpEmail.SignUpEmailBody(FilteredUsername, otp);
                         bool stat = _mailer.SendEmailAsync(userProfile.EMail.ToString(), subject, body);
                         if (stat)
                         {
@@ -272,9 +274,9 @@ namespace almondcove.Api
 
                     if (otpSent == true)
                     {
-                        if (_authRepo.SaveOTPInDatabaseAsync(connection, userId, otp)) 
-                        { 
-                            return Ok("OTP sent to your email. Please enter the OTP to login."); 
+                        if (_authRepo.SaveOTPInDatabaseAsync(connection, userId, otp))
+                        {
+                            return Ok("OTP sent to your email. Please enter the OTP to login.");
                         }
                         else
                         {
@@ -301,7 +303,7 @@ namespace almondcove.Api
             }
         }
 
-        [Perm("user","admin","editor")]
+        [Perm("user", "admin", "editor")]
         [HttpPost("/api/account/clearallsessions")]
         public async Task<IActionResult> DisposeSessionKey()
         {

@@ -47,6 +47,7 @@
     <Folder Include="Migrations\DDL\" />
     <Folder Include="Models\DTO\Media\Music\" />
     <Folder Include="Logs\" />
+    <Folder Include="wwwroot\assets\images\megamenu\" />
     <Folder Include="wwwroot\content\gallery\darjeeling-diaries\assets\" />
     <Folder Include="wwwroot\content\learning-hub\" />
     <Folder Include="wwwroot\content\music\global\" />

@@ -89,6 +89,9 @@ async function submitDetails() {
         {
             acToast("Success", resp.data);
             await updatePfp();
+            const something = document.getElementsByClassName('name-placeholder');
+            something[0].innerHTML = firstName.value;
+            something[1].innerHTML = firstName.value;
 
         }
         else

@@ -11,6 +11,41 @@ namespace almondcove.Repositories
         private readonly IConfigManager _configManager = configManager;
         private readonly ILogger<BlogRepository> _logger = logger;
 
+        public async Task<BlogLoadDTO> GetBlogBySlug(string slug)
+        {
+            using (var connection = new SqlConnection(_configManager.GetConnString()))
+            {
+                await connection.OpenAsync();
+
+                string extractQuery = @"
+                SELECT a.Id, a.Tags, a.Title, a.PostContent, a.UrlHandle,YEAR(CONVERT(DATE, a.DatePosted)) AS Year, COUNT(b.blogid) AS LikeCount
+                FROM TblBlogMaster a
+                LEFT JOIN TblBlogLike b ON a.Id = b.blogid
+                WHERE a.UrlHandle = @Slug
+                GROUP BY a.Id, a.Tags, a.Title, a.UrlHandle, a.PostContent,a.DatePosted
+            ";
+
+                using var command = new SqlCommand(extractQuery, connection);
+                command.Parameters.AddWithValue("@Slug", slug);
+
+                using var reader = await command.ExecuteReaderAsync();
+                if (reader.Read())
+                {
+                    return new BlogLoadDTO
+                    {
+                        Id = (int)reader["Id"],
+                        Tags = reader["Tags"].ToString(),
+                        Title = reader["Title"].ToString(),
+                        Slug = reader["UrlHandle"].ToString(),
+                        Year = reader["Year"].ToString(),
+                        Likes = reader["LikeCount"].ToString()
+                    };
+                }
+            }
+
+            return null;
+        }
+
         public async Task<List<BlogThumbsDTO>> GetTopBlogsAsync()
         {
             List<BlogThumbsDTO> entries = [];

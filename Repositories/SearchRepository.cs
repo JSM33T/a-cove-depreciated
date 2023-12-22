@@ -8,7 +8,6 @@ namespace almondcove.Repositories
     public class SearchRepository(IConfigManager configManager) : ISearchRepository
     {
         private readonly IConfigManager _configManager = configManager;
-        string SearchQuery = "SELECT * FROM TblSearchMaster WHERE Slug = @Slug";
 
         public async Task<LiveSearchDTO> GetSearchResultsBySlug(string Slug)
         {
@@ -16,8 +15,8 @@ namespace almondcove.Repositories
 
             using SqlConnection conn = new(_configManager.GetConnString());
             await conn.OpenAsync();
-            
 
+            string SearchQuery = "SELECT * FROM TblSearchMaster WHERE Slug = @Slug";
             using SqlCommand searchCommand = new(SearchQuery, conn);
             searchCommand.Parameters.AddWithValue("@Slug", Slug);
 

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 
-namespace almondcove.Api
+namespace almondcove.Controllers.Api
 {
     [ApiController]
     public class MailingListController(

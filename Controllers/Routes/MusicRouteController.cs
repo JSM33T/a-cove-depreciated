@@ -1,17 +1,11 @@
 ﻿using almondcove.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using System.Text.Json;
 
-namespace almondcove.Controllers
+namespace almondcove.Controllers.Routes
 {
-    public class StudioRouteController : Controller
+    public class MusicRouteController : Controller
     {
-        [Route("/studio")]
-        public IActionResult Index()
-        {
-            return View("Views/Studio/Index.cshtml");
-        }
 
         [Route("/music")]
         public IActionResult Music()
@@ -22,7 +16,7 @@ namespace almondcove.Controllers
         [Route("/music/album/{Slug}")]
         public IActionResult Album(string Slug)
         {
-            return View("Views/Music/Albums/"+Slug.Trim()+".cshtml");
+            return View("Views/Music/Albums/" + Slug.Trim() + ".cshtml");
         }
 
         [Route("/music/single/{Slug}")]

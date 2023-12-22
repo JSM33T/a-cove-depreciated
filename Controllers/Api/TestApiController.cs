@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace almondcove.Api
+namespace almondcove.Controllers.Api
 {
     [Route("api/[controller]")]
     [ApiController]

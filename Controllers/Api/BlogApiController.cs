@@ -10,7 +10,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Web;
 
-namespace almondcove.Api
+namespace almondcove.Controllers.Api
 {
     [ApiController]
     public class BlogApiController : ControllerBase
@@ -19,13 +19,13 @@ namespace almondcove.Api
         private readonly IConfigManager _configManager;
         private readonly ILogger<BlogApiController> _logger;
         private readonly IBlogRepository _blogRepo;
-        public BlogApiController(IConfigManager configManager,ILogger<BlogApiController> logger,IBlogRepository blogRepository)
+        public BlogApiController(IConfigManager configManager, ILogger<BlogApiController> logger, IBlogRepository blogRepository)
         {
             _configManager = configManager;
             _logger = logger;
             _blogRepo = blogRepository;
             connectionString = _configManager.GetConnString();
-            
+
         }
 
 
@@ -145,13 +145,13 @@ namespace almondcove.Api
                     }
                     else if (classify == "year")
                     {
-                       sql = "SELECT m.Id, m.Title,m.Description,m.UrlHandle,m.DatePosted,m.Tags,YEAR(m.DatePosted) AS Year,c.Title AS Category,c.Locator,COUNT(bc.Id) AS Comments FROM TblBlogMaster m " +
-                             "LEFT JOIN TblBlogComment bc ON m.Id = bc.PostId " +
-                             "JOIN TblBlogCategory c ON m.CategoryId = c.Id " +
-                             "WHERE m.CategoryId = c.Id and YEAR(m.DatePosted) = '" + key + "' AND m.IsActive = 1" +
-                             "GROUP BY m.Id, m.Title,m.Description,m.UrlHandle, m.DatePosted,m.Tags,c.Title,c.Locator " +
-                             "ORDER BY Id OFFSET " + mode + " " +
-                             "ROWS FETCH NEXT 5 ROWS ONLY";
+                        sql = "SELECT m.Id, m.Title,m.Description,m.UrlHandle,m.DatePosted,m.Tags,YEAR(m.DatePosted) AS Year,c.Title AS Category,c.Locator,COUNT(bc.Id) AS Comments FROM TblBlogMaster m " +
+                              "LEFT JOIN TblBlogComment bc ON m.Id = bc.PostId " +
+                              "JOIN TblBlogCategory c ON m.CategoryId = c.Id " +
+                              "WHERE m.CategoryId = c.Id and YEAR(m.DatePosted) = '" + key + "' AND m.IsActive = 1" +
+                              "GROUP BY m.Id, m.Title,m.Description,m.UrlHandle, m.DatePosted,m.Tags,c.Title,c.Locator " +
+                              "ORDER BY Id OFFSET " + mode + " " +
+                              "ROWS FETCH NEXT 5 ROWS ONLY";
 
                     }
                     else if (classify == "tag")
@@ -352,7 +352,7 @@ namespace almondcove.Api
                     command.Parameters.AddWithValue("@slug", blogLike.Slug);
                     int likecounter = (int)await command.ExecuteScalarAsync();
                     await connection.CloseAsync();
-                    return (likecounter == 1) ? Ok(true) : Ok(false);
+                    return likecounter == 1 ? Ok(true) : Ok(false);
 
                 }
                 catch (Exception ex)
@@ -417,7 +417,7 @@ namespace almondcove.Api
         [HttpPost]
         [Route("/api/blog/comment/add")]
         [IgnoreAntiforgeryToken]
-        public async Task<IActionResult> AddComment( BlogCommentDTO blogComment)
+        public async Task<IActionResult> AddComment(BlogCommentDTO blogComment)
         {
 
             string userid = "", blogid = "";
@@ -531,7 +531,7 @@ namespace almondcove.Api
                         user = "yes";
                         try
                         {
-                            editable = !string.IsNullOrEmpty(reader.GetString(5)) && (reader.GetString(5) == SessionUser);
+                            editable = !string.IsNullOrEmpty(reader.GetString(5)) && reader.GetString(5) == SessionUser;
                         }
                         catch
                         {
@@ -539,10 +539,10 @@ namespace almondcove.Api
                         }
                         try
                         {
-                            replyeditable = !string.IsNullOrEmpty(reader.GetString(16)) && (reader.GetString(16) == SessionUser);
+                            replyeditable = !string.IsNullOrEmpty(reader.GetString(16)) && reader.GetString(16) == SessionUser;
                         }
                         catch
-                        {   
+                        {
                             replyeditable = false;
                         }
                     }
@@ -623,7 +623,7 @@ namespace almondcove.Api
         [HttpPost]
         [Route("/api/blog/comment/edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditComment( BlogCommentDTO blogComment)
+        public async Task<IActionResult> EditComment(BlogCommentDTO blogComment)
         {
             if (HttpContext.Session.GetString("username") != null)
             {
@@ -740,50 +740,50 @@ namespace almondcove.Api
         {
             string userid = "";
             string encodedreply = HttpUtility.HtmlEncode(blogReply.ReplyText.ToString().Trim());
-           
-                try
+
+            try
+            {
+                if (encodedreply.Trim() != "")
                 {
-                    if (encodedreply.Trim() != "")
+                    using var connection = new SqlConnection(connectionString);
+                    await connection.OpenAsync();
+                    var command = new SqlCommand("SELECT Id FROM TblUserProfile WHERE UserName = @username", connection);
+                    command.Parameters.AddWithValue("@username", HttpContext.Session.GetString("username").ToString());
+                    var reader = await command.ExecuteReaderAsync();
+                    if (await reader.ReadAsync())
                     {
-                        using var connection = new SqlConnection(connectionString);
-                        await connection.OpenAsync();
-                        var command = new SqlCommand("SELECT Id FROM TblUserProfile WHERE UserName = @username", connection);
-                        command.Parameters.AddWithValue("@username", HttpContext.Session.GetString("username").ToString());
-                        var reader = await command.ExecuteReaderAsync();
-                        if (await reader.ReadAsync())
-                        {
-                            userid = reader.GetInt32(0).ToString();
-                        }
-                        reader.Close();
-                        SqlCommand maxIdCommand = new("SELECT ISNULL(MAX(Id), 0) + 1 FROM TblBlogReply", connection);
-                        int newId = Convert.ToInt32(maxIdCommand.ExecuteScalar());
-
-                        command = new SqlCommand("insert into TblBlogReply(Id,CommentId,UserId,Reply,IsActive,DatePosted) values(" + newId + ",'" + blogReply.CommentId + "','" + userid + "','" + encodedreply + "',1,@dateposted)", connection);
-                        command.Parameters.Add("@dateposted", SqlDbType.DateTime).Value = DateTime.Now;
-                        await command.ExecuteNonQueryAsync();
-                        return Ok("reply added");
+                        userid = reader.GetInt32(0).ToString();
                     }
-                    else
-                    {
+                    reader.Close();
+                    SqlCommand maxIdCommand = new("SELECT ISNULL(MAX(Id), 0) + 1 FROM TblBlogReply", connection);
+                    int newId = Convert.ToInt32(maxIdCommand.ExecuteScalar());
 
-                        return BadRequest("Reply too short");
-                    }
-
+                    command = new SqlCommand("insert into TblBlogReply(Id,CommentId,UserId,Reply,IsActive,DatePosted) values(" + newId + ",'" + blogReply.CommentId + "','" + userid + "','" + encodedreply + "',1,@dateposted)", connection);
+                    command.Parameters.Add("@dateposted", SqlDbType.DateTime).Value = DateTime.Now;
+                    await command.ExecuteNonQueryAsync();
+                    return Ok("reply added");
                 }
-                catch (Exception ex)
+                else
                 {
-                    _logger.LogInformation("error in adding reply by {username} exc message: {eexmessage}" , HttpContext.Session.GetString("username"),ex.Message);
-                    return BadRequest("Something went wrong");
+
+                    return BadRequest("Reply too short");
                 }
-         
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("error in adding reply by {username} exc message: {eexmessage}", HttpContext.Session.GetString("username"), ex.Message);
+                return BadRequest("Something went wrong");
+            }
+
         }
 
-        
+
 
         [HttpPost]
         [Route("/api/blog/reply/delete")]
         [IgnoreAntiforgeryToken]
-        public async Task<IActionResult> DeleteReply( BlogReplyDTO blogReply)
+        public async Task<IActionResult> DeleteReply(BlogReplyDTO blogReply)
         {
             if (HttpContext.Session.GetString("username") != null)
             {

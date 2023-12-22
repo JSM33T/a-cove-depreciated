@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
-namespace almondcove.Controllers
+namespace almondcove.Controllers.Routes
 {
     public class GalleryRouteController(ILogger<GalleryRouteController> logger, IWebHostEnvironment hostingEnvironment) : Controller
     {
@@ -13,7 +13,7 @@ namespace almondcove.Controllers
         public IActionResult Browse()
         {
             string webRootPath = _hostingEnvironment.WebRootPath;
-            string jsonFilePath = Path.Combine(webRootPath, "content", "gallery","gallery.json");
+            string jsonFilePath = Path.Combine(webRootPath, "content", "gallery", "gallery.json");
             _logger.LogError(jsonFilePath + " and " + webRootPath);
             if (System.IO.File.Exists(jsonFilePath))
             {
@@ -21,7 +21,7 @@ namespace almondcove.Controllers
                 List<AlbumDTO> albumModel = JsonSerializer.Deserialize<List<AlbumDTO>>(jsonContent);
                 _logger.LogError(albumModel.ToString());
                 return View("Views/Gallery/Index.cshtml", albumModel);
-                
+
             }
             else
             {
@@ -34,7 +34,7 @@ namespace almondcove.Controllers
         public IActionResult Viewer(string Slug)
         {
             string webRootPath = _hostingEnvironment.WebRootPath;
-            string jsonFilePath = Path.Combine(webRootPath, "content","gallery", Slug, "content.json");
+            string jsonFilePath = Path.Combine(webRootPath, "content", "gallery", Slug, "content.json");
             _logger.LogError(jsonFilePath + " and " + webRootPath);
             if (System.IO.File.Exists(jsonFilePath))
             {

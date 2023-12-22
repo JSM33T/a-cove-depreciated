@@ -1,6 +1,5 @@
 ﻿import { Email } from '../Interfaces/email.interface.js';
-import { acInit, acGetData, acPostData, acToast, validateEmail } from '../global.js';
-
+import { acInit, acGetData, acPostData, acToast, validateEmail, prettifyDate } from '../global.js';
 
 const mailForm = document.querySelector('.subscription-form') as HTMLFormElement;
 
@@ -8,7 +7,6 @@ acInit([
     loadTopBlogs,
     formSubmitEvent
 ])
-
 
 async function formSubmitEvent() {
     mailForm.addEventListener('submit', async function (event) {
@@ -48,6 +46,7 @@ async function postEmailToAPI(emailData: Email) {
 
 async function loadTopBlogs() {
     const resp = await acGetData("/api/topblogs/get");
+    console.log(resp.data);
     try {
         await constructArticles(resp.data);
     } catch (error: any) {
@@ -55,17 +54,6 @@ async function loadTopBlogs() {
     }
 }
 
-
-//async function loadTopBlogs() {
-//    acGetData("/api/topblogs/get")
-//        .then(async (data) => {
-//            console.log('Data received:', data);
-//            await constructArticles(data);
-//        })
-//        .catch((error) => {
-//            console.error('Error:', error.data);
-//        });
-//}
 
 async function constructArticles(responsedata: any) {
     var articleTags = responsedata.map(post => `
@@ -88,13 +76,12 @@ async function constructArticles(responsedata: any) {
                     ${post.comments}
                     <i class="ai-message fs-lg ms-1"></i>
                 </a>
-                
-                <span class="fs-xs opacity-20 mt-2 mx-3">|</span><span class="fs-sm text-muted mt-2">${post.datePosted}</span><span class="fs-xs opacity-20 mt-2 mx-3">|</span><a class="badge bg-faded-primary text-primary fs-xs mt-2" href="/blogs/category/binge">Binge</a>
+                <span class="fs-xs opacity-20 mt-2 mx-3">|</span><span class="fs-sm text-muted mt-2">${prettifyDate(post.datePosted)} </span><span class="fs-xs opacity-20 mt-2 mx-3">|</span > <a class="badge bg-faded-primary text-primary fs-xs mt-2" href = "/blogs/category/${post.locator}">${post.category}</a>
             </div>
         </article>
     `).join('');
 
-    const artcl = document.getElementById('articlePlaceholder');
+    const artcl = document.getElementById('articlePlaceholder') as HTMLElement;
     if (artcl) {
         artcl.innerHTML = articleTags;
     }

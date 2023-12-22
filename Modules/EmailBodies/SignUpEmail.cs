@@ -6,7 +6,7 @@ namespace almondcove.Modules.EmailBodies
     {
         public static string SignUpEmailBody(string userName, string otp)
         {
-            StringBuilder bodyBuilder = new StringBuilder();
+            StringBuilder bodyBuilder = new();
             bodyBuilder.Append("<html>")
                        .Append("<body style=\"font-family: 'Arial', sans-serif;\">")
                        .Append("<div style=\"background-color: #f4f4f4; padding: 20px;border-radius:10px\">")
@@ -14,12 +14,12 @@ namespace almondcove.Modules.EmailBodies
                        .Append("<p style=\"color: #555; font-size: 16px;\">Dear ")
                        .Append(userName)
                        .Append(",</p>")
-                       .Append("<p style=\"color: #555; font-size: 16px;\">Thank you for joining our community.<string>")
+                       .Append("<p style=\"color: #555; font-size: 16px;\">Thank you for joining our community. <strong>")
                        .Append(otp)
-                       .Append("</string>is your otp for confirming your email account")
+                       .Append("</strong> is your otp for confirming your email account")
                        .Append("</p><p style=\"color: #555; font-size: 16px;\">Here are a few things you can do to get started:</p>")
                        .Append("<ul style=\"color: #555; font-size: 16px;\">")
-                       .Append("   <li>Explore our website and discover exciting features.</li>")
+                       .Append("   <li>Explore our website and discover exciting resources.</li>")
                        .Append("   <li>Customize your profile settings to make the most of your experience.</li>")
                        .Append("   <li>Connect with other users and start engaging with our community.</li>")
                        .Append("</ul>")

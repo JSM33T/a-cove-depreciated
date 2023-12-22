@@ -1,6 +1,4 @@
--- DROP SCHEMA dbo;
 
-CREATE SCHEMA dbo;
 -- almondcoveDB.dbo.TblAvatarMaster definition
 
 -- Drop table

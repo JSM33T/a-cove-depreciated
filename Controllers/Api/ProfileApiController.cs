@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.Data;
 
-namespace almondcove.Api
+namespace almondcove.Controllers.Api
 {
     [ApiController]
-    public class ProfileApiController(IConfigManager _configuration, ILogger<ProfileApiController> _logger,IProfileRepository _profileRepo) : ControllerBase
+    public class ProfileApiController(IConfigManager _configuration, ILogger<ProfileApiController> _logger, IProfileRepository _profileRepo) : ControllerBase
     {
 
         [HttpGet]
@@ -21,16 +21,16 @@ namespace almondcove.Api
 
             if (sessionStat != null && (sessionStat == "user" || sessionStat == "admin"))
             {
-                try 
-                { 
-                    return Ok( await _profileRepo.GetProfileByUsername(HttpContext.Session.GetString("username")) ); 
-                }
-                catch(Exception ex)
+                try
                 {
-                    _logger.LogError("exception in fetching profile details for user {msg}",ex.Message);
+                    return Ok(await _profileRepo.GetProfileByUsername(HttpContext.Session.GetString("username")));
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError("exception in fetching profile details for user {msg}", ex.Message);
                     return BadRequest();
                 }
-                
+
             }
             else
             {
@@ -105,7 +105,7 @@ namespace almondcove.Api
                 Bio = userProfileDTO.Bio,
                 EMail = userProfileDTO.EMail,
                 AvatarId = userProfileDTO.AvatarId
-                
+
             };
 
             if (!ModelState.IsValid)
@@ -138,7 +138,7 @@ namespace almondcove.Api
             }
             catch (Exception ex)
             {
-                 _logger.LogError("Error updating profile exception {exc}", ex.Message);
+                _logger.LogError("Error updating profile exception {exc}", ex.Message);
                 return BadRequest("Something went wrong");
             }
         }

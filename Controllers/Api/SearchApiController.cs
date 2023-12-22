@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace almondcove.Api
+namespace almondcove.Controllers.Api
 {
     [ApiController]
-    public class SearchApiController(ISearchRepository searchRepository,ILogger<SearchApiController> logger) : ControllerBase
+    public class SearchApiController(ISearchRepository searchRepository, ILogger<SearchApiController> logger) : ControllerBase
     {
         private readonly ILogger<SearchApiController> _logger = logger;
         private readonly ISearchRepository _searchRepo = searchRepository;
@@ -16,9 +16,9 @@ namespace almondcove.Api
         {
             try
             {
-                return Ok(await _searchRepo.GetSearchResultsBySlug(Slug)); 
+                return Ok(await _searchRepo.GetSearchResultsBySlug(Slug));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError("error fetching search results ,message:{message}", ex.Message);
                 return BadRequest("unable to fetch search results");

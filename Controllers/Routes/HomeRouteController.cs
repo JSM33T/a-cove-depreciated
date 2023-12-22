@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace almondcove.Controllers
+namespace almondcove.Controllers.Routes
 {
     public class HomeRouteController() : Controller
     {

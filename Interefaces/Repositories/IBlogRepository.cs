@@ -5,5 +5,6 @@ namespace almondcove.Interefaces.Repositories
     public interface IBlogRepository
     {
         Task<List<BlogThumbsDTO>> GetTopBlogsAsync();
+        Task<BlogLoadDTO> GetBlogBySlug(string slug);
     }
 }

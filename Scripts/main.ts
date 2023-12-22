@@ -1,17 +1,22 @@
-﻿import { acInit } from './global.js'
+﻿import { acInit,Url } from './global.js'
 declare const axios: { get: (arg0: string) => Promise<{ data: string | any[]; }>; }
 
+const shareBtn = document.getElementById('share-btn') as HTMLButtonElement;
 
 acInit([
-    searchEvent,
-    shareEvent
+    () => {
+        if (shareBtn) {
+            shareBtn.addEventListener('click', shareIt)
+        } 
+    }
 ]);
 
-//evebnt to bind the search button with search methods
-function searchEvent() { }
-//event to bind with buttons with class acshare
-function shareEvent() { }
 
+async function shareIt() {
+    const currentUrl = new Url();
+    const linkholder = document.getElementById('link-placeholder');
+    linkholder.innerHTML = currentUrl.fullUrl;
+}
 
 function livesearch() {
 

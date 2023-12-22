@@ -4,7 +4,7 @@ using Almondcove.Interefaces.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace almondcove.Controllers
+namespace almondcove.Controllers.Routes
 {
     public class AccountRouteController(ILogger<AccountRouteController> logger) : Controller
     {

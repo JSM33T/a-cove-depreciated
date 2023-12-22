@@ -96,4 +96,4 @@ const verifyDeets = async function () {
         }
 };
 
-const redirect = () => window.location.href = "/";
+const redirect = () => window.location.href = "/account/login";

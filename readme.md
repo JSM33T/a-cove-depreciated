@@ -7,19 +7,17 @@ This repository contains the source code for a community website project made wi
 
 ### C#/.NET:
   - **src:** Contains all .NET source files.
-  - **Utility Classes:** Directory for modularizing features. Each feature has its own folder with controllers, services, and other related files.
+  - **Module Classes:** Helper classes with specific functions that dont need a separate service representation.
   - **Services:** Directory for common services used across multiple modules.
   - **Controllers** : 
-    - Routers : handle routing and prerendering of contents
-    - Api  : Api controllers for lazy loading & js operations
+    - Routers : Handle routing and prerendering of contents
+    - Api  : Api controllers for lazy loading & data fetching
 
   - **Interfaces:** Directory for defining interfaces, promoting abstraction and separation of concerns.
   - **Middlewares:** Directory for custom middlewares used in the project.
   - **Extensions:** Directory for extension methods or service collection extensions.
   - **Repositories** : Data access methods.
-  - **Migrations** : SQL files for migrating db schema.
-  - **appsettings.json:** Configuration file for application settings.
-  - **Program.cs:** Main entry point for configuring services, middleware, and the application pipeline.
+  - **Filters** : Action filters for permission management.
 
 ### Typescript
 
@@ -31,27 +29,40 @@ This repository contains the source code for a community website project made wi
 ## Configuration and Startup
 
 - **appsettings.json:** Configuration file containing application settings, connection strings, etc.
+- **tsconfig.json:** TypeScript configuration file.
 - **Program.cs** : Main entry point for configuring services, middleware, and the application pipeline.
-- **Migrations** : Migrations
+- **Migrations** : SQL files for migrating db schema
 
 ## Project File
 
 - **project.csproj:** The .NET project file specifying dependencies, references, and other project-related configurations.
 
-### Components/File types
 
-- **Scripts (Typescript):** Contains all TypeScript source files.
-  - **global.ts file:** Global TypeScript file containing common functions, constants, or configurations used across multiple modules.
-  - **dedicated .ts files:** Dedicated TypeScript files for specific features or modules in the individual project pages.
-  - **interface .ts files:** Interfaces for data structures.
 
-- **tsconfig.json:** TypeScript configuration file.
+
+
 
 ## Tech stack used 
 
-![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)![.NET](https://img.shields.io/badge/.NET-%235C2D91.svg?style=for-the-badge&logo=.net&logoColor=white)![C#](https://img.shields.io/badge/csharp-%23000000.svg?style=for-the-badge&logo=csharp&logoColor=violet)
+### Languages & framework
+
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white) ![Javascript](https://img.shields.io/badge/javascript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white) ![C#](https://img.shields.io/badge/csharp-%23000000.svg?style=for-the-badge&logo=csharp&logoColor=violet) ![C#](https://img.shields.io/badge/css-%23000000.svg?style=for-the-badge&logo=css3&logoColor=violet) 
+
+![.NET](https://img.shields.io/badge/.NET-%235C2D91.svg?style=for-the-badge&logo=.net&logoColor=white) ![VuE JS](https://img.shields.io/badge/vue-%4FC08D.svg?style=for-the-badge&logo=VUEDOTJS&logoColor=white) ![NPM](https://img.shields.io/badge/npm-%339933.svg?style=for-the-badge&logo=nodedotjs&logoColor=white)
 
 
-![PWA](https://img.shields.io/badge/pwa-%232496ED.svg?style=for-the-badge&logo=pwa&logoColor=white)
-![SWC](https://img.shields.io/badge/swc-%23000000.svg?style=for-the-badge&logo=swc&logoColor=white)
+
+### Build & Tooling
+ ![SWC](https://img.shields.io/badge/swc-%23000000.svg?style=for-the-badge&logo=swc&logoColor=white) ![NPM](https://img.shields.io/badge/npm-%232496ED.svg?style=for-the-badge&logo=npm&logoColor=white)
+
+### Package Manager
+
+![NUGET](https://img.shields.io/badge/nuget-%232496ED.svg?style=for-the-badge&logo=nuget&logoColor=white)  
+
+
+
+### Database
+
+![NUGET](https://img.shields.io/badge/MS%20SQL%20SERVER-%232496ED.svg?style=for-the-badge&logo=microsoft-sql-server&logoColor=white) 
+
 

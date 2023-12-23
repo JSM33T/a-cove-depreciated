@@ -11,13 +11,13 @@
     "keepClassNames": false,
     "minify": {
       "compress": {
-        "unused": false
+        "unused": true
       },
-      "mangle": false
+      "mangle": truw
     }
   },
     "module": {
         "type": "es6"
     },
-    "minify": false
+    "minify": true
 }

@@ -21,6 +21,7 @@ namespace almondcove.Controllers.Routes
         [Route("/account/login")]
         public IActionResult Login()
         {
+            _logger.LogInformation("login page reached");
             return View("Views/Account/Login.cshtml");
         }
 

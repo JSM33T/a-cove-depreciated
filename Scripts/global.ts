@@ -117,7 +117,6 @@ function addTargetBlankToLinks() {
 
 }
 
-
 function acInit(functions: (() => void)[]): void {
     if (document.readyState === "complete") {
         functions.forEach(func => func());
@@ -341,13 +340,9 @@ function acToast(type: string, message: string) {
     });
 }
 
-
-
 function shareIt() {
     // share using apis
 }
-
-
 
 function acQueryParams(key: string, value: string) {
     let currentUrl = new URL(window.location.href);

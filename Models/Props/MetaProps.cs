@@ -4,13 +4,13 @@
     {
         public MetaProps()
         {
-            Title = "almondcove";
-            Description = "A webspace for photos, videos by almondcove";
-            Tags = "almondcove,blog, blogs,movies,series,morbid,urbex,urbanexploration,portfolio";
-            Image = "https://almondcove.in/assets/meta/banner.jpg";
-            Url = "https://almondcove.in";
+            Title = "laymaann";
+            Description = "A webspace for photos, videos by laymaann";
+            Tags = "laymaann, photography,portfolio";
+            Image = "https://laymaann.in/assets/meta/banner.jpg";
+            Url = "https://laymaann.in";
             Type = "Website";
-            Author = "almondcove | Karan Singh";
+            Author = "Laymaann | Karan Singh";
         }
 
         public string Title { get; set; }
@@ -20,7 +20,5 @@
         public string Url { get; set; } 
         public string Type { get; set; }
         public string Author { get; set; }
-
-   
     }
 }

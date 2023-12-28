@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <Compile Remove="Build\**" />
-	<Compile Remove="node_modules\**" />
+	  <Compile Remove="node_modules\**" />
     <Compile Remove="Migrations\Tables\**" />
     <Compile Remove="wwwroot\content\blogs\html\**" />
     <Compile Remove="wwwroot\content\blogs\markdown\**" />

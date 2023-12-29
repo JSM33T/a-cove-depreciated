@@ -36,7 +36,6 @@ async function postToLoginApi(usernameval: string) {
         acToast(response.type, response.data);
 
         if (response.type === "ok") {
-            submitBtn.innerHTML = "Proceed";
             const lastLink: string | null = localStorage.getItem("curr_link");
             otpModal!.show();
         }
@@ -44,7 +43,7 @@ async function postToLoginApi(usernameval: string) {
         console.error('Error during login:', error);
         acToast('error', 'Something went wrong');
     } finally {
-        submitBtn.innerHTML = "Log In";
+        submitBtn.innerHTML = "Recover";
     }
 }
 
@@ -69,6 +68,7 @@ const recoverAccount = async function () {
         }
         else {
             console.log("error", response.data);
+            acToast("error", "Invalid OTP");
         }
     } catch (error) {
         console.error('Error during login:', error);

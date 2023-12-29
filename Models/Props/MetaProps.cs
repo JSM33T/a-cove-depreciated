@@ -5,12 +5,12 @@
         public MetaProps()
         {
             Title = "laymaann";
-            Description = "A webspace for photos, videos by laymaann";
+            Description = "A webspace for blogs , apps, music and resources";
             Tags = "laymaann, photography,portfolio";
             Image = "https://laymaann.in/assets/meta/banner.jpg";
             Url = "https://laymaann.in";
             Type = "Website";
-            Author = "Laymaann | Karan Singh";
+            Author = "jsm33t | Jass";
         }
 
         public string Title { get; set; }

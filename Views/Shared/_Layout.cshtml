@@ -31,7 +31,7 @@ _____  |  |   _____   ____   ____    __| _/____  _______  __ ____      |__| ____
 (____  /____/__|_|  /\____/|___|  /\____ |\___  >____/ \_/  \___  > /\ |__|___|  /
      \/           \/            \/      \/    \/                \/  \/         \/
 
- v.1.0.0
+ v.1.5.0
 
 
 -->
@@ -39,38 +39,37 @@ _____  |  |   _____   ____   ____    __| _/____  _______  __ ____      |__| ____
 <!DOCTYPE html>
 <html lang="en" data-bs-theme="light">
    <head>
-      <meta charset="utf-8">
-      <!-- Viewport -->
-      <meta name="viewport"
-         content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover">
-      <!-- SEO meta tags -->
-      <title>@metaProps.Title | AlmondCove</title>
-   <meta name="description" content="@metaProps.Description" />
-   <meta name="keywords" content="@metaProps.Tags">
-   <meta name="author" content="@metaProps.Author">
-   <link rel="canonical" href="https://almondcove.in" />
-   <meta property="og:title" content="@metaProps.Title" />
-   <meta property="og:description" content="@metaProps.Description" />
-   <meta property="og:url" content="https://almondcove.in" />
-   <meta property="og:image" content="https://www.almondcove.in/assets/images/meta/ac_landscape.jpg" />
-   <meta property="og:image:alt" content="Almondcove Banner" />
-   <meta property="og:image:type" content="image/jpeg" />
-   <meta property="og:image:width" content="1200" />
-   <meta property="og:image:height" content="630" />
-   <meta property="og:image" content="https://www.almondcove.in/assets/images/meta/ac_landscape.jpg" />
-   <meta property="og:image:alt" content="Almondcove banner" />
-   <meta property="og:image:type" content="image/jpeg" />
-   <meta property="og:image:width" content="4096" />
-   <meta property="og:image:height" content="4096" />
-   <meta property="og:image" content="https://www.almondcove.in/assets/images/meta/ac_landscape.jpg" />
-   <link rel="manifest" href="/manifest.json">
-   <meta property="og:site_name" content="Almondcove.in" />
-   <meta name="twitter:card" content="summary_large_image" />
-   <meta name="twitter:site" content="@@jsm33t" />
-   <meta name="twitter:creator" content="@@jsm33t" /> 
+       <meta charset="utf-8">
+          <!-- Viewport -->
+       <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover">
+          <!-- SEO meta tags -->
+       <title>@metaProps.Title | AlmondCove</title>
+       <meta name="description" content="@metaProps.Description" />
+       <meta name="keywords" content="@metaProps.Tags">
+       <meta name="author" content="@metaProps.Author">
+       <link rel="canonical" href="https://almondcove.in" />
+       <meta property="og:title" content="@metaProps.Title" />
+       <meta property="og:description" content="@metaProps.Description" />
+       <meta property="og:url" content="https://almondcove.in" />
+       <meta property="og:image" content="https://www.almondcove.in/assets/images/meta/ac_landscape.jpg" />
+       <meta property="og:image:alt" content="Almondcove Banner" />
+       <meta property="og:image:type" content="image/jpeg" />
+       <meta property="og:image:width" content="1200" />
+       <meta property="og:image:height" content="630" />
+       <meta property="og:image" content="https://www.almondcove.in/assets/images/meta/ac_landscape.jpg" />
+       <meta property="og:image:alt" content="Almondcove banner" />
+       <meta property="og:image:type" content="image/jpeg" />
+       <meta property="og:image:width" content="4096" />
+       <meta property="og:image:height" content="4096" />
+       <meta property="og:image" content="https://www.almondcove.in/assets/images/meta/ac_landscape.jpg" />
+       <link rel="manifest" href="/manifest.json">
+       <meta property="og:site_name" content="Almondcove.in" />
+       <meta name="twitter:card" content="summary_large_image" />
+       <meta name="twitter:site" content="@@jsm33t" />
+       <meta name="twitter:creator" content="@@jsm33t" /> 
 
-     <link rel="icon" type="image/png" href="/assets/app-icons/icon-32x32.png" sizes="32x32">
-  <link rel="apple-touch-icon" href="/assets/app-icons/icon-180x180.png">
+        <link rel="icon" type="image/png" href="/assets/app-icons/icon-32x32.png" sizes="32x32">
+        <link rel="apple-touch-icon" href="/assets/app-icons/icon-180x180.png">
 
       <script src="/assets/js/theme-switcher.js"></script>
       <!-- Import Google font (Inter) -->
@@ -253,44 +252,13 @@ _____  |  |   _____   ____   ____    __| _/____  _______  __ ____      |__| ____
       <script src="~/lib/axios/dist/axios.min.js"></script>
       @await RenderSectionAsync("Scripts", required: false)
       <script src="~/lib/aos/dist/aos.min.js"></script>
-      <script src="/assets/js/theme.min.js"></script>
-      <script>
-          function livesearch() {
-    const searchStat = document.getElementById('search_stat');
-    const searchResults = document.getElementById('search_results');
-    var ddr = document.getElementById("global_search");
-    if (ddr.value.length >= 2) {
-        axios.get('/api/livesearch/all/' + ddr.value)
-            .then((response) => {
-            console.log(response.data);
-            var sb = "";
-            for (var i = 0; i < response.data.length; i++) {
-                sb += `
-                    <div class="d-flex align-items-center border-bottom pb-4 mb-4 fade-in">
-                        <a class="position-relative d-inline-block flex-shrink-0 bg-secondary rounded-1" href="${response.data[i].url}">
-                        <img src="/assets/images/search_thumbs/${response.data[i].image}.svg" width="70" alt="Product" /></a>
-                        <div class="ps-3">
-                            <h4 class="h6 mb-2"><a href="${response.data[i].url}">${response.data[i].title}</a></h4>
-                            <span class="fs-sm text-muted ms-auto">${response.data[i].description}</span>'
-                        </div>
-                    </div>
-                    `;
-            }
-            searchResults.innerHTML = sb.toString();
-            searchStat.innerHTML = 'Search';
-        })
-            .catch(error => {
-            console.error('Error:', error);
-            searchStat.innerHTML = '';
-            searchResults.innerHTML = '';
-        });
-    }
-    else {
-        searchResults.innerHTML = '';
-        searchStat.innerHTML = 'Search';
-    }
-}
-          </script>
-      <script type="module" src="/assets/js/main.js"></script>
+       <environment include="development">
+           <script src="~/assets/js/theme.js"></script>
+       </environment>
+       <environment include="production">
+           <script src="~/assets/js/theme.min.js"></script>
+       </environment>
+      
+      <script type="module" src="~/assets/js/main.js"></script>
    </body>
 </html>

@@ -38,7 +38,7 @@
                         data-bs-dismiss="modal">
                     </button>
                     <i class="ai-search fs-xl position-absolute top-50 start-0 translate-middle-y ms-3"></i>
-                    <input id="global_search" onkeyup="livesearch()" class="form-control form-control-lg px-5"
+                    <input id="global_search" class="form-control form-control-lg px-5"
                         type="text" placeholder="Type to search" autocomplete="off"
                         data-focus-on-open="[&quot;modal&quot;, &quot;#searchModal&quot;]" />
                 </div>
@@ -52,24 +52,31 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="share-modal" tabindex="-1" role="dialog">
+<div class="modal fade" id="shareModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Your custom styles</h4>
+                <h4 class="modal-title">Share It</h4>
                 <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body py-4">
-                <p class="mb-3">Copy link to clipboard and share the way you want or just use one of the following social share icons:</p>
+                <p class="mb-3 fs-md">Copy link to clipboard and share the way you want or just use one of the following social share icons:</p>
+                <div class="overflow-hidden pb-2">
+                    <button class="btn btn-outline-secondary btn-sm"><i class="ai ai-whatsapp"></i>&nbsp;Whatsapp</button>
+                    <button class="btn btn-outline-secondary btn-sm"><i class="ai ai-whatsapp"></i>&nbsp;Twitter</button>
+                    <button class="btn btn-outline-secondary btn-sm"><i class="ai ai-whatsapp"></i>&nbsp;Facebook</button>
+                </div>
+
+               
                 <div class="bg-secondary overflow-hidden rounded-4">
                     <pre class="text-wrap bg-transparent border-0 text-dark p-4" id="link-placeholder"></pre>
                 </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary w-100 w-sm-auto mb-3 mb-sm-0" type="button" data-bs-dismiss="modal">Close</button>
-                <button class="btn btn-primary w-100 w-sm-auto ms-sm-3" type="button" id="copy-styles-btn">
+                <button class="btn btn-primary w-100 w-sm-auto ms-sm-3" type="button" id="copy-btn">
                     <i class="ai-copy me-2 ms-n1"></i>
-                    Copy styles
+                    Copy
                 </button>
             </div>
         </div>

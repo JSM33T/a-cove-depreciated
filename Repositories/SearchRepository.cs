@@ -16,7 +16,7 @@ namespace almondcove.Repositories
             using SqlConnection conn = new(_configManager.GetConnString());
             await conn.OpenAsync();
 
-            string SearchQuery = "SELECT * FROM TblSearchMaster WHERE Slug = @Slug";
+            string SearchQuery = "SELECT * FROM TblSearchMaster WHERE Title = @Slug or Description = @Slug";
             using SqlCommand searchCommand = new(SearchQuery, conn);
             searchCommand.Parameters.AddWithValue("@Slug", Slug);
 
@@ -27,7 +27,9 @@ namespace almondcove.Repositories
                 LiveSearchDTO searchResult = new()
                 {
                     Title = reader["Title"].ToString(),
-                    Description = reader["Description"].ToString()
+                    Description = reader["Description"].ToString(),
+                    Image = reader["Image"].ToString(),
+                    Url = reader["Url"].ToString()
                 };
 
                 return searchResult;

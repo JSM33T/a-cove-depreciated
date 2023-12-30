@@ -9,14 +9,10 @@ namespace almondcove.Filters
     {
         private readonly string[] _allowedRoles = allowedRoles ?? throw new ArgumentNullException(nameof(allowedRoles));
 
-        public void OnActionExecuted(ActionExecutedContext context)
-        {
-            // Executed after the action method
-        }
+        public void OnActionExecuted(ActionExecutedContext context) { }
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
-            // Retrieve IPermissionService from the service provider
             IPermissionService permissionService = context.HttpContext.RequestServices.GetService<IPermissionService>() ?? throw new InvalidOperationException("IPermissionService not found in the service container.");
             string currentRole = permissionService.CurrentRole();
 

@@ -9,16 +9,13 @@ using Microsoft.Data.SqlClient;
 namespace almondcove.Controllers.Api
 {
     [ApiController]
-    public class MailingListController(
-        ILogger<MailingListController> logger,
-        IMailingListRepository mailRepo
-    ) : ControllerBase
+    public class MailingListController(ILogger<MailingListController> logger,IMailingListRepository mailRepo) : ControllerBase
     {
         private readonly ILogger<MailingListController> _logger = logger;
         private readonly IMailingListRepository _mailRepo = mailRepo;
 
         [HttpPost("/api/mailinglist/subscribe")]
-        [ValidateAntiForgeryToken]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> PostMail(MailDTO mailDTO)
         {
             try
@@ -26,7 +23,8 @@ namespace almondcove.Controllers.Api
                 var mail = MapToMailEntity(mailDTO);
                 var (Success, Message) = await _mailRepo.PostMail(mail);
 
-                return Success ? Ok(Message) : BadRequest(Message);
+                _logger.LogError("email addition result {result} and message:{message}",Success,Message);
+                return Success ? Ok() : BadRequest();
             }
             catch (Exception ex)
             {
@@ -34,6 +32,7 @@ namespace almondcove.Controllers.Api
                 return StatusCode(500, "An error occurred while processing the request.");
             }
         }
+
 
         private static Mail MapToMailEntity(MailDTO mailDTO)
         {

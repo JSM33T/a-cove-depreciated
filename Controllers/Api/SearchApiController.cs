@@ -10,7 +10,8 @@ namespace almondcove.Controllers.Api
         private readonly ILogger<SearchApiController> _logger = logger;
         private readonly ISearchRepository _searchRepo = searchRepository;
 
-        [HttpGet("/api/liversearch/all/{Slug}")]
+        [HttpGet]
+        [Route("/api/liversearch/all/{Slug}")]
         [IgnoreAntiforgeryToken]
         public async Task<IActionResult> LiveSearch(string Slug)
         {
@@ -20,7 +21,7 @@ namespace almondcove.Controllers.Api
             }
             catch (Exception ex)
             {
-                _logger.LogError("error fetching search results ,message:{message}", ex.Message);
+                _logger.LogError("error fetching search results for:{Slug} ,message:{message}", Slug,ex.Message);
                 return BadRequest("unable to fetch search results");
             }
         }

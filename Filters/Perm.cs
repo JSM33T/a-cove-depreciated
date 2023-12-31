@@ -18,7 +18,17 @@ namespace almondcove.Filters
 
             bool isAuthorized = Array.Exists(_allowedRoles, role => role == currentRole);
 
-            if (!isAuthorized) context.Result = new RedirectToActionResult("AccessDenied", "Error", null);
+            //if (!isAuthorized) context.Result = new RedirectToActionResult("AccessDenied", "Error", null);
+            if (!isAuthorized)
+            {
+                // Assuming "AccessDenied" is the name of your view
+                ViewResult viewResult = new()
+                {
+                    ViewName = "~/Views/Home/AccessDenied.cshtml"
+                };
+
+                context.Result = viewResult;
+            }
         }
     }
 }

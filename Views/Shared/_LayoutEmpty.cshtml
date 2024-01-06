@@ -59,8 +59,8 @@ _____  |  |   _____   ____   ____    __| _/____  _______  __ ____      |__| ____
   <link rel="stylesheet" href="/assets/icons/around-icons.min.css">
 
   <!-- Theme styles + Bootstrap -->
-  <link rel="stylesheet" media="screen" href="/assets/css/theme.css">
-  <link href="~/assets/css/almondcove.css" rel="stylesheet" />
+  <link rel="stylesheet" media="screen" asp-append-version="true" href="/assets/css/theme.min.css">
+  <link href="~/assets/css/almondcove.css" asp-append-version="true" rel="stylesheet" />
 
   @await RenderSectionAsync("Css", required: false)
 

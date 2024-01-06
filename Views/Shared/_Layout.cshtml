@@ -81,9 +81,9 @@ _____  |  |   _____   ____   ____    __| _/____  _______  __ ____      |__| ____
       <!-- Font icons -->
       <link rel="stylesheet" href="/assets/icons/around-icons.min.css">
       <!-- Theme styles + Bootstrap -->
-      <link rel="stylesheet" media="screen" href="/assets/css/theme.css">
+      <link rel="stylesheet" media="screen" href="/assets/css/theme.min.css" asp-append-version="true">
       <link rel="stylesheet" media="screen" href="/lib/aos/dist/aos.min.css">
-      <link href="~/assets/css/almondcove.css" rel="stylesheet" />
+      <link href="~/assets/css/almondcove.css" asp-append-version="true" rel="stylesheet" />
       @await RenderSectionAsync("Css", required: false)
       <style>
          .page-loading {
@@ -217,7 +217,7 @@ _____  |  |   _____   ____   ____    __| _/____  _______  __ ____      |__| ____
    <!-- Body -->
    <body class="@htmlProps.BodyClass">
       <!-- Page loading spinner -->
-      <div class="page-loading active">
+      <div class="page-loading">
          <div class="page-loading-inner">
             <div class="page-spinner"></div>
             <span>Loading...</span>

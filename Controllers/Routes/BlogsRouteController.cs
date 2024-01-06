@@ -27,7 +27,7 @@ namespace almondcove.Controllers.Routes
         public async Task<IActionResult> Blogs(string Year, string Slug)
         {
             BlogLoadDTO blogLoad  =await _blogRepo.GetBlogBySlug(Slug);
-            string  markdownFilePath = Path.Combine(_hostingEnvironment.WebRootPath, "content/blogs/" + blogLoad.Year + "/" + blogLoad.Slug + "/content.md");
+            string markdownFilePath = Path.Combine(_hostingEnvironment.WebRootPath, "content/blogs/" + blogLoad.Year + "/" + blogLoad.Slug + "/content.html");
             string markdownContent = System.IO.File.ReadAllText(markdownFilePath);
             string htmlContent = ConvertMarkdownToHtml(markdownContent);
 

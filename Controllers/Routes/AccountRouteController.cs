@@ -6,8 +6,9 @@ using System.Diagnostics;
 
 namespace almondcove.Controllers.Routes
 {
-    public class AccountRouteController() : Controller
+    public class AccountRouteController(ILogger<AccountRouteController> logger) : Controller
     {
+        private readonly ILogger<AccountRouteController> _logger = logger;
 
         [Perm("guest")]
         [Route("/account")]
@@ -20,6 +21,7 @@ namespace almondcove.Controllers.Routes
         [Route("/account/login")]
         public IActionResult Login()
         {
+            _logger.LogInformation("login page reached");
             return View("Views/Account/Login.cshtml");
         }
 

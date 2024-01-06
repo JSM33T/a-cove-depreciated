@@ -1,6 +1,6 @@
 {
   "name": "almondcove",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "scripts": {
     "swc": "swc --source-maps --out-dir wwwroot/assets/js Scripts",
     "serve": "dotnet watch",

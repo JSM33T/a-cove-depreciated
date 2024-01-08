@@ -221,7 +221,6 @@ namespace almondcove.Controllers.Api
                     {
                         SqlCommand activateCmd = new("UPDATE TblUserProfile SET IsVerified = 1 WHERE UserName = @Username", connection);
                         activateCmd.Parameters.AddWithValue("@Username", verify.UserName);
-
                         await activateCmd.ExecuteNonQueryAsync();
                         return Ok("User Verified!!");
                     }
@@ -247,10 +246,8 @@ namespace almondcove.Controllers.Api
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RecoverAccount(RecoveryDTO recovery)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Invalid Username/Email!!");
-            }
+
+            if (!ModelState.IsValid) return BadRequest("Invalid Username/Email!!");
 
             try
             {
@@ -295,6 +292,7 @@ namespace almondcove.Controllers.Api
                     await connection.CloseAsync();
                     return BadRequest("No record found with the given username/email.");
                 }
+                
             }
             catch (Exception ex)
             {
@@ -326,12 +324,9 @@ namespace almondcove.Controllers.Api
                 using SqlDataReader readera = checkOTP.ExecuteReader();
                 string currUserId = "";
 
-                if (readera.Read())
-                {
-                    currUserId = readera.GetInt32(readera.GetOrdinal("UserId")).ToString();
-                }
-                else
-                { currUserId = ""; };
+                if (readera.Read()) currUserId = readera.GetInt32(readera.GetOrdinal("UserId")).ToString();
+                else currUserId = "";
+
                 readera.Close();
                 SqlCommand checkcommand = new("select p.*,a.Image " +
                    "from TblUserProfile p,TblAvatarMaster a " +

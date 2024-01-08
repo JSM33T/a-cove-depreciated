@@ -10,8 +10,10 @@ using Microsoft.AspNetCore.Session;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSession(options =>
 {
+    options.Cookie.HttpOnly = true;
     options.Cookie.Name = ".almondcove.Session";
     options.IdleTimeout = TimeSpan.FromSeconds(3600);
+    
 });
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
@@ -20,7 +22,7 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(
         builder =>
         {
-                builder.WithOrigins("https://jsm33t.in", "http://localhost:4200/")
+                builder.WithOrigins("https://jsm33t.in")
                                 .AllowAnyHeader()
                                 .AllowAnyMethod();
         });
@@ -37,9 +39,9 @@ builder.Services.AddAuthentication("MyCookieAuthenticationScheme")
      });
 //exc services
 builder.Services.AddSingleton<IConfigManager, ConfigManager>();
-builder.Services.AddSingleton<IMailer, Mailer>();
-builder.Services.AddSingleton<ISqlService, SqlService>();
 
+//builder.Services.AddSingleton<ISqlService, SqlService>();
+builder.Services.AddScoped<IMailer, Mailer>();
 builder.Services.AddScoped<IMailingListRepository, MailingListRepository>();
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();

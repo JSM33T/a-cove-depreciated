@@ -12,7 +12,17 @@ namespace almondcove.Repositories
         private readonly ILogger<AuthRepository> _logger = logger;
         public Task<bool> DisposeSessionKey(string Username)
         {
-            return Task.FromResult(true);
+            SqlConnection conn = new();
+            SqlCommand cmd = new("UPDATE TblUserProfile SET SessionKey = '' WHERE UserName = @username", conn);
+            cmd.Parameters.AddWithValue("@username", Username);
+            try { 
+                    cmd.ExecuteNonQuery();
+                    return Task.FromResult(true);
+                }
+            catch {
+                return Task.FromResult(true);
+            }
+           
         }
 
         public bool SaveOTPInDatabaseAsync(SqlConnection connection, int userId, string otp)

@@ -4,11 +4,11 @@
     {
         public MetaProps()
         {
-            Title = "laymaann";
+            Title = "AlmondCove";
             Description = "A webspace for blogs , apps, music and resources";
-            Tags = "laymaann, photography,portfolio";
-            Image = "https://laymaann.in/assets/meta/banner.jpg";
-            Url = "https://laymaann.in";
+            Tags = "AlmondCove, photography,portfolio,apps,blogs,lightroom,presets";
+            Image = "https://almondcove.in/assets/meta/banner.jpg";
+            Url = "https://almondcove.in";
             Type = "Website";
             Author = "jsm33t | Jass";
         }

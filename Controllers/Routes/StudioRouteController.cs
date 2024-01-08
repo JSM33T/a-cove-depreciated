@@ -4,16 +4,16 @@ using System.Text.Json;
 
 namespace almondcove.Controllers.Routes
 {
-    public class GalleryRouteController(IWebHostEnvironment hostingEnvironment) : Controller
+    public class StudioRouteController(IWebHostEnvironment hostingEnvironment) : Controller
     {
         private readonly IWebHostEnvironment _hostingEnvironment = hostingEnvironment;
 
-        [Route("/gallery")]
+        [Route("/studio")]
         public IActionResult Browse()
         {
             IActionResult response = NotFound();
             string webRootPath = _hostingEnvironment.WebRootPath;
-            string jsonFilePath = Path.Combine(webRootPath, "content", "gallery", "gallery.json");
+            string jsonFilePath = Path.Combine(webRootPath, "content", "studio", "studio.json");
 
             if (System.IO.File.Exists(jsonFilePath))
             {
@@ -26,12 +26,12 @@ namespace almondcove.Controllers.Routes
         }
 
 
-        [Route("/gallery/album/{Slug}")]
+        [Route("/studio/lr-preset/{Slug}")]
         public IActionResult Viewer(string Slug)
         {
             IActionResult response = NotFound();
             string webRootPath = _hostingEnvironment.WebRootPath;
-            string jsonFilePath = Path.Combine(webRootPath, "content", "gallery", Slug, "content.json");
+            string jsonFilePath = Path.Combine(webRootPath, "content", "studio", Slug, "content.json");
             if (System.IO.File.Exists(jsonFilePath))
             {
                 string jsonContent = System.IO.File.ReadAllText(jsonFilePath);

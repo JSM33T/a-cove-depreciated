@@ -1,0 +1,26 @@
+﻿@using Microsoft.AspNetCore.Html
+@using almondcove.Models.Props
+@{
+    HTMLProps props = new()
+            {
+                DataBsTheme = "",
+                HeaderClass = "navbar navbar-expand-lg fixed-top bg-light"
+            };
+
+    // MetaProps meta = new()
+    //         {
+    //             Title = Model.Title,
+    //             Description = Model.Description,
+    //             Tags = Model.Tags,
+    //             Author = Model.Author,
+
+    //         };
+
+    ViewData["HtmlProps"] = props;
+ 
+    var htmlContent = ViewData["HtmlContent"] as HtmlString;
+
+}
+
+
+@htmlContent

@@ -43,7 +43,7 @@ _____  |  |   _____   ____   ____    __| _/____  _______  __ ____      |__| ____
           <!-- Viewport -->
        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover">
           <!-- SEO meta tags -->
-       <title>@metaProps.Title | AlmondCove</title>
+       <title>@metaProps.Title </title>
        <meta name="description" content="@metaProps.Description" />
        <meta name="keywords" content="@metaProps.Tags">
        <meta name="author" content="@metaProps.Author">
@@ -226,7 +226,7 @@ _____  |  |   _____   ____   ____    __| _/____  _______  __ ____      |__| ____
       <!-- Page wrapper -->
       @await Html.PartialAsync("Partials/Modals/Default.cshtml")
       @await Html.PartialAsync("Partials/SidePanel/Default.cshtml")
-      <main class="page-wrapper">
+      <main class="page-wrapper" aos-ddata="fade-in">
          <header data-bs-theme="@htmlProps.DataBsTheme">
             <div class="@htmlProps.HeaderClass">
                <div class="container">

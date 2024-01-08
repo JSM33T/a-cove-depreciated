@@ -1,10 +1,7 @@
 ﻿using almondcove.Interefaces.Repositories;
-using almondcove.Interefaces.Services;
 using almondcove.Models.Domain;
 using almondcove.Models.DTO;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
 
 namespace almondcove.Controllers.Api
 {
@@ -24,7 +21,7 @@ namespace almondcove.Controllers.Api
                 var (Success, Message) = await _mailRepo.PostMail(mail);
 
                 _logger.LogError("email addition result {result} and message:{message}",Success,Message);
-                return Success ? Ok() : BadRequest();
+                return Success ? Ok("Mail submitted") : BadRequest(Message);
             }
             catch (Exception ex)
             {

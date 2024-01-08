@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -48,12 +48,8 @@
     <Folder Include="Models\DTO\Media\Music\" />
     <Folder Include="Logs\" />
     <Folder Include="wwwroot\assets\images\megamenu\" />
-    <Folder Include="wwwroot\content\apps\test\" />
     <Folder Include="wwwroot\content\gallery\darjeeling-diaries\assets\" />
     <Folder Include="wwwroot\content\learning-hub\" />
-    <Folder Include="wwwroot\content\music\global\" />
-    <Folder Include="wwwroot\content\music\radio-cuts\" />
-    <Folder Include="wwwroot\content\studio\" />
     <Folder Include="wwwroot\stores\configurations\" />
     <Folder Include="wwwroot\stores\studio\" />
   </ItemGroup>

@@ -1,7 +1,8 @@
 ﻿const CACHE_NAME = 'almond-cache-v4';
 const cacheUrls = [
     '/assets/css/theme.min.css',
-    '/assets/js/theme.min.js'
+    '/assets/js/theme.min.js',
+    'https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300&display=swap'
 ];
 
 self.addEventListener('install', (event) => {

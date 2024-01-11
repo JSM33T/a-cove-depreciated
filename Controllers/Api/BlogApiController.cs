@@ -49,7 +49,7 @@ namespace almondcove.Controllers.Api
         public async Task<IActionResult> GetBlogs(string mode, string classify, string key)
         {
             mode = "0";
-            List<BlogThumbsDTO> thumbs = new();
+            List<BlogThumbsDTO> thumbs = [];
             _ = new List<BlogThumbsDTO>();
             if (mode != "n")
             {
@@ -73,9 +73,9 @@ namespace almondcove.Controllers.Api
                         sql = "SELECT m.Id, m.Title,m.Description,m.UrlHandle,m.DatePosted,m.Tags,YEAR(m.DatePosted) AS Year,c.Title AS Category,c.Locator,COUNT(bc.Id) AS Comments FROM TblBlogMaster m " +
                               "LEFT JOIN TblBlogComment bc ON m.Id = bc.PostId " +
                               "JOIN TblBlogCategory c ON m.CategoryId = c.Id " +
-                              "WHERE m.CategoryId = c.Id and YEAR(m.DatePosted) = '" + key + "' AND m.IsActive = 1" +
+                              "WHERE m.CategoryId = c.Id and YEAR(m.DatePosted) = @key AND m.IsActive = 1" +
                               "GROUP BY m.Id, m.Title,m.Description,m.UrlHandle, m.DatePosted,m.Tags,c.Title,c.Locator " +
-                              "ORDER BY Id OFFSET " + mode + " " +
+                              "ORDER BY Id OFFSET @mode " +
                               "ROWS FETCH NEXT 5 ROWS ONLY";
 
                     }
@@ -114,6 +114,8 @@ namespace almondcove.Controllers.Api
                             "ROWS FETCH NEXT 5 ROWS ONLY";
                 }
                 using SqlCommand command = new(sql, connection);
+                command.Parameters.AddWithValue("@key",key);
+                command.Parameters.AddWithValue("@mode",mode);
                 using SqlDataReader dataReader = await command.ExecuteReaderAsync();
                 if (dataReader.HasRows)
                 {

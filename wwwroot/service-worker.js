@@ -1,4 +1,4 @@
-﻿const CACHE_NAME = 'almond-cache-v4';
+﻿const CACHE_NAME = 'almond-cache-v5';
 const cacheUrls = [
     '/assets/css/theme.min.css',
     '/assets/js/theme.min.js',

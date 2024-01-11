@@ -168,26 +168,18 @@ namespace almondcove.Controllers.Api
             await command.ExecuteNonQueryAsync();
         }
 
-        private void UpdateSessionVariables(UserProfile userProfile)
+        private async void UpdateSessionVariables(UserProfile userProfile)
         {
             HttpContext.Session.SetString("username", userProfile.UserName);
             HttpContext.Session.SetString("first_name", userProfile.FirstName.Trim());
             HttpContext.Session.SetString("fullname", userProfile.FirstName.Trim() + " " + userProfile.LastName.Trim());
-            HttpContext.Session.SetString("avatar", GetAvatar(userProfile.AvatarId));
+            HttpContext.Session.SetString("avatar",await GetAvatar(userProfile.AvatarId));
         }
 
-        private string GetAvatar(int avatarId)
+        private async Task<string> GetAvatar(int avatarId)
         {
-            using var connection = new SqlConnection(_configuration.GetConnString());
-            connection.Open();
-
-            var sql = "SELECT Image FROM TblAvatarMaster WHERE Id = @avtrid";
-            using var command = new SqlCommand(sql, connection);
-            command.Parameters.AddWithValue("@avtrid", avatarId);
-
-            var avatar = (string)command.ExecuteScalar();
-
-            return avatar;
+            Avatar avtr = await _profileRepo.GetAvatarByIdAsync(avatarId);
+            return avtr.Image;
         }
 
     }

@@ -19,6 +19,7 @@ namespace almondcove.Controllers.Routes
             {
                 string jsonContent = System.IO.File.ReadAllText(jsonFilePath);
                 List<AlbumDTO> albumModel = JsonSerializer.Deserialize<List<AlbumDTO>>(jsonContent);
+                //todo- viewdata over passing model as whole
                 response = View("Views/Gallery/Index.cshtml", albumModel);
 
             }
@@ -37,6 +38,7 @@ namespace almondcove.Controllers.Routes
                 string jsonContent = System.IO.File.ReadAllText(jsonFilePath);
                 ViewData["gallery_slug"] = Slug;
                 List<AlbumItemsDTO> albumModel = JsonSerializer.Deserialize<List<AlbumItemsDTO>>(jsonContent);
+                //todo- viewdata over passing model as whole
                 response = View("Views/Gallery/Viewer.cshtml", albumModel);
             }
             return response;

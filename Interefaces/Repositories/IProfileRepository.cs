@@ -10,6 +10,7 @@ namespace almondcove.Interefaces.Repositories
 
         //get avatars
         public Task<List<Avatar>> GetAvatarsAsync();
+        public Task<Avatar> GetAvatarByIdAsync(int Id);
         public Task<bool> UpdatePassword(string username, string newPassword);
 
     }

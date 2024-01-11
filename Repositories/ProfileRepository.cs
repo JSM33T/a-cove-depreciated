@@ -8,7 +8,7 @@ using System.Data;
 
 namespace almondcove.Repositories
 {
-    public class ProfileRepository(IConfigManager configManager,ILogger<ProfileRepository> logger) : IProfileRepository
+    public class ProfileRepository(IConfigManager configManager, ILogger<ProfileRepository> logger) : IProfileRepository
     {
         private readonly IConfigManager _configManager = configManager;
         private readonly ILogger<ProfileRepository> _logger = logger;
@@ -153,9 +153,39 @@ namespace almondcove.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError("error updating password{message}",ex.Message);
-                // Log the exception or handle it appropriately
+                _logger.LogError("error updating password{message}", ex.Message);
                 return false;
+            }
+        }
+
+        public async Task<Avatar> GetAvatarByIdAsync(int Id)
+        {
+            using var connection = new SqlConnection(_configManager.GetConnString());
+            await connection.OpenAsync().ConfigureAwait(false);
+
+            var sql = "SELECT * FROM TblAvatarMaster WHERE Id = @avtrid";
+            using var command = new SqlCommand(sql, connection);
+            command.Parameters.AddWithValue("@avtrid", Id);
+            try
+            {
+                using var reader = await command.ExecuteReaderAsync();
+                if (await reader.ReadAsync())
+                {
+                    Avatar _avatar = new()
+                    {
+                        Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                        Title = reader.GetString(reader.GetOrdinal("Title")),
+                        Image = reader.GetString(reader.GetOrdinal("Image")),
+                        Description = reader.GetString(reader.GetOrdinal("Description"))
+                    };
+
+                    return _avatar;
+                }
+                return null;
+            }
+            catch
+            {
+                return null;
             }
         }
     }

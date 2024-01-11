@@ -12,14 +12,14 @@ namespace almondcove.Controllers.Routes
         public IActionResult Browse()
         {
             IActionResult response = NotFound();
-            string webRootPath = _hostingEnvironment.WebRootPath;
-            string jsonFilePath = Path.Combine(webRootPath, "content", "studio", "studio.json");
+
+            string jsonFilePath = Path.Combine(_hostingEnvironment.WebRootPath, "content", "studio", "studio.json");
 
             if (System.IO.File.Exists(jsonFilePath))
             {
                 string jsonContent = System.IO.File.ReadAllText(jsonFilePath);
                 List<AlbumDTO> albumModel = JsonSerializer.Deserialize<List<AlbumDTO>>(jsonContent);
-                response = View("Views/Gallery/Index.cshtml", albumModel);
+                response = View("Views/Studio/Index.cshtml", albumModel);
 
             }
             return response;
@@ -31,7 +31,7 @@ namespace almondcove.Controllers.Routes
         {
             IActionResult response = NotFound();
             string webRootPath = _hostingEnvironment.WebRootPath;
-            string jsonFilePath = Path.Combine(webRootPath, "content", "studio", Slug, "content.json");
+            string jsonFilePath = Path.Combine(webRootPath, "content", "studio","lr-presets", Slug, "content.json");
             if (System.IO.File.Exists(jsonFilePath))
             {
                 string jsonContent = System.IO.File.ReadAllText(jsonFilePath);

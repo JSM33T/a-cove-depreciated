@@ -1,72 +1,71 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>disable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>e2f99584-583b-4eb8-a62d-2af5236ccbf0</UserSecretsId>
+	<TargetFramework>net8.0</TargetFramework>
+	<Nullable>disable</Nullable>
+	<ImplicitUsings>enable</ImplicitUsings>
+	<AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
+	<UserSecretsId>e2f99584-583b-4eb8-a62d-2af5236ccbf0</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Build\**" />
-	  <Compile Remove="node_modules\**" />
-    <Compile Remove="Migrations\Tables\**" />
-    <Compile Remove="wwwroot\content\blogs\html\**" />
-    <Compile Remove="wwwroot\content\blogs\markdown\**" />
-    <Compile Remove="wwwroot\content\gallery\backyard-birdies\assets\**" />
-    <Compile Remove="wwwroot\content\gallery\garden-state\assets\**" />
-    <Compile Remove="wwwroot\lib\vendor\**" />
-    <Content Remove="Build\**" />
-    <Content Remove="Migrations\Tables\**" />
-    <Content Remove="wwwroot\content\blogs\html\**" />
-    <Content Remove="wwwroot\content\blogs\markdown\**" />
-    <Content Remove="wwwroot\content\gallery\backyard-birdies\assets\**" />
-    <Content Remove="wwwroot\content\gallery\garden-state\assets\**" />
-    <Content Remove="wwwroot\lib\vendor\**" />
-    <EmbeddedResource Remove="Build\**" />
-    <EmbeddedResource Remove="Migrations\Tables\**" />
-    <EmbeddedResource Remove="wwwroot\content\blogs\html\**" />
-    <EmbeddedResource Remove="wwwroot\content\blogs\markdown\**" />
-    <EmbeddedResource Remove="wwwroot\content\gallery\backyard-birdies\assets\**" />
-    <EmbeddedResource Remove="wwwroot\content\gallery\garden-state\assets\**" />
-    <None Remove="Build\**" />
-    <None Remove="Migrations\Tables\**" />
-    <None Remove="wwwroot\content\blogs\html\**" />
-    <None Remove="wwwroot\content\blogs\markdown\**" />
-    <None Remove="wwwroot\content\gallery\backyard-birdies\assets\**" />
-    <None Remove="wwwroot\content\gallery\garden-state\assets\**" />
-    <None Remove="wwwroot\lib\vendor\**" />
+	<Compile Remove="Build\**" />
+	<Compile Remove="node_modules\**" />
+	<Compile Remove="wwwroot\content\blogs\html\**" />
+	<Compile Remove="wwwroot\content\blogs\markdown\**" />
+	<Compile Remove="wwwroot\content\gallery\backyard-birdies\assets\**" />
+	<Compile Remove="wwwroot\content\gallery\garden-state\assets\**" />
+	<Compile Remove="wwwroot\lib\vendor\**" />
+	<Content Remove="Build\**" />
+	<Content Remove="Migrations\Tables\**" />
+	<Content Remove="wwwroot\content\blogs\html\**" />
+	<Content Remove="wwwroot\content\blogs\markdown\**" />
+	<Content Remove="wwwroot\content\gallery\backyard-birdies\assets\**" />
+	<Content Remove="wwwroot\content\gallery\garden-state\assets\**" />
+	<Content Remove="wwwroot\lib\vendor\**" />
+	<EmbeddedResource Remove="Build\**" />
+	<EmbeddedResource Remove="Migrations\Tables\**" />
+	<EmbeddedResource Remove="wwwroot\content\blogs\html\**" />
+	<EmbeddedResource Remove="wwwroot\content\blogs\markdown\**" />
+	<EmbeddedResource Remove="wwwroot\content\gallery\backyard-birdies\assets\**" />
+	<EmbeddedResource Remove="wwwroot\content\gallery\garden-state\assets\**" />
+	<None Remove="Build\**" />
+	<None Remove="Migrations\Tables\**" />
+	<None Remove="wwwroot\content\blogs\html\**" />
+	<None Remove="wwwroot\content\blogs\markdown\**" />
+	<None Remove="wwwroot\content\gallery\backyard-birdies\assets\**" />
+	<None Remove="wwwroot\content\gallery\garden-state\assets\**" />
+	<None Remove="wwwroot\lib\vendor\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Markdig" Version="0.34.0" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.2" />
+	<PackageReference Include="Markdig" Version="0.34.0" />
+	<PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\DDL\" />
-    <Folder Include="Models\DTO\Media\Music\" />
-    <Folder Include="Logs\" />
-    <Folder Include="wwwroot\assets\images\megamenu\" />
-    <Folder Include="wwwroot\content\gallery\darjeeling-diaries\assets\" />
-    <Folder Include="wwwroot\content\learning-hub\" />
-    <Folder Include="wwwroot\stores\configurations\" />
-    <Folder Include="wwwroot\stores\studio\" />
+	<Folder Include="Migrations\DDL\" />
+	<Folder Include="Models\DTO\Media\Music\" />
+	<Folder Include="Logs\" />
+	<Folder Include="wwwroot\assets\images\megamenu\" />
+	<Folder Include="wwwroot\content\gallery\darjeeling-diaries\assets\" />
+	<Folder Include="wwwroot\content\learning-hub\" />
+	<Folder Include="wwwroot\content\studio\lr-presets\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Views\Studio\Index.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Update="wwwroot\content\music\singles\melancholy\cover_landscape.jpg">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Update="wwwroot\content\music\singles\melancholy\links.json">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
+	<Content Update="Views\Studio\Index.cshtml">
+	  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	  <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	</Content>
+	<Content Update="wwwroot\content\music\singles\melancholy\assets\cover_landscape.jpg">
+	  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	  <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	</Content>
+	<Content Update="wwwroot\content\music\singles\melancholy\links.json">
+	  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	  <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	</Content>
   </ItemGroup>
 
 

@@ -26,21 +26,15 @@ namespace almondcove.Controllers.Routes
         [Route("/blog/{Year}/{Slug}")]
         public async Task<IActionResult> Blogs(string Year, string Slug)
         {
-            BlogLoadDTO blogLoad  =await _blogRepo.GetBlogBySlug(Slug);
-            string markdownFilePath = Path.Combine(_hostingEnvironment.WebRootPath, "content/blogs/" + blogLoad.Year + "/" + blogLoad.Slug + "/content.html");
-            string markdownContent = System.IO.File.ReadAllText(markdownFilePath);
-            string htmlContent = ConvertMarkdownToHtml(markdownContent);
+            BlogLoadDTO blogLoad  = await _blogRepo.GetBlogBySlug(Slug);
+            string mdFilePath = Path.Combine(_hostingEnvironment.WebRootPath, "content/blogs/" + blogLoad.Year + "/" + blogLoad.Slug + "/content.html");
+            string mdContent = System.IO.File.ReadAllText(mdFilePath);
+            string htmlContent = Markdown.ToHtml(mdContent,new MarkdownPipelineBuilder().Build());
 
             ViewData["HtmlContent"] = htmlContent;
             ViewData["blogdeet"] = blogLoad;
 
             return View("Views/Blogs/Viewer.cshtml");
-        }
-
-        private static string ConvertMarkdownToHtml(string markdownContent)
-        {
-            var pipeline = new MarkdownPipelineBuilder().Build();
-            return Markdown.ToHtml(markdownContent, pipeline);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

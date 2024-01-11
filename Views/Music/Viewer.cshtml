@@ -7,15 +7,6 @@
                 HeaderClass = "navbar navbar-expand-lg fixed-top bg-light"
             };
 
-    // MetaProps meta = new()
-    //         {
-    //             Title = Model.Title,
-    //             Description = Model.Description,
-    //             Tags = Model.Tags,
-    //             Author = Model.Author,
-
-    //         };
-
     ViewData["HtmlProps"] = props;
  
     var htmlContent = ViewData["HtmlContent"] as HtmlString;
@@ -23,4 +14,18 @@
 }
 
 
+@section Scripts
+{
+    <script src="~/lib/lightgallery/plugins/video/lg-video.min.js"></script>
+    <script src="~/lib/lightgallery/lightgallery.min.js"></script>
+    <script src="~/lib/jarallax/dist/jarallax.min.js"></script>
+    <script src="~/lib/imagesloaded/imagesloaded.pkgd.min.js"></script><script src="~/lib/jarallax/dist/jarallax-video.min.js"></script>
+}
+@section Styles{
+    <link href="~/lib/jarallax/dist/jarallax.min.css" rel="stylesheet" />
+    <link href="~/lib/lightgallery/css/lightgallery-bundle.min.css" rel="stylesheet" />
+    <link href="~/lib/lightgallery/css/lg-video.min.css" rel="stylesheet" />
+}
+
+@* render content *@
 @htmlContent

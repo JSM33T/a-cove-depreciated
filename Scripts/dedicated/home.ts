@@ -59,7 +59,7 @@ async function constructArticles(responsedata: any) {
     var articleTags = responsedata.map(post => `
         <article class="swiper-slide swiper-slide-active" role="group" aria-label="1/2" style="width: 416px; margin-right: 24px;">
             <a href="/blog/${post.datePosted.substring(0, 4)}/${post.urlHandle}">
-                <img class="rounded-5" src="content/blogs/2023/${[post.urlHandle]}/assets/cover.jpg" alt="Image">
+                <img class="rounded-5" src="content/blogs/${post.datePosted.substring(0, 4)}/${[post.urlHandle]}/assets/cover.jpg" alt="Image">
             </a>
             <h3 class="h4 pt-4">
                 <a href="/blog/${post.datePosted.substring(0, 4)}/${post.urlHandle}">${post.title}

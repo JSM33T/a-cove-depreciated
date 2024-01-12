@@ -22,13 +22,14 @@ async function getUpdates() {
             for (const entry of updateEntries) {
                 if (entry.link.length == 0 || entry.link.length == "") {
                     updatePlaceholder.innerHTML = updatePlaceholder.innerHTML + `
-                    <li> <span>${entry.type} ${entry.title}</span></li>
+                    <dt>${entry.type}:</dt>
+                    <dd class="nav-link"> <span>${entry.title}</span></dd>
                 `;
                 }
                 else {
                     updatePlaceholder.innerHTML = updatePlaceholder.innerHTML + `
-                    ${entry.type}:
-                    <li><a href="${entry.link}"><span> ${entry.title}</span></a></li>
+                    <dt>${entry.type}:</dt>
+                    <dd class="nav-link"><a href="${entry.link}"><span> ${entry.title}</span></a></dd>
                 `;
                 }
                 

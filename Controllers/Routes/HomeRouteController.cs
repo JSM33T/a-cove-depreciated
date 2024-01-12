@@ -16,6 +16,30 @@ namespace almondcove.Controllers.Routes
             return View("Views/Home/About.cshtml");
         }
 
+        [Route("/faq")]
+        public IActionResult Faq()
+        {
+            return View("Views/Home/FAQs.cshtml");
+        }
+
+        [Route("/changelog")]
+        public IActionResult Changelog()
+        {
+            return View("Views/Home/Changelog.cshtml");
+        }
+
+        [Route("/attributions")]
+        public IActionResult Attributions()
+        {
+            return View("Views/Home/Attributions.cshtml");
+        }
+
+         [Route("/contact")]
+        public IActionResult Contact()
+        {
+            return View("Views/Home/Attributions.cshtml");
+        }
+
         [Route("/404")]
         public IActionResult NF()
         {

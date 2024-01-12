@@ -1,0 +1,14 @@
+{
+  "changelog": [
+    {
+      "type": "Added",
+      "title": "something | sample entry with no hyperlik",
+      "link": ""
+    },
+    {
+      "type": "Major update",
+      "title": "something | sample entry with a hyperlik",
+      "link": "https://almondcove.in/"
+    }
+  ]
+}

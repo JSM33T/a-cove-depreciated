@@ -1,14 +1,8 @@
-﻿using almondcove.Interefaces.Repositories;
-using almondcove.Models;
-using almondcove.Models.DTO.BlogDTOs;
+﻿using almondcove.Models;
 using almondcove.Models.Props;
-using almondcove.Repositories;
-using Markdig;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting.Internal;
 using System.Diagnostics;
-using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -42,18 +36,17 @@ namespace almondcove.Controllers.Routes
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull, 
             };
             MetaProps propModel = JsonSerializer.Deserialize<MetaProps>(metaPropsFetch, jsonSerializerOptions);
-            _logger.LogInformation(propModel.Author);
             MetaProps meta = new()
             {
-                Title = propModel.Title,
-                Description = propModel.Description,
-                Tags = propModel.Tags,
-                Author = propModel.Author,
-
+                Title = propModel?.Title ?? "Almondcove Music",
+                Description = propModel?.Description ?? "Almondcove Music:  compilatio of bootlegs, originals and uch more form jsm33t & various artists",
+                Tags = propModel?.Tags ?? "Music,almondcove,remixes,bootlegs,bollywood remixes,studio",
+                Author = propModel?.Author ?? "Various artists",
             };
+
             ViewData["MetaProps"] = meta;
-            
             ViewData["HtmlContent"] = new HtmlString(htmlContent);
+
             return View("Views/Music/Viewer.cshtml");
         }
 

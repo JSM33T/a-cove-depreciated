@@ -4,99 +4,36 @@
   "libraries": [
     {
       "library": "shufflejs@6.1.0",
-      "destination": "wwwroot/lib/shufflejs/",
-      "files": [
-        "dist/shuffle.min.js"
-      ]
+      "destination": "wwwroot/lib/shufflejs/"
     },
     {
       "library": "parallax-js@3.1.0",
-      "destination": "wwwroot/lib/parallax-js/",
-      "files": [
-        "dist/parallax.min.js"
-      ]
+      "destination": "wwwroot/lib/parallax-js/"
     },
     {
       "library": "bootstrap@5.3.2",
-      "destination": "wwwroot/lib/bootstrap/",
-      "files": [
-        "dist/js/bootstrap.bundle.min.js"
-      ]
+      "destination": "wwwroot/lib/bootstrap/"
     },
     {
       "library": "axios@1.6.1",
-      "destination": "wwwroot/lib/axios/",
-      "files": [
-        "dist/axios.min.js"
-      ]
+      "destination": "wwwroot/lib/axios/"
     },
     {
       "library": "swiper@11.0.4",
-      "destination": "wwwroot/lib/swiper/",
-      "files": [
-        "swiper-bundle.min.css",
-        "swiper-bundle.min.js"
-      ]
+      "destination": "wwwroot/lib/swiper/"
     },
     {
       "library": "imagesloaded@5.0.0",
-      "destination": "wwwroot/lib/imagesloaded/",
-      "files": [
-        "imagesloaded.pkgd.min.js"
-      ]
+      "destination": "wwwroot/lib/imagesloaded/"
     },
     {
       "library": "lightgallery@2.7.2",
-      "destination": "wwwroot/lib/lightgallery/",
-      "files": [
-        "lightgallery.min.js",
-        "plugins/autoplay/lg-autoplay.min.js",
-        "plugins/fullscreen/lg-fullscreen.min.js",
-        "plugins/hash/lg-hash.min.js",
-        "plugins/mediumZoom/lg-medium-zoom.min.js",
-        "plugins/pager/lg-pager.min.js",
-        "plugins/relativeCaption/lg-relative-caption.min.js",
-        "plugins/rotate/lg-rotate.min.js",
-        "plugins/share/lg-share.min.js",
-        "plugins/thumbnail/lg-thumbnail.min.js",
-        "plugins/video/lg-video.min.js",
-        "plugins/vimeoThumbnail/lg-vimeo-thumbnail.min.js",
-        "plugins/zoom/lg-zoom.min.js",
-        "css/lg-autoplay.min.css",
-        "css/lg-comments.min.css",
-        "css/lg-fullscreen.min.css",
-        "css/lg-medium-zoom.min.css",
-        "css/lg-pager.min.css",
-        "css/lg-relative-caption.min.css",
-        "css/lg-rotate.min.css",
-        "css/lg-share.min.css",
-        "css/lg-thumbnail.min.css",
-        "css/lg-transitions.min.css",
-        "css/lg-video.min.css",
-        "css/lg-zoom.min.css",
-        "css/lightgallery-bundle.css",
-        "css/lightgallery-bundle.min.css",
-        "css/lightgallery-core.css",
-        "css/lightgallery-core.min.css",
-        "css/lightgallery.css",
-        "css/lightgallery.min.css",
-        "fonts/lg.svg",
-        "fonts/lg.ttf",
-        "fonts/lg.woff",
-        "fonts/lg.woff2",
-        "images/loading.gif"
-      ]
+      "destination": "wwwroot/lib/lightgallery/"
     },
     {
       "provider": "cdnjs",
       "library": "vue@3.3.8",
-      "destination": "wwwroot/lib/vue/",
-      "files": [
-        "vue.global.prod.min.js",
-        "vue.global.prod.js",
-        "vue.global.min.js",
-        "vue.global.js"
-      ]
+      "destination": "wwwroot/lib/vue/"
     },
     {
       "library": "vue-router@4.2.5",
@@ -104,23 +41,21 @@
     },
     {
       "library": "aos@2.3.4",
-      "destination": "wwwroot/lib/aos/",
-      "files": [
-        "dist/aos.css",
-        "dist/aos.js",
-        "dist/aos.min.css",
-        "dist/aos.min.js"
-      ]
+      "destination": "wwwroot/lib/aos/"
     },
     {
       "library": "jarallax@2.1.4",
-      "destination": "wwwroot/lib/jarallax/",
-      "files": [
-        "dist/jarallax.min.css",
-        "dist/jarallax.min.js",
-        "dist/jarallax-video.min.js"
-
-      ]
+      "destination": "wwwroot/lib/jarallax/"
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "simplebar@6.2.5",
+      "destination": "wwwroot/lib/simplebar/"
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "prismjs@1.29.0",
+      "destination": "wwwroot/lib/prismjs/"
     }
   ]
 }

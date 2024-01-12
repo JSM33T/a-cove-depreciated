@@ -18,7 +18,5 @@ namespace almondcove.Controllers.Routes
         {
             return View("/Views/Profile/EditProfile.cshtml");
         }
-
-
     }
 }

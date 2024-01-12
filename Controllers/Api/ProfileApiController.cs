@@ -131,8 +131,8 @@ namespace almondcove.Controllers.Api
                 await UpdateUserProfileAsync(connection, userProfile, transaction);
 
                 transaction.Commit();
-
-                UpdateSessionVariables(userProfile);
+                _logger.LogInformation("id is {id} and image is{image}", userProfile.AvatarId, userProfile.AvatarImg);
+                await UpdateSessionVariables(userProfile);
 
                 return Ok("Changes Saved");
             }
@@ -168,7 +168,7 @@ namespace almondcove.Controllers.Api
             await command.ExecuteNonQueryAsync();
         }
 
-        private async void UpdateSessionVariables(UserProfile userProfile)
+        private async Task UpdateSessionVariables(UserProfile userProfile)
         {
             HttpContext.Session.SetString("username", userProfile.UserName);
             HttpContext.Session.SetString("first_name", userProfile.FirstName.Trim());
@@ -179,6 +179,7 @@ namespace almondcove.Controllers.Api
         private async Task<string> GetAvatar(int avatarId)
         {
             Avatar avtr = await _profileRepo.GetAvatarByIdAsync(avatarId);
+            _logger.LogInformation("avatar received for id :{id} and image:{img}", avtr.Id, avtr.Image);
             return avtr.Image;
         }
 

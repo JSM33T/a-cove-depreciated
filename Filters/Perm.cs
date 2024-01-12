@@ -13,21 +13,18 @@ namespace almondcove.Filters
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
-            IPermissionService permissionService = context.HttpContext.RequestServices.GetService<IPermissionService>() ?? throw new InvalidOperationException("IPermissionService not found in the service container.");
-            string currentRole = permissionService.CurrentRole();
+            IPermissionService _permissionService = context.HttpContext.RequestServices.GetService<IPermissionService>() ?? throw new InvalidOperationException("IPermissionService not found in the service container.");
+            string currentRole = _permissionService.CurrentRole();
 
             bool isAuthorized = Array.Exists(_allowedRoles, role => role == currentRole);
 
             //if (!isAuthorized) context.Result = new RedirectToActionResult("AccessDenied", "Error", null);
             if (!isAuthorized)
             {
-                // Assuming "AccessDenied" is the name of your view
-                ViewResult viewResult = new()
+                context.Result = new ObjectResult("Unauthorized Access")
                 {
-                    ViewName = "~/Views/Home/AccessDenied.cshtml"
+                    StatusCode = 401
                 };
-
-                context.Result = viewResult;
             }
         }
     }

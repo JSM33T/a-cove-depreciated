@@ -44,12 +44,32 @@
 			  text-align: justify;
 			  text-justify: inter-word;
 		}
+		.size-image{
+			width:1024px;
+		}
 	</style>
 }
 
+
+@section Css{
+	<link rel="stylesheet" media="screen" href="~/lib/simplebar/dist/simplebar.min.css">
+	<link rel="stylesheet" media="screen" href="~/lib/prismjs/themes/prism.min.css">
+    <link rel="stylesheet" media="screen" href="~/lib/prismjs/plugins/toolbar/prism-toolbar.min.css">
+    <link rel="stylesheet" media="screen" href="~/lib/prismjs/plugins/line-numbers/prism-line-numbers.min.css">
+}
+
+@section Scripts{
+	<script src="~/lib/simplebar/dist/simplebar.min.js"></script>
+    <script src="~/lib/prismjs/components/prism-core.min.js"></script>
+    <script src="~/lib/prismjs/components/prism-markup.min.js"></script>
+    <script src="~/lib/prismjs/components/prism-clike.min.js"></script>
+    <script src="~/lib/prismjs/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="~/lib/prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <script src="~/lib/prismjs/plugins/line-numbers/prism-line-numbers.min.js"></script>
+}
 	@Html.AntiForgeryToken()
 	<input id="ip_slug" value="@blogDeet.Slug" class="hidden"/>
-	<input id="ip_tags" value="@blogDeet.Tags"3 class="hidden"/>
+	<input id="ip_tags" value="@blogDeet.Tags" class="hidden"/>
 	<input id="ip_blogrole" value="@ViewData["BlogRole"]" 3 class="hidden" />
 
 <!--===================MODALS================-->
@@ -136,7 +156,7 @@
 				</div>
 	<section class="container">
 		<div class="row pt-xxl-2">
-			<div class="col-lg-8 pe-lg-4 pe-xl-0 pt-5 pb-5">
+			<div class="col-lg-8 pe-lg-4 pe-xl-0 pt-5 pb-5" id="blogBody">
 				@Html.Raw(htmlContent)
 			</div>
 			<!-- Sidebar -->
@@ -189,7 +209,7 @@
 	</div>
 </section>
 
-	<section class="container pt-5 mt-5">
+	<section class="container pt-5 mt-5 mb-lg-4 mb-sm-2">
 		<div class="card border-0 bg-secondary pt-2 pb-2 mt-2 p-md-2 p-xl-3 p-xxl-4 mt-n3 mt-md-0">
 			<div class="card-body">
 				@{

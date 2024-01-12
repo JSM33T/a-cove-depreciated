@@ -1,4 +1,4 @@
-﻿import { acGetData, acInit, Url } from './global.js'
+﻿import { acGetData, acInit, fetchJsonFile, Url } from './global.js'
 declare const bootstrap: any;
 declare const axios: { get: (arg0: string) => Promise<{ data: string | any[]; }>; }
 
@@ -7,9 +7,39 @@ const lsearch = document.getElementById('global_search') as HTMLInputElement;
 
 acInit([
     () => shareBtn.addEventListener('click', shareIt),
-    () => lsearch.addEventListener('keyup', livesearch)
+    () => lsearch.addEventListener('keyup', livesearch),
+    getUpdates
 ]);
 
+
+async function getUpdates() {
+    try {
+        const updatesData = await fetchJsonFile<any>('/store/updates.json');
+        const updatePlaceholder = document.getElementById('updates-placeholder') as HTMLSpanElement;
+        if (updatesData && updatesData.updates) {
+            const updateEntries = updatesData.updates;
+
+            for (const entry of updateEntries) {
+                if (entry.link.length == 0 || entry.link.length == "") {
+                    updatePlaceholder.innerHTML = updatePlaceholder.innerHTML + `
+                    <li> <span>${entry.type} ${entry.title}</span></li>
+                `;
+                }
+                else {
+                    updatePlaceholder.innerHTML = updatePlaceholder.innerHTML + `
+                    ${entry.type}:
+                    <li><a href="${entry.link}"><span> ${entry.title}</span></a></li>
+                `;
+                }
+                
+            }
+        } else {
+            console.error('Invalid or missing changelog data');
+        }
+    } catch (error) {
+        console.error('Error fetching or processing changelog:', error);
+    }
+}
 
 async function shareIt() {
     const currentUrl = new Url();

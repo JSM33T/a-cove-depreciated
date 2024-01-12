@@ -23,15 +23,5 @@ namespace Almondcove.Services
                 return "guest";
             }
         }
-
-        public Task<bool> IsActionAllowed()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> IsPageAllowed(int UserId)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

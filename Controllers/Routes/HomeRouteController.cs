@@ -21,5 +21,11 @@ namespace almondcove.Controllers.Routes
         {
             return View("Views/Home/404.cshtml");
         }
+
+        [Route("/401")]
+        public IActionResult UA()
+        {
+            return View("Views/Home/AccessDenied.cshtml");
+        }
     }
 }

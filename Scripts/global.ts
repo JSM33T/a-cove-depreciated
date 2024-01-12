@@ -1,6 +1,4 @@
-﻿import { Email } from './Interfaces/email.interface';
-
-declare const bootstrap: any, axios: any;
+﻿declare const bootstrap: any, axios: any;
 const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]') as HTMLInputElement;
 
 ///===================== URL UTILS ====================
@@ -57,7 +55,6 @@ async function acPostData(apiUrl: string, data: any) {
     }
 }
 
-
 async function acGetData(apiUrl: string) {
     try {
         if (!tokenElement) {
@@ -77,7 +74,41 @@ async function acGetData(apiUrl: string) {
     }
 }
 
+//===================== File handling =================
+
+async function fetchJsonFile<T>(filePath: string): Promise<T> {
+    try {
+        const response = await fetch(filePath);
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch JSON file. Status: ${response.status}`);
+        }
+
+        const jsonData: T = await response.json();
+        return jsonData;
+    } catch (error) {
+        console.error(`Error fetching JSON file: ${error.message}`);
+        throw error; // Rethrow the error for the caller to handle if needed
+    }
+}
+
 //===================== DOM UTILS ====================
+
+function classesToTagsWDiv(divId, tagName, className) {
+    // Find the div with the specified id
+    let blogBodyDiv = document.getElementById(divId) as HTMLElement;
+
+    // Check if the div exists
+    if (blogBodyDiv) {
+        // Find all matching tags within the div
+        let matchingTags = blogBodyDiv.getElementsByTagName(tagName);
+
+        // Loop through the matching tags and add the specified class
+        for (var i = 0; i < matchingTags.length; i++) {
+            matchingTags[i].classList.add(className);
+        }
+    }
+}
 
 function classesToTags(tag: string, classes: string) {
     // Get all elements with the specified tag name
@@ -94,7 +125,6 @@ function classesToTags(tag: string, classes: string) {
                 elements[i].classList.add(classesArray[j]);
             }
         }
-        console.log("classes: " + classes + "added to tag: " + tag + " successfully!");
     } else {
         console.error("No elements with tag '" + tag + "' found.");
     }
@@ -431,10 +461,13 @@ export {
     acGetData, //get data axios currently xhr via axios
     acPostData, //post data currently xhr via axios
 
+    fetchJsonFile,
+
     acFormHandler, //set default submit behaviour to a custom function
 
     validateEmail, // email validation
     classesToTags, // add classes to all the tags passed as params(markdown to html)
+    classesToTagsWDiv,
     addTargetBlankToLinks,//add target blank to all the links in content (markdown to html)
 
     prettifyDate,// prettify date wrt today.  (today , yesterday, 3 days ago, 23rd of july etc.)

@@ -1,4 +1,4 @@
-﻿import { acToast, acInit, classesToTags, acPostData, acFormHandler, acGetData } from '../../global.js'
+﻿import { acToast, acInit, classesToTags, acPostData, acFormHandler, acGetData, classesToTagsWDiv } from '../../global.js'
 declare const bootstrap: any;
 
 const gl_slug = document.getElementById("ip_slug") as HTMLInputElement;
@@ -35,6 +35,7 @@ acInit([
     loadComments,
     () => likeBtn.addEventListener('click', addLike),
     () => classesToTags('img', 'rounded-3'),
+    () => classesToTagsWDiv('blogBody','img','size-image'),
     () => classesToTags('p', 'fs-lg'),
     () => acFormHandler('comment-form', addComment),
     () => delbtn.addEventListener('click', delConfirm),

@@ -25,7 +25,7 @@ namespace almondcove.Modules.EmailBodies
                        .Append("</ul>")
                        .Append("<p style=\"color: #555; font-size: 16px;\">If you have any questions or need assistance, feel free to reach out to our support team.</p>")
                        .Append("<div style=\"margin-top: 20px; padding: 15px; background-color: #121519; border-radius:10px;color: #fff; text-align: center;\">")
-                       .Append("<p style=\"margin: 0;\">Karan</p>")
+                       .Append("<p style=\"margin: 0;\">Jass</p>")
                        .Append("Founder, almondcove.in")
                        .Append("</div>")
                        .Append("</div>")

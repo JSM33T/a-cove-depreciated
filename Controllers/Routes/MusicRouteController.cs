@@ -1,5 +1,6 @@
 ﻿using almondcove.Models;
 using almondcove.Models.Props;
+using almondcove.Modules;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -8,7 +9,7 @@ using System.Text.Json.Serialization;
 
 namespace almondcove.Controllers.Routes
 {
-    public class MusicRouteController(IWebHostEnvironment hostingEnvironment,ILogger<MusicRouteController> logger) : Controller
+    public class MusicRouteController(IWebHostEnvironment hostingEnvironment, ILogger<MusicRouteController> logger) : Controller
     {
         private readonly IWebHostEnvironment _hostingEnvironment = hostingEnvironment;
         private readonly ILogger<MusicRouteController> _logger = logger;
@@ -20,22 +21,18 @@ namespace almondcove.Controllers.Routes
         }
 
         [Route("/music/{Type}/{Slug}")]
-        public IActionResult Single(string Type,string Slug)
+        public IActionResult Single(string Type, string Slug)
         {
-            
-            string markdownFilePath = Path.Combine(_hostingEnvironment.WebRootPath, "content/music/" + Type+ "/" + Slug );
+
+            string markdownFilePath = Path.Combine(_hostingEnvironment.WebRootPath, "content/music/" + Type + "/" + Slug);
             //fetch html content
             string htmlContent = System.IO.File.ReadAllText(markdownFilePath + "/content.html");
             //fetch seo/meta props
             string metaPropsFetch = System.IO.File.ReadAllText(markdownFilePath + "/props.json");
-            JsonSerializerOptions jsonSerializerOptions = new()
-            {
-                // Enable case-insensitive deserialization
-                PropertyNameCaseInsensitive = true,
-                // Ignore null values
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull, 
-            };
-            MetaProps propModel = JsonSerializer.Deserialize<MetaProps>(metaPropsFetch, jsonSerializerOptions);
+            
+            //MetaProps propModel = JsonSerializer.Deserialize<MetaProps>(metaPropsFetch, jsonSerializerOptions);
+
+            MetaProps propModel = JsonSerializationHelper.Deserialize<MetaProps>(metaPropsFetch);
             MetaProps meta = new()
             {
                 Title = propModel?.Title ?? "Almondcove Music",

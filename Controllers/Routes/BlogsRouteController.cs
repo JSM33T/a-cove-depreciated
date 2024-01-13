@@ -10,7 +10,7 @@ using System.Diagnostics;
 namespace almondcove.Controllers.Routes
 {
 
-    public class BlogsRouteController(IWebHostEnvironment hostingEnvironment,IBlogRepository blogRepository) : Controller
+    public class BlogsRouteController(IWebHostEnvironment hostingEnvironment, IBlogRepository blogRepository) : Controller
     {
         private readonly IWebHostEnvironment _hostingEnvironment = hostingEnvironment;
         //private readonly IConfigManager _configManager = configManager;
@@ -26,10 +26,10 @@ namespace almondcove.Controllers.Routes
         [Route("/blog/{Year}/{Slug}")]
         public async Task<IActionResult> Blogs(string Year, string Slug)
         {
-            BlogLoadDTO blogLoad  = await _blogRepo.GetBlogBySlug(Slug);
+            BlogLoadDTO blogLoad = await _blogRepo.GetBlogBySlug(Slug);
             string mdFilePath = Path.Combine(_hostingEnvironment.WebRootPath, "content/blogs/" + blogLoad.Year + "/" + blogLoad.Slug + "/content.html");
             string mdContent = System.IO.File.ReadAllText(mdFilePath);
-            string htmlContent = Markdown.ToHtml(mdContent,new MarkdownPipelineBuilder().Build());
+            string htmlContent = Markdown.ToHtml(mdContent, new MarkdownPipelineBuilder().Build());
 
             ViewData["HtmlContent"] = htmlContent;
             ViewData["blogdeet"] = blogLoad;

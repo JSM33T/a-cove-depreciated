@@ -6,21 +6,27 @@ const shareBtn = document.getElementById('share-btn') as HTMLButtonElement;
 const lsearch = document.getElementById('global_search') as HTMLInputElement;
 
 acInit([
-    () => shareBtn.addEventListener('click', shareIt),
+    () => { if (shareBtn) shareBtn.addEventListener('click', shareIt) },
     () => lsearch.addEventListener('keyup', livesearch),
     getUpdates
 ]);
 
+interface UpdateEntry {
+    type: string;
+    title: string;
+    link: string;
+}
 
 async function getUpdates() {
     try {
-        const updatesData = await fetchJsonFile<any>('/store/updates.json');
+        const updatesData = await fetchJsonFile<{ updates: UpdateEntry[] }>('/store/updates.json');
         const updatePlaceholder = document.getElementById('updates-placeholder') as HTMLSpanElement;
+        if (!updatePlaceholder) return;
         if (updatesData && updatesData.updates) {
             const updateEntries = updatesData.updates;
 
             for (const entry of updateEntries) {
-                if (entry.link.length == 0 || entry.link.length == "") {
+                if (entry.link.length == 0 || entry.link == "") {
                     updatePlaceholder.innerHTML = updatePlaceholder.innerHTML + `
                     <dt>${entry.type}:</dt>
                     <dd class="nav-link"> <span>${entry.title}</span></dd>

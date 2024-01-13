@@ -34,7 +34,7 @@ namespace almondcove.Controllers.Routes
             return View("Views/Home/Attributions.cshtml");
         }
 
-         [Route("/contact")]
+        [Route("/contact")]
         public IActionResult Contact()
         {
             return View("Views/Home/Attributions.cshtml");

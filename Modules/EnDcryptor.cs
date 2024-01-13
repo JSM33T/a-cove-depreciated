@@ -1,5 +1,4 @@
-﻿using almondcove.Services;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 
 namespace almondcove.Modules

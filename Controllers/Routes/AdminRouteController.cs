@@ -4,9 +4,6 @@ namespace almondcove.Controllers.Routes
 {
     public class AdminRouteController : Controller
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        public IActionResult Index() => View();
     }
 }

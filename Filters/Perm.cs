@@ -18,14 +18,10 @@ namespace almondcove.Filters
 
             bool isAuthorized = Array.Exists(_allowedRoles, role => role == currentRole);
 
-            //if (!isAuthorized) context.Result = new RedirectToActionResult("AccessDenied", "Error", null);
-            if (!isAuthorized)
+            if (!isAuthorized) context.Result = new ObjectResult("Unauthorized Access")
             {
-                context.Result = new ObjectResult("Unauthorized Access")
-                {
-                    StatusCode = 401
-                };
-            }
+                StatusCode = 401
+            };
         }
     }
 }

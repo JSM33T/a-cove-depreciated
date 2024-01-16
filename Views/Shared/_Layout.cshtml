@@ -72,7 +72,8 @@ _____  |  |   _____   ____   ____    __| _/____  _______  __ ____      |__| ____
 		<link rel="apple-touch-icon" href="/assets/app-icons/icon-180x180.png">
 
 	  <script src="/assets/js/theme-switcher.js" asp-append-version="true"></script>
-	  <link rel="stylesheet" href="~/assets/fonts/poppins/poppins.css" asp-append-version="true" rel="stylesheet" />
+	  @* <link rel="stylesheet" href="~/assets/fonts/poppins/poppins.css" asp-append-version="true" rel="stylesheet" /> *@
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,200;6..12,300;6..12,400&display=swap" asp-append-version="true" rel="stylesheet" />
 	  @* Vendor styles *@
 	  @await RenderSectionAsync("Styles", required: false)
 		@* icon fonts *@
@@ -231,7 +232,8 @@ _____  |  |   _____   ____   ____    __| _/____  _______  __ ____      |__| ____
 	  </div>
 	  <!-- Page wrapper -->
 	  @await Html.PartialAsync("Partials/Modals/Default.cshtml")
-	  @await Html.PartialAsync("Partials/SidePanel/Default.cshtml")
+	  @await Html.PartialAsync("Partials/Panels/Top.cshtml")
+	  @await Html.PartialAsync("Partials/Panels/Right.cshtml")
 	  <main class="page-wrapper" aos-ddata="fade-in">
 		 <header data-bs-theme="@htmlProps.DataBsTheme">
 			<div class="@htmlProps.HeaderClass">

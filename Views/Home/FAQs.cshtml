@@ -17,6 +17,8 @@
     ViewData["HtmlProps"] = props;
     ViewData["MetaProps"] = meta;
 
+    bool isLoggedin = Context.Session.GetString("role") == "guest" ? false : true;
+
 }
 
 <section class="bg-secondary py-5">
@@ -34,43 +36,48 @@
                     <div class="accordion-item bg-light">
                         <h3 class="accordion-header" id="headingOne">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#questionOne" aria-expanded="false" aria-controls="questionOne">Is there
-                                a free trial?</button>
+                                data-bs-target="#questionOne" aria-expanded="false" aria-controls="questionOne">
+                                Didn't receive verification email?</button>
                         </h3>
                         <div class="accordion-collapse collapse" id="questionOne" aria-labelledby="headingOne"
                             data-bs-parent="#faq" style="">
-                            <div class="accordion-body fs-sm">Adipiscing sagittis neque egestas id platea accumsan.
-                                Morbi inpa platea urna curabitur habitant pulvinar lacinia neque. Netus gravida amet,
-                                aliquam quam turpis aliquet cras. Find aute irure dolor in reprehenderit voluptate velit
-                                esse cillum dolore eu nulla pariatur. Sit amet, adipiscing elit.</div>
+                            <div class="accordion-body fs-sm">
+                                Check your spam folder for theemail. If you still didn't find it make use of the forgot password module to login via otp and set your password.
+                            </div>
                         </div>
                     </div>
                     <div class="accordion-item bg-light">
                         <h3 class="accordion-header" id="headingTwo">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#questionTwo" aria-expanded="false" aria-controls="questionTwo">How do
-                                refunds work?</button>
+                                data-bs-target="#questionTwo" aria-expanded="false" aria-controls="questionTwo">
+                                Forgot password?</button>
                         </h3>
-                        <div class="accordion-collapse collapse" id="questionTwo" aria-labelledby="headingTwo"
-                            data-bs-parent="#faq" style="">
-                            <div class="accordion-body fs-sm">Quisque rutrum sit amet magna sit amet tristique. Vivamus
-                                rhoncus ac purus vitae convallis. Aliquam erat volutpat. Proin egestas, mauris ut semper
-                                semper, ipsum felis mattis ligula, et porttitor ante arcu nec ante. Aliquam congue est
-                                eu turpis sollicitudin, et ullamcorper tortor aliquam.</div>
+                        <div class="accordion-collapse collapse" id="questionTwo" aria-labelledby="headingTwo" data-bs-parent="#faq">
+                            <div class="accordion-body fs-sm">
+                                @if(isLoggedin)
+                                {
+                                    @Html.Raw("As you are already loggedin you can set your password in <a href=\"/profile/edit\">Edit profile</a>");
+                                }
+                                else
+                                {
+                                    @Html.Raw("Here we go -> <a href=\"/account/recover-account\">Account recovery</a>");
+                                }
+
+                            </div>
                         </div>
                     </div>
                     <div class="accordion-item bg-light">
                         <h3 class="accordion-header" id="headingFour">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#questionFour" aria-expanded="false" aria-controls="questionFour">What
-                                happens if I run out of credit?</button>
+                                data-bs-target="#questionFour" aria-expanded="false" aria-controls="questionFour">
+                                Something is wrong?
+                            </button>
                         </h3>
                         <div class="accordion-collapse collapse" id="questionFour" aria-labelledby="headingFour"
                             data-bs-parent="#faq">
-                            <div class="accordion-body fs-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                Integer ac pretium dui. Aliquam rutrum justo lorem, in efficitur odio efficitur vel.
-                                Integer mattis, neque malesuada sagittis porttitor, enim tortor ullamcorper diam, id
-                                eleifend sem mauris at turpis. Curabitur sed nisi nec ligula dictum.</div>
+                            <div class="accordion-body fs-sm">
+                                Use <a href="#customizer" data-bs-toggle="offcanvas">RightPanel</a> to send message briefing about it.
+                            </div>
                         </div>
                     </div>
                     <div class="accordion-item bg-light">

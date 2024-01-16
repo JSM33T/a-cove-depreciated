@@ -4,9 +4,6 @@ namespace almondcove.Extensions
 {
     public static class CookieCheckMiddlewareExtensions
     {
-        public static IApplicationBuilder UseCookieCheckMiddleware(this IApplicationBuilder builder)
-        {
-            return builder.UseMiddleware<SessionManager>();
-        }
+        public static IApplicationBuilder UseCookieCheckMiddleware(this IApplicationBuilder builder) => builder.UseMiddleware<SessionManager>();
     }
 }

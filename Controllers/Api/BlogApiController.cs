@@ -65,7 +65,7 @@ namespace almondcove.Controllers.Api
                               "JOIN TblBlogCategory c ON m.CategoryId = c.Id " +
                               "WHERE c.Locator = '" + key + "' and m.IsActive = 1" +
                               "GROUP BY m.Id, m.Title,m.Description,m.UrlHandle, m.DatePosted,m.Tags,c.Title,c.Locator " +
-                              "ORDER BY Id OFFSET " + mode + " " +
+                              "ORDER BY m.DatePosted Desc OFFSET " + mode + " " +
                               "ROWS FETCH NEXT 5 ROWS ONLY";
                     }
                     else if (classify == "year")
@@ -75,7 +75,7 @@ namespace almondcove.Controllers.Api
                               "JOIN TblBlogCategory c ON m.CategoryId = c.Id " +
                               "WHERE m.CategoryId = c.Id and YEAR(m.DatePosted) = @key AND m.IsActive = 1" +
                               "GROUP BY m.Id, m.Title,m.Description,m.UrlHandle, m.DatePosted,m.Tags,c.Title,c.Locator " +
-                              "ORDER BY Id OFFSET @mode " +
+                              "ORDER BY  m.DatePosted Desc OFFSET @mode " +
                               "ROWS FETCH NEXT 5 ROWS ONLY";
 
                     }
@@ -86,7 +86,7 @@ namespace almondcove.Controllers.Api
                              "JOIN TblBlogCategory c ON m.CategoryId = c.Id " +
                              "WHERE m.CategoryId = c.Id and Tags like '%" + key + "%' AND m.IsActive = 1" +
                              "GROUP BY m.Id, m.Title,m.Description,m.UrlHandle, m.DatePosted,m.Tags,c.Title,c.Locator " +
-                             "ORDER BY Id OFFSET " + mode + " " +
+                             "ORDER BY  m.DatePosted Desc OFFSET " + mode + " " +
                              "ROWS FETCH NEXT 5 ROWS ONLY";
                     }
 
@@ -99,7 +99,7 @@ namespace almondcove.Controllers.Api
                              "JOIN TblBlogCategory c ON m.CategoryId = c.Id " +
                              "WHERE m.CategoryId = c.Id and (m.Title like '%" + key + "%' OR m.Description like '%" + key + "%'  OR m.Tags like '%" + key + "%' ) AND m.IsActive = 1" +
                              "GROUP BY m.Id, m.Title,m.Description,m.UrlHandle, m.DatePosted,m.Tags,c.Title,c.Locator " +
-                             "ORDER BY Id OFFSET " + mode + " " +
+                             "ORDER BY  m.DatePosted Desc OFFSET " + mode + " " +
                              "ROWS FETCH NEXT 5 ROWS ONLY";
                     }
                 }
@@ -110,7 +110,7 @@ namespace almondcove.Controllers.Api
                             "JOIN TblBlogCategory c ON m.CategoryId = c.Id " +
                             "WHERE m.CategoryId = c.Id  AND m.IsActive = 1" +
                             "GROUP BY m.Id, m.Title,m.Description,m.UrlHandle, m.DatePosted,m.Tags,c.Title,c.Locator " +
-                            "ORDER BY Id OFFSET " + mode + " " +
+                            "ORDER BY  m.DatePosted Desc OFFSET " + mode + " " +
                             "ROWS FETCH NEXT 5 ROWS ONLY";
                 }
                 using SqlCommand command = new(sql, connection);
@@ -143,7 +143,7 @@ namespace almondcove.Controllers.Api
         [IgnoreAntiforgeryToken]
         public async Task<IActionResult> LoadAuthors(string Slug)
         {
-            List<object> data = new();
+            List<object> data = [];
             using var connection = new SqlConnection(connectionString);
             await connection.OpenAsync();
             var command = new SqlCommand(@"
@@ -152,7 +152,6 @@ namespace almondcove.Controllers.Api
                 JOIN TblUserProfile AS u ON ba.AuthorId = u.Id 
                 JOIN TblAvatarMaster AS avt ON u.AvatarId = avt.Id where b.UrlHandle = @UrlHandle 
             ", connection);
-            //added scalar vars
             command.Parameters.AddWithValue("@UrlHandle", Slug);
             var reader = await command.ExecuteReaderAsync();
             while (await reader.ReadAsync())
@@ -205,7 +204,7 @@ namespace almondcove.Controllers.Api
 
             if (HttpContext.Session.GetString("user_id") != null)
             {
-                List<object> data = new();
+                List<object> data = [];
                 var SessionUserId = HttpContext.Session.GetString("user_id");
                 // var SessionUserId = 1;
                 try

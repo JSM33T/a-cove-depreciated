@@ -25,38 +25,51 @@ namespace almondcove.Repositories
            
         }
 
-        public bool SaveOTPInDatabaseAsync(SqlConnection connection, int userId, string otp)
+        public async Task<bool> SaveOTPInDatabaseAsync(SqlConnection connection, int userId, string otp)
         {
             try
             {
-                var maxIdCommand = new SqlCommand("SELECT ISNULL(MAX(Id), 0) + 1 FROM TblPasswordReset", connection);
-                int newId = Convert.ToInt32(maxIdCommand.ExecuteScalar());
+                var newId = await GetNextIdAsync(connection, "TblPasswordReset");
 
-                var cmd = new SqlCommand("INSERT INTO TblPasswordReset (Id, UserId, Token, DateAdded, IsValid) VALUES (@id, @userid, @token, @dateadded, @isvalid)", connection);
+                // Insert the new record
+                var sql = @"
+                        INSERT INTO TblPasswordReset (Id, UserId, Token, DateAdded, IsValid)
+                        VALUES (@id, @userId, @token, @dateAdded, @isValid)";
+
+                using var cmd = new SqlCommand(sql, connection);
                 cmd.Parameters.AddWithValue("@id", newId);
-                cmd.Parameters.AddWithValue("@userid", userId);
+                cmd.Parameters.AddWithValue("@userId", userId);
                 cmd.Parameters.AddWithValue("@token", otp);
-                cmd.Parameters.AddWithValue("@isvalid", true);
-                cmd.Parameters.Add("@dateadded", SqlDbType.DateTime).Value = DateTime.Now;
-                cmd.ExecuteNonQuery();
+                cmd.Parameters.AddWithValue("@isValid", true);
+                cmd.Parameters.AddWithValue("@dateAdded", DateTime.Now);
+
+                await cmd.ExecuteNonQueryAsync();
 
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                _logger.LogError("error sending email {message}", ex.Message);
+                _logger.LogError("Error saving OTP in the database: {message}", ex.Message);
                 return false;
             }
         }
 
-        public Task<UserProfile> GetUserByUsernameOrEmail(SqlConnection connection, string usernameOrEmail)
+        private static async Task<int> GetNextIdAsync(SqlConnection connection, string tableName)
+        {
+            var sql = $"SELECT ISNULL(MAX(Id), 0) + 1 FROM {tableName}";
+
+            using var cmd = new SqlCommand(sql, connection);
+            return await cmd.ExecuteScalarAsync() as int? ?? 1;
+        }
+
+        public async Task<UserProfile> GetUserByUsernameOrEmailAsync(SqlConnection connection, string usernameOrEmail)
         {
             var sql = "SELECT * FROM TblUserProfile WHERE UserName = @username OR EMail = @username";
             using var command = new SqlCommand(sql, connection);
             command.Parameters.AddWithValue("@username", usernameOrEmail);
-            using var reader = command.ExecuteReader();
+            using var reader = await command.ExecuteReaderAsync();
 
-            return Task.FromResult(
+            return await Task.FromResult(
                     reader.Read()
                     ? new UserProfile
                     {
@@ -67,6 +80,8 @@ namespace almondcove.Repositories
                     : null
                 );
         }
+
+
         public Task<UserProfile> LogIn()
         {
             throw new NotImplementedException();

@@ -254,7 +254,7 @@ namespace almondcove.Controllers.Api
                 using SqlConnection connection = new(_configManager.GetConnString());
                 await connection.OpenAsync();
 
-                var user = await _authRepo.GetUserByUsernameOrEmail(connection, recovery.UserName);
+                var user = await _authRepo.GetUserByUsernameOrEmailAsync(connection, recovery.UserName);
 
                 if (user != null)
                 {
@@ -271,7 +271,7 @@ namespace almondcove.Controllers.Api
 
                     if (otpSent == true)
                     {
-                        if (_authRepo.SaveOTPInDatabaseAsync(connection, userId, otp))
+                        if (await _authRepo.SaveOTPInDatabaseAsync(connection, userId, otp))
                         {
                             return Ok("OTP sent to your email. Please enter the OTP to login.");
                         }

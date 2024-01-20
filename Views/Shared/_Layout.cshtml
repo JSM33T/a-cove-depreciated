@@ -187,7 +187,7 @@ _____  |  |   _____   ____   ____    __| _/____  _______  __ ____      |__| ____
 			 preloader.classList.remove('active')
 			 setTimeout(function () {
 			   preloader.remove()
-			 }, 1500)
+			 }, 800)
 		   }
 		 })()
 		 
@@ -224,7 +224,8 @@ _____  |  |   _____   ____   ____    __| _/____  _______  __ ____      |__| ____
    <!-- Body -->
    <body class="@htmlProps.BodyClass">
 	  <!-- Page loading spinner -->
-	  <div class="page-loading active">
+	@* <div class="page-loading active"> *@
+	  <div class="page-loading">
 		 <div class="page-loading-inner">
 			<div class="page-spinner"></div>
 			<span>Loading...</span>

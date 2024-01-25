@@ -2,7 +2,7 @@
 @using almondcove.Models.Props
 @model List<AlbumDTO>;
 @{
-    
+
     var errorMessage = ViewData["ErrorMessage"] as string;
 
     HTMLProps props = new()
@@ -19,37 +19,42 @@
     ViewData["MetaProps"] = meta;
 }
 
-@section Styles{
-<link href="~/lib/lightgallery/css/lightgallery-bundle.min.css" rel="stylesheet" />
+@section Styles {
+    <link href="~/lib/lightgallery/css/lightgallery-bundle.min.css" rel="stylesheet" />
 }
 
-@section Scripts{
-<script src="~/lib/lightgallery/lightgallery.min.js"></script>
-<script src="~/lib/imagesloaded/imagesloaded.pkgd.min.js"></script>
-<script src="~/lib/shufflejs/dist/shuffle.min.js"></script>
-<script src="~/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script>
-<script src="~/lib/lightgallery/plugins/fullscreen/lg-fullscreen.min.js"></script>
-<script src="~/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script>
-<script src="~/lib/parallax-js/dist/parallax.min.js"></script>
-<script type="module" src="~/assets/js/dedicated/gallery.js" asp-append-version="true"></script>
+@section Scripts {
+    <script src="~/lib/lightgallery/lightgallery.min.js"></script>
+    <script src="~/lib/imagesloaded/imagesloaded.pkgd.min.js"></script>
+    <script src="~/lib/shufflejs/dist/shuffle.min.js"></script>
+    <script src="~/lib/lightgallery/plugins/zoom/lg-zoom.min.js"></script>
+    <script src="~/lib/lightgallery/plugins/fullscreen/lg-fullscreen.min.js"></script>
+    <script src="~/lib/lightgallery/plugins/thumbnail/lg-thumbnail.min.js"></script>
+    <script src="~/lib/parallax-js/dist/parallax.min.js"></script>
+    <script type="module" src="~/assets/js/dedicated/gallery.js" asp-append-version="true"></script>
 }
 
 <section class="container py-5 mt-2 mb-xl-3 mb-xxl-5">
     <div class="row pt-2">
         <!-- Text + CTA button-->
         <div class="col-lg-6 d-flex flex-column mb-4 mb-lg-0 pb-sm-3 pb-lg-0">
-            <h1 class="display-1 text-uppercase fw-bold mt-auto mb-2 mt-2" data-aos="flip-up" data-aos-duration="500" data-aos-offset="50" data-disable-parallax-down="md" data-disable="md"><span class="fw-normal">almondcove</span> Gallery<span class="d-none d-md-inline-block align-middle ms-4" style="width: 120px; height: 2px; background-color: currentColor;"></span></h1>
+            <h1 class="display-1 text-uppercase fw-bold mt-auto mb-2 mt-2" data-aos="flip-up" data-aos-duration="500"
+                data-aos-offset="50" data-disable-parallax-down="md" data-disable="md"><span
+                    class="fw-normal">almondcove</span> Gallery<span class="d-none d-md-inline-block align-middle ms-4"
+                    style="width: 120px; height: 2px; background-color: currentColor;"></span></h1>
             @* <div class="d-flex align-items-center py-2 py-lg-3">
             </div> *@
-            <ul class="nav mt-auto mx-n2 pt-sm-3 pt-lg-0" data-aos="flip-up" data-aos-duration="500" data-aos-offset="50" data-disable-parallax-down="md" data-disable="md">
+            <ul class="nav mt-auto mx-n2 pt-sm-3 pt-lg-0" data-aos="flip-up" data-aos-duration="500"
+                data-aos-offset="50" data-disable-parallax-down="md" data-disable="md">
                 <li class="nav-item me-3"><a class="nav-link p-2" href="#">youtube</a></li>
                 <li class="nav-item me-3"><a class="nav-link p-2" href="#">soundcloud</a></li>
                 <li class="nav-item"><a class="nav-link p-2" href="#">instagram</a></li>
             </ul>
         </div>
 
-        <div class="col-lg-6" data-aos="fade-up" data-aos-duration="500" data-aos-offset="50" data-disable-parallax-down="md" data-disable="md">
-                <img src="~/assets/images/covers/gallery-cover.png"/>
+        <div class="col-lg-6" data-aos="fade-up" data-aos-duration="500" data-aos-offset="50"
+            data-disable-parallax-down="md" data-disable="md">
+            <img src="~/assets/images/covers/gallery-cover.png" />
         </div>
     </div>
 </section>
@@ -62,7 +67,8 @@
                 <p class="mb-4 mb-lg-0">Browse through the albums from me and laymaann</p>
             </div>
             <div class="col-xxl-9 col-lg-8 d-flex">
-                <ul class="masonry-filters nav nav-pills fs-sm flex-nowrap overflow-auto text-nowrap w-100 mx-auto me-lg-0 pb-3" style="max-width: 510px;">
+                <ul class="masonry-filters nav nav-pills fs-sm flex-nowrap overflow-auto text-nowrap w-100 mx-auto me-lg-0 pb-3"
+                    style="max-width: 510px;">
                     <li class="nav-item mb-0"><a class="nav-link border active" href="#" data-group="all">All</a></li>
                     <li class="nav-item mb-0"><a class="nav-link border" href="#" data-group="nature">Nature</a></li>
                     <li class="nav-item mb-0"><a class="nav-link border" href="#" data-group="travel">Travel</a></li>
@@ -70,20 +76,26 @@
                 </ul>
             </div>
         </div>
-        <div class="masonry-grid shuffle" data-columns="3" style="position: relative; height: 1946.12px; transition: height 250ms cubic-bezier(0.4, 0, 0.2, 1) 0s;">
+        <div class="masonry-grid shuffle" data-columns="3"
+            style="position: relative; height: 1946.12px; transition: height 250ms cubic-bezier(0.4, 0, 0.2, 1) 0s;">
 
-             @foreach (var album in Model)
+            @foreach (var album in Model)
             {
-                if (!album.IsActive){ continue; }
+                if (!album.IsActive) { continue; }
 
-                <article class="masonry-grid-item pb-5 mb-md-2 mb-lg-4 mb-xl-5 shuffle-item shuffle-item--visible" data-groups="[&quot;@album.Category&quot;]" style="position: absolute; top: 0px; visibility: visible; will-change: transform; left: 0px; opacity: 1; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-property: transform, opacity;">
+                <article class="masonry-grid-item pb-5 mb-md-2 mb-lg-4 mb-xl-5 shuffle-item shuffle-item--visible"
+                    data-groups="[&quot;@album.Category&quot;]"
+                    style="position: absolute; top: 0px; visibility: visible; will-change: transform; left: 0px; opacity: 1; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-property: transform, opacity;">
                     <div class="zoom-effect position-relative border-bottom pb-3" style="max-width: 500px;">
                         <div class="zoom-effect-wrapper">
-                            <div class="zoom-effect-img"><img src="/content/gallery/@album.Slug/cover.jpg" alt="Image"></div>
+                            <div class="zoom-effect-img"><img src="/content/gallery/@album.Slug/cover.jpg" alt="Image">
+                            </div>
                         </div>
                         <div class="pt-4 mt-lg-2">
-                            <h2 class="h4 mb-2"><a class="stretched-link" href="/gallery/album/@album.Slug">@album.Title</a></h2>
-                            <div class="d-flex justify-content-between fs-lg text-muted"><span>@album.Desc</span><span>@album.Year</span></div>
+                            <h2 class="h4 mb-2"><a class="stretched-link" href="/gallery/album/@album.Slug">@album.Title</a>
+                            </h2>
+                            <div class="d-flex justify-content-between fs-lg text-muted">
+                                <span>@album.Desc</span><span>@album.Year</span></div>
                         </div>
                     </div>
                 </article>
@@ -91,4 +103,3 @@
         </div>
     </div>
 </section>
-

@@ -73,7 +73,7 @@ _____  |  |   _____   ____   ____    __| _/____  _______  __ ____      |__| ____
 
 	  <script src="/assets/js/theme-switcher.js" asp-append-version="true"></script>
 	  @* <link rel="stylesheet" href="~/assets/fonts/poppins/poppins.css" asp-append-version="true" rel="stylesheet" /> *@
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,200;6..12,300;6..12,400&display=swap" asp-append-version="true" rel="stylesheet" />
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" asp-append-version="true" rel="stylesheet" />
 	  @* Vendor styles *@
 	  @await RenderSectionAsync("Styles", required: false)
 		@* icon fonts *@
@@ -224,8 +224,7 @@ _____  |  |   _____   ____   ____    __| _/____  _______  __ ____      |__| ____
    <!-- Body -->
    <body class="@htmlProps.BodyClass">
 	  <!-- Page loading spinner -->
-	@* <div class="page-loading active"> *@
-	  <div class="page-loading">
+	  <div class="page-loading active">
 		 <div class="page-loading-inner">
 			<div class="page-spinner"></div>
 			<span>Loading...</span>

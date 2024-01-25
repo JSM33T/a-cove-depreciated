@@ -40,7 +40,7 @@
 
   <ItemGroup>
 	<PackageReference Include="Markdig" Version="0.34.0" />
-	<PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.2" />
+	<PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.4" />
   </ItemGroup>
 
   <ItemGroup>

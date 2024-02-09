@@ -16,43 +16,50 @@ const avatarDdl = document.getElementById("avatarDdl") as HTMLSelectElement;
 
 
 acInit([
-    onAvatarChangeEvent,
     async () => {
-        await loadavatarDdl();
-        await fetchDetails();
-    },
-    async () => acFormHandler('basicInfoForm', submitDetails),
-    async () => acFormHandler('passForm', submitPass)
-])
+        await Promise.all([
+            onAvatarChangeEvent(),
+            loadavatarDdl().then(fetchDetails),
+            acFormHandler("basicInfoForm", submitDetails),
+            acFormHandler("passForm", submitPass),
+        ]);
+    }
+]);
 
+
+
+//onAvatarChangeEvent,
+//async () => {
+//    await loadavatarDdl();
+//    await fetchDetails();
+//},
+//() => acFormHandler('basicInfoForm', submitDetails),
+//() => acFormHandler('passForm', submitPass),
 
 async function onAvatarChangeEvent() {
 
-    avatarDdl!.addEventListener("change", function () {
-
+    avatarDdl!.addEventListener("change", () => {
         var selectedOption = avatarDdl!.options[avatarDdl!.selectedIndex];
-
         var imgValue = selectedOption.dataset.img;
-
         Avatar!.style.backgroundImage = 'url(/assets/images/avatars/default/' + imgValue + '.png)';
     });
 }
 
 
 async function getCheckedRadioButton() {
-    //var genderRadios = document.getElementsByName('gender');
-
-    //for (var i = 0; i < genderRadios.length; i++) {
-    //    if (genderRadios[i].checked) {
-    //        return genderRadios[i];
-    //    }
-    //}
-    //return null;
-    return "m";
+    return null;
 }
 
+
+
+
 async function fetchDetails() {
+    const g_m = document.getElementById('male') as HTMLInputElement;
+    const g_f = document.getElementById('female') as HTMLInputElement;
+    const g_o = document.getElementById('other') as HTMLInputElement;
+
     const response = acGetData('/api/profile/getdetails');
+    console.log((await response).data);
     const resp: IProfile = (await response).data;
     firstName.value = resp.firstName;
     lastName.value = resp.lastName;
@@ -60,8 +67,12 @@ async function fetchDetails() {
     emailId.value = resp.eMail;
     bio.value = resp.bio;
     avatarDdl.value = resp.avatarId!.toString();
+
+    if (resp.gender == 'm') { g_m.checked}
+    else if (resp.gender == 'f') { g_f.checked }
+    else { g_o.checked }
+
     Avatar.style.backgroundImage = 'url(/assets/images/avatars/default/' + resp.avatarImg + '.png)';
-    console.log(response);
 }
     
 async function loadavatarDdl() {
@@ -75,13 +86,14 @@ async function loadavatarDdl() {
 }
 
 async function submitDetails() {
+    console.log(getCheckedRadioButton);
     const data = {
         firstName: firstName.value,
         lastName: lastName.value,
         bio: bio.value,
         avatarId: parseInt(avatarDdl.value) || 1,
         eMail: emailId.value,
-        gender: "m",
+        gender: getCheckedRadioButton,
         userName: userName.value
     }
     const resp = await acPostData('/api/profile/update', data);
@@ -102,14 +114,12 @@ async function submitDetails() {
 
 async function updatePfp() {
 
-    var selectedOption = avatarDdl.options[avatarDdl.selectedIndex];
-    var dataImgValue = selectedOption.getAttribute("data-img");
-
-    console.log(dataImgValue);
+    const selectedOption = avatarDdl.options[avatarDdl.selectedIndex];
+    let dataImgValue = selectedOption.getAttribute("data-img");
     
-    var imgElements = document.getElementsByClassName("avatar-placeholder") as HTMLCollectionOf<HTMLImageElement>;
+    let imgElements = document.getElementsByClassName("avatar-placeholder") as HTMLCollectionOf<HTMLImageElement>;
 
-    for (var i = 0; i < imgElements.length; i++) {
+    for (let i = 0; i < imgElements.length; i++) {
 
         imgElements[i].src = "/assets/images/avatars/default/" + dataImgValue + ".png";
         console.log(imgElements[i].src);
@@ -119,6 +129,7 @@ async function updatePfp() {
 }
 
 async function submitPass() {
+
     const newpass = document.getElementById('new-pass') as HTMLInputElement;
     const confirmpass = document.getElementById('confirm-pass') as HTMLInputElement;
     if (newpass.value == "" || newpass.value.length < 6) {

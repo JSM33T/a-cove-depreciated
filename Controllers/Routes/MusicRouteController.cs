@@ -20,32 +20,38 @@ namespace almondcove.Controllers.Routes
             return View("Views/Music/Index.cshtml");
         }
 
-        [Route("/music/{Type}/{Slug}")]
-        public IActionResult Single(string Type, string Slug)
-        {
+        //[Route("/music/{Type}/{Slug}")]
+        //public IActionResult Single(string Type, string Slug)
+        //{
 
-            string markdownFilePath = Path.Combine(_hostingEnvironment.WebRootPath, "content/music/" + Type + "/" + Slug);
-            //fetch html content
-            string htmlContent = System.IO.File.ReadAllText(markdownFilePath + "/content.html");
-            //fetch seo/meta props
-            string metaPropsFetch = System.IO.File.ReadAllText(markdownFilePath + "/props.json");
-            
-            //MetaProps propModel = JsonSerializer.Deserialize<MetaProps>(metaPropsFetch, jsonSerializerOptions);
+        //    string markdownFilePath = Path.Combine(_hostingEnvironment.WebRootPath, "content/music/" + Type + "/" + Slug);
 
-            MetaProps propModel = JsonSerializationHelper.Deserialize<MetaProps>(metaPropsFetch);
-            MetaProps meta = new()
-            {
-                Title = propModel?.Title ?? "Almondcove Music",
-                Description = propModel?.Description ?? "Almondcove Music:  compilatio of bootlegs, originals and uch more form jsm33t & various artists",
-                Tags = propModel?.Tags ?? "Music,almondcove,remixes,bootlegs,bollywood remixes,studio",
-                Author = propModel?.Author ?? "Various artists",
-            };
+        //    string htmlContent = System.IO.File.ReadAllText(markdownFilePath + "/content.html");
+        //    string metaPropsFetch = System.IO.File.ReadAllText(markdownFilePath + "/props.json");
 
-            ViewData["MetaProps"] = meta;
-            ViewData["HtmlContent"] = new HtmlString(htmlContent);
+        //    MetaProps propModel = JsonSerializationHelper.Deserialize<MetaProps>(metaPropsFetch);
+        //    MetaProps meta = new()
+        //    {
+        //        Title = propModel?.Title ?? "Almondcove Music",
+        //        Description = propModel?.Description ?? "Almondcove Music:  compilatio of bootlegs, originals and much more form jsm33t & various artists",
+        //        Tags = propModel?.Tags ?? "Music,almondcove,remixes,bootlegs,bollywood remixes,studio",
+        //        Author = propModel?.Author ?? "Various artists",
+        //    };
 
-            return View("Views/Music/Viewer.cshtml");
-        }
+        //    ViewData["MetaProps"] = meta;
+        //    ViewData["HtmlContent"] = new HtmlString(htmlContent);
+
+        //    return View("Views/Music/Viewer.cshtml");
+        //}
+
+
+        [Route("/music/album/{Slug}")]
+        public IActionResult Albums(string Slug) => View($"Views/Music/Albums/{Slug}.cshtml");
+
+        [Route("/music/single/{Slug}")]
+        public IActionResult Singles(string Slug) => View($"Views/Music/Singles/{Slug}.cshtml");
+
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

@@ -39,8 +39,7 @@ namespace almondcove.Controllers.Api
                     " and p.AvatarId = a.Id", connection);
                 checkcommand.Parameters.AddWithValue("@username", loginCreds.UserName.ToLower());
                 checkcommand.Parameters.AddWithValue("@password", EnDcryptor.Encrypt(loginCreds.Password, _configManager.GetCryptKey()));
-                // TEST
-                //_logger.LogCritical( "{cryptkey}" ,EnDcryptor.Encrypt(loginCreds.Password, _configManager.GetCryptKey()));
+
                 using var reader = await checkcommand.ExecuteReaderAsync();
                 if (reader.Read())
                 {
@@ -53,9 +52,9 @@ namespace almondcove.Controllers.Api
                     //NULL ISSUE - BUG IN V1
                     // var sessionKeyOld = reader.GetString(reader.GetOrdinal("SessionKey"));
                     var sessionKeyOrdinal = reader.GetOrdinal("SessionKey");
-                    // Check if the value is DBNull before trying to retrieve it
+
                     var sessionKeyOld = reader.IsDBNull(sessionKeyOrdinal) ? null : reader.GetString(reader.GetOrdinal("SessionKey"));
-                    // Now you can use sessionKeyOld without the risk of a NullReferenceException
+                    // sessionKeyOld without the risk of a NullReferenceException
 
                     //set session
                     HttpContext.Session.SetString("user_id", user_id.ToString());
@@ -66,7 +65,7 @@ namespace almondcove.Controllers.Api
                     HttpContext.Session.SetString("avatar", avatar.ToString());
                     var sessionKeyNew = "";
 
-                    if (sessionKeyOld == null)
+                    if (string.IsNullOrWhiteSpace(sessionKeyOld))
                     {
                         string SessionKey = StringProcessors.GenerateRandomString(20);
 
@@ -133,10 +132,6 @@ namespace almondcove.Controllers.Api
                     subject = "Verify Your Account | AlmondCove";
                     try
                     {
-
-                        // body = "<!DOCTYPE html><html><head><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Verification</title></head><body style=\"margin:0;padding:0;font-family:Arial,sans-serif;line-height:1.4;color:#111;background-color:#fff\"><div style=\"max-width:600px;margin:0 auto;background-color:#fff;padding:20px;border-radius:5px\"><h1 style=\"color:#111;margin-bottom:20px;font-size:24px\">Complete Signup</h1><p>Hey there,</p><div style=\"text-align:center;margin-bottom:20px\"><img src=\"https://almondcove.in/assets/favicon/apple-touch-icon.png\" width=\"100\" alt=\"Image\" style=\"max-width:100%;height:auto;border-radius:5px\"></div><p>Welcome to the AlmondCove.Your OTP is <h2><b>" + otp + " </b></h2> .You can verify your account from the following button too.</p><p>" +
-                        //         "<a href=\"https://almondcove.in/account/verification/" + FilteredUsername + "/" + otp + "\"" +
-                        //         " style=\"display:inline-block;padding:10px 20px;background-color:#111;color:#fff;text-decoration:none;border-radius:4px\">Verify Email</a></p><p>If you did not sign up for this account, please ignore this email.</p><div style=\"margin-top:20px;text-align:center;font-size:12px;color:#999\"><p>This is an automated email, please do not reply.</p></div></div></body></html>";
                         body = Modules.EmailBodies.SignUpEmail.SignUpEmailBody(FilteredUsername, otp);
                         bool stat = _mailer.SendEmailAsync(userProfile.EMail.ToString(), subject, body);
                         if (stat)
@@ -256,43 +251,31 @@ namespace almondcove.Controllers.Api
 
                 var user = await _authRepo.GetUserByUsernameOrEmailAsync(connection, recovery.UserName);
 
-                if (user != null)
-                {
-                    var userId = user.Id;
-                    var username = user.UserName;
-                    var userEmail = user.EMail;
-                    var secret = StringProcessors.GenerateRandomString(10);
-                    var otp = OTPGenerator.GenerateOTP(secret);
-                    var subject = "Recover Your Account | AlmondCove";
 
-                    string body = Modules.EmailBodies.RecoveryEmail.GenerateRecoveryEmailBody(userEmail, otp);
-
-                    bool otpSent = _mailer.SendEmailAsync(userEmail, subject, body);
-
-                    if (otpSent == true)
-                    {
-                        if (await _authRepo.SaveOTPInDatabaseAsync(connection, userId, otp))
-                        {
-                            return Ok("OTP sent to your email. Please enter the OTP to login.");
-                        }
-                        else
-                        {
-                            _logger.LogError("error generating otp");
-                            return BadRequest("Something went wrong.");
-                        }
-                    }
-                    else
-                    {
-                        _logger.LogError("error generating otp msg");
-                        return BadRequest("Unable to send mail.");
-                    }
-                }
-                else
+                if (user == null)
                 {
                     await connection.CloseAsync();
                     return BadRequest("No record found with the given username/email.");
                 }
-                
+               
+                var userId = user.Id;
+                var username = user.UserName;
+                var userEmail = user.EMail;
+                var secret = StringProcessors.GenerateRandomString(10);
+                var otp = OTPGenerator.GenerateOTP(secret);
+                var subject = "Recover Your Account | AlmondCove";
+
+                string body = Modules.EmailBodies.RecoveryEmail.GenerateRecoveryEmailBody(userEmail, otp);
+
+                bool otpSent = _mailer.SendEmailAsync(userEmail, subject, body);
+
+                if (otpSent && await _authRepo.SaveOTPInDatabaseAsync(connection, userId, otp))
+                {
+                    return Ok("OTP sent to your email. Please enter the OTP to login.");
+                }
+                _logger.LogError(otpSent ? "Error saving OTP in database." : "Error sending OTP email.");
+                return BadRequest(otpSent ? "Something went wrong." : "Unable to send mail.");
+
             }
             catch (Exception ex)
             {
@@ -305,8 +288,8 @@ namespace almondcove.Controllers.Api
         [HttpPost("/api/account/clearallsessions")]
         public async Task<IActionResult> DisposeSessionKey()
         {
-            if (await _authRepo.DisposeSessionKey(HttpContext.Session.GetString("username"))) return Ok();
-            else return BadRequest("unable to dispose session key");
+            var username = HttpContext.Session.GetString("username");
+            return await _authRepo.DisposeSessionKey(username) ? Ok("session key disposed") : BadRequest("Unable to dispose session key");
         }
 
         [HttpPost("/api/account/loginviaotp")]

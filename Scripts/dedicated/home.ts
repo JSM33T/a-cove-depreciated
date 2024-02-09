@@ -76,7 +76,7 @@ async function constructArticles(responsedata: any) {
                     ${post.comments}
                     <i class="ai-message fs-lg ms-1"></i>
                 </a>
-                <span class="fs-xs opacity-20 mt-2 mx-3">|</span><span class="fs-sm text-muted mt-2">${prettifyDate(post.datePosted)} </span><span class="fs-xs opacity-20 mt-2 mx-3">|</span > <a class="badge bg-faded-primary text-primary fs-xs mt-2" href = "/blogs/category/${post.locator}">${post.category}</a>
+                <span class="fs-xs opacity-20 mt-2 mx-3">|</span><span class="fs-sm text-muted mt-2">${prettifyDate(post.datePosted)} </span><span class="fs-xs opacity-20 mt-2 mx-3">|</span > <a class="badge bg-faded-primary border border-primary text-primary fs-xs mt-2" href = "/blogs/category/${post.locator}">${post.category}</a>
             </div>
         </article>
     `).join('');

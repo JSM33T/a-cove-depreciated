@@ -1,7 +1,6 @@
 ﻿using almondcove.Interefaces.Repositories;
 using almondcove.Interefaces.Services;
 using almondcove.Models.Domain;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 
 namespace almondcove.Repositories

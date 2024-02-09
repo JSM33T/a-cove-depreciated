@@ -671,31 +671,25 @@ namespace almondcove.Controllers.Api
 
             try
             {
-                if (encodedreply.Trim() != "")
+                if (encodedreply.Trim() == "") return BadRequest("Reply too short");
+                
+                using var connection = new SqlConnection(connectionString);
+                await connection.OpenAsync();
+                var command = new SqlCommand("SELECT Id FROM TblUserProfile WHERE UserName = @username", connection);
+                command.Parameters.AddWithValue("@username", HttpContext.Session.GetString("username").ToString());
+                var reader = await command.ExecuteReaderAsync();
+                if (await reader.ReadAsync())
                 {
-                    using var connection = new SqlConnection(connectionString);
-                    await connection.OpenAsync();
-                    var command = new SqlCommand("SELECT Id FROM TblUserProfile WHERE UserName = @username", connection);
-                    command.Parameters.AddWithValue("@username", HttpContext.Session.GetString("username").ToString());
-                    var reader = await command.ExecuteReaderAsync();
-                    if (await reader.ReadAsync())
-                    {
-                        userid = reader.GetInt32(0).ToString();
-                    }
-                    reader.Close();
-                    SqlCommand maxIdCommand = new("SELECT ISNULL(MAX(Id), 0) + 1 FROM TblBlogReply", connection);
-                    int newId = Convert.ToInt32(maxIdCommand.ExecuteScalar());
-
-                    command = new SqlCommand("insert into TblBlogReply(Id,CommentId,UserId,Reply,IsActive,DatePosted) values(" + newId + ",'" + blogReply.CommentId + "','" + userid + "','" + encodedreply + "',1,@dateposted)", connection);
-                    command.Parameters.Add("@dateposted", SqlDbType.DateTime).Value = DateTime.Now;
-                    await command.ExecuteNonQueryAsync();
-                    return Ok("reply added");
+                    userid = reader.GetInt32(0).ToString();
                 }
-                else
-                {
+                reader.Close();
+                SqlCommand maxIdCommand = new("SELECT ISNULL(MAX(Id), 0) + 1 FROM TblBlogReply", connection);
+                int newId = Convert.ToInt32(maxIdCommand.ExecuteScalar());
 
-                    return BadRequest("Reply too short");
-                }
+                command = new SqlCommand("insert into TblBlogReply(Id,CommentId,UserId,Reply,IsActive,DatePosted) values(" + newId + ",'" + blogReply.CommentId + "','" + userid + "','" + encodedreply + "',1,@dateposted)", connection);
+                command.Parameters.Add("@dateposted", SqlDbType.DateTime).Value = DateTime.Now;
+                await command.ExecuteNonQueryAsync();
+                return Ok("reply added");
 
             }
             catch (Exception ex)
@@ -710,34 +704,26 @@ namespace almondcove.Controllers.Api
 
         [HttpPost]
         [Route("/api/blog/reply/delete")]
-        [IgnoreAntiforgeryToken]
+        [Perm("user", "admin", "editor")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteReply(BlogReplyDTO blogReply)
         {
-            if (HttpContext.Session.GetString("username") != null)
+            try
             {
-                try
-                {
-                    using var connection = new SqlConnection(connectionString);
-                    await connection.OpenAsync();
-                    using var command = connection.CreateCommand();
-                    command.CommandText = "DELETE FROM TblBlogReply WHERE Id = @id and UserId = @user_id";
-                    command.Parameters.AddWithValue("@id", blogReply.ReplyId);
-                    command.Parameters.AddWithValue("@user_id", HttpContext.Session.GetString("user_id"));
-                    await command.ExecuteNonQueryAsync();
-                    return Ok("Reply deleted");
-
-                }
-                catch
-                {
-                    return BadRequest("Something went wrong");
-                }
+                using var connection = new SqlConnection(connectionString);
+                await connection.OpenAsync();
+                using var command = connection.CreateCommand();
+                command.CommandText = "DELETE FROM TblBlogReply WHERE Id = @id and UserId = @user_id";
+                command.Parameters.AddWithValue("@id", blogReply.ReplyId);
+                command.Parameters.AddWithValue("@user_id", HttpContext.Session.GetString("user_id"));
+                await command.ExecuteNonQueryAsync();
+                return Ok("Reply deleted");
 
             }
-            else
+            catch
             {
-                return BadRequest("Access Denied");
+                return BadRequest("Something went wrong");
             }
-
         }
 
 

@@ -1,5 +1,4 @@
-﻿using almondcove.Interefaces.Repositories;
-using almondcove.Interefaces.Services;
+﻿using almondcove.Interefaces.Services;
 using Microsoft.Data.SqlClient;
 
 namespace almondcove.Middlewares

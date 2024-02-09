@@ -14,6 +14,7 @@
 	<Compile Remove="wwwroot\content\blogs\html\**" />
 	<Compile Remove="wwwroot\content\blogs\markdown\**" />
 	<Compile Remove="wwwroot\content\gallery\backyard-birdies\assets\**" />
+	<Compile Remove="wwwroot\content\gallery\darjeeling-diaries\**" />
 	<Compile Remove="wwwroot\content\gallery\garden-state\assets\**" />
 	<Compile Remove="wwwroot\lib\vendor\**" />
 	<Content Remove="Build\**" />
@@ -21,6 +22,7 @@
 	<Content Remove="wwwroot\content\blogs\html\**" />
 	<Content Remove="wwwroot\content\blogs\markdown\**" />
 	<Content Remove="wwwroot\content\gallery\backyard-birdies\assets\**" />
+	<Content Remove="wwwroot\content\gallery\darjeeling-diaries\**" />
 	<Content Remove="wwwroot\content\gallery\garden-state\assets\**" />
 	<Content Remove="wwwroot\lib\vendor\**" />
 	<EmbeddedResource Remove="Build\**" />
@@ -28,12 +30,14 @@
 	<EmbeddedResource Remove="wwwroot\content\blogs\html\**" />
 	<EmbeddedResource Remove="wwwroot\content\blogs\markdown\**" />
 	<EmbeddedResource Remove="wwwroot\content\gallery\backyard-birdies\assets\**" />
+	<EmbeddedResource Remove="wwwroot\content\gallery\darjeeling-diaries\**" />
 	<EmbeddedResource Remove="wwwroot\content\gallery\garden-state\assets\**" />
 	<None Remove="Build\**" />
 	<None Remove="Migrations\Tables\**" />
 	<None Remove="wwwroot\content\blogs\html\**" />
 	<None Remove="wwwroot\content\blogs\markdown\**" />
 	<None Remove="wwwroot\content\gallery\backyard-birdies\assets\**" />
+	<None Remove="wwwroot\content\gallery\darjeeling-diaries\**" />
 	<None Remove="wwwroot\content\gallery\garden-state\assets\**" />
 	<None Remove="wwwroot\lib\vendor\**" />
   </ItemGroup>
@@ -48,7 +52,6 @@
 	<Folder Include="Models\DTO\Media\Music\" />
 	<Folder Include="Logs\" />
 	<Folder Include="wwwroot\assets\images\megamenu\" />
-	<Folder Include="wwwroot\content\gallery\darjeeling-diaries\assets\" />
 	<Folder Include="wwwroot\content\learning-hub\" />
 	<Folder Include="wwwroot\content\studio\lr-presets\" />
   </ItemGroup>
@@ -717,10 +720,6 @@
 	  <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 	</Content>
 	<Content Update="wwwroot\content\music\singles\melancholy\assets\cover_landscape.jpg">
-	  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-	  <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-	</Content>
-	<Content Update="wwwroot\content\music\singles\melancholy\links.json">
 	  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
 	  <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 	</Content>

@@ -9,7 +9,7 @@ export interface IProfile {
     dateJoined: string;
     eMail: string;
     firstName: string;
-    gender: 'm' | 'f'; // Assuming gender is a string with values 'm' or 'f'
+    gender: string; // Assuming gender is a string with values 'm' or 'f'
     id: number;
     lastName: string;
     password: null | string; // Assuming password can be a string or null

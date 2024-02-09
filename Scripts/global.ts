@@ -17,9 +17,9 @@ function getUrl(url?: string) {
 //===================== VALIDATIONS ====================
 
 function validateEmail(email: string): boolean {
+    //checks for the presence of @ ad .
     const emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-    
+    return emailRegex.test(email);   
 }
 
 function acSanitize(text: string): string {
@@ -236,32 +236,56 @@ function getQueryParameters() {
 }
 
 
+//function prettifyDate(inputDate: string): string {
+//    const dateParts = inputDate.split('-');
+//    const year = parseInt(dateParts[0]);
+//    const month = parseInt(dateParts[1]);
+//    const day = parseInt(dateParts[2]);
+//    const inputDateTime = new Date(year, month - 1, day);
+
+//    const currentDate = new Date();
+//    const currentDateTime = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+
+//    const timeDifference = currentDateTime.getTime() - inputDateTime.getTime();
+//    const dayDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+//    if (dayDifference === 0) {
+//        return 'Today';
+//    } else if (dayDifference === 1) {
+//        return 'Yesterday';
+//    } else if (dayDifference <= 7) {
+//        return 'This week';
+//    } else if (dayDifference <= 30) {
+//        return `${dayDifference} days ago`;
+//    } else {
+//        const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
+//        return inputDateTime.toLocaleDateString('en-US', options);
+//    }
+//}
+
+
 function prettifyDate(inputDate: string): string {
-    const dateParts = inputDate.split('-');
-    const year = parseInt(dateParts[0]);
-    const month = parseInt(dateParts[1]);
-    const day = parseInt(dateParts[2]);
+    const [year, month, day] = inputDate.split('-').map(Number);
     const inputDateTime = new Date(year, month - 1, day);
-
-    const currentDate = new Date();
-    const currentDateTime = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-
+    const currentDateTime = new Date();
     const timeDifference = currentDateTime.getTime() - inputDateTime.getTime();
     const dayDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 
-    if (dayDifference === 0) {
-        return 'Today';
-    } else if (dayDifference === 1) {
-        return 'Yesterday';
-    } else if (dayDifference <= 7) {
-        return 'This week';
-    } else if (dayDifference <= 30) {
-        return `${dayDifference} days ago`;
-    } else {
-        const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
-        return inputDateTime.toLocaleDateString('en-US', options);
+    switch (true) {
+        case (dayDifference === 0):
+            return 'Today';
+        case (dayDifference === 1):
+            return 'Yesterday';
+        case (dayDifference <= 7):
+            return 'This week';
+        case (dayDifference <= 30):
+            return `${dayDifference} days ago`;
+        default:
+            const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
+            return inputDateTime.toLocaleDateString('en-US', options);
     }
 }
+
 
 
 //============global ac methods=============

@@ -39,8 +39,6 @@ builder.Services.AddAuthentication("MyCookieAuthenticationScheme")
      });
 //exc services
 builder.Services.AddSingleton<IConfigManager, ConfigManager>();
-
-//builder.Services.AddSingleton<ISqlService, SqlService>();
 builder.Services.AddScoped<IMailer, Mailer>();
 builder.Services.AddScoped<IMailingListRepository, MailingListRepository>();
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();

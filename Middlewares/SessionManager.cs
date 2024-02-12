@@ -34,14 +34,28 @@ namespace almondcove.Middlewares
                     var fullname = firstname + " " + reader.GetString(reader.GetOrdinal("LastName"));
                     var role = reader.GetString(reader.GetOrdinal("Role"));
                     var avatar = reader.GetString(reader.GetOrdinal("Image"));
-                    
+
                     //set session
-                    context.Session.SetString("user_id", user_id.ToString());
-                    context.Session.SetString("username", username);
-                    context.Session.SetString("first_name", firstname);
-                    context.Session.SetString("role", role);
-                    context.Session.SetString("fullname", fullname);
-                    context.Session.SetString("avatar", avatar.ToString());
+                    //context.Session.SetString("user_id", user_id.ToString());
+                    //context.Session.SetString("username", username);
+                    //context.Session.SetString("first_name", firstname);
+                    //context.Session.SetString("role", role);
+                    //context.Session.SetString("fullname", fullname);
+                    //context.Session.SetString("avatar", avatar.ToString());
+
+                    var sessionData = new Dictionary<string, string>
+                    {
+                        { "user_id", user_id.ToString() },
+                        { "username", username },
+                        { "first_name", firstname },
+                        { "role", role },
+                        { "fullname", fullname },
+                        { "avatar", avatar.ToString() }
+                    };
+
+                    foreach (var kvp in sessionData) context.Session.SetString(kvp.Key, kvp.Value);
+                    
+
                 }
             }
             await _next(context);

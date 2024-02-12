@@ -15,10 +15,7 @@ namespace almondcove.Controllers.Routes
         private readonly ILogger<MusicRouteController> _logger = logger;
 
         [Route("/music")]
-        public IActionResult Music()
-        {
-            return View("Views/Music/Index.cshtml");
-        }
+        public IActionResult Music() => View("Views/Music/Index.cshtml");
 
         //[Route("/music/{Type}/{Slug}")]
         //public IActionResult Single(string Type, string Slug)
@@ -52,11 +49,7 @@ namespace almondcove.Controllers.Routes
         public IActionResult Singles(string Slug) => View($"Views/Music/Singles/{Slug}.cshtml");
 
 
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        public IActionResult Error() => View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }

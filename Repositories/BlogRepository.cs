@@ -98,7 +98,7 @@ namespace almondcove.Repositories
                         Title = dataReader.GetString("Title"),
                         Description = dataReader.GetString("Description"),
                         DatePosted = dataReader.GetDateTime("DatePosted"),
-                        DateFormatted = DateTimeFormats.FormatDateOrRelative(dataReader.GetDateTime("DatePosted")),
+                        DateFormatted = DateTimeFormats.PrettifyDate(dataReader.GetDateTime("DatePosted")),
                         UrlHandle = dataReader.GetString("UrlHandle"),
                         Comments = dataReader.GetInt32("CommentCount"),
                         Likes = dataReader.GetInt32("LikeCount"),

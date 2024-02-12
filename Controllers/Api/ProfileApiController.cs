@@ -1,4 +1,5 @@
-﻿using almondcove.Interefaces.Repositories;
+﻿using almondcove.Filters;
+using almondcove.Interefaces.Repositories;
 using almondcove.Interefaces.Services;
 using almondcove.Models.Domain;
 using almondcove.Models.DTO.Profile;
@@ -9,86 +10,28 @@ using System.Data;
 namespace almondcove.Controllers.Api
 {
     [ApiController]
+    [ValidateAntiForgeryToken]
     public class ProfileApiController(IConfigManager _configuration, ILogger<ProfileApiController> _logger, IProfileRepository _profileRepo) : ControllerBase
     {
+        [HttpGet("/api/profile/getdetails")]
+        [Perm("admin", "user", "editor")]
+        public async Task<IActionResult> Index() => Ok(await _profileRepo.GetProfileByUsername(HttpContext.Session.GetString("username")));
 
-        [HttpGet]
-        [Route("/api/profile/getdetails")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index()
-        {
-            var sessionStat = HttpContext.Session.GetString("role");
 
-            if (sessionStat != null && (sessionStat == "user" || sessionStat == "admin"))
-            {
-                try
-                {
-                    return Ok(await _profileRepo.GetProfileByUsername(HttpContext.Session.GetString("username")));
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError("exception in fetching profile details for user {msg}", ex.Message);
-                    return BadRequest();
-                }
+        [HttpGet("/api/getavatars")]        
+        public async Task<List<Avatar>> GetAvatars() => await _profileRepo.GetAvatarsAsync();
 
-            }
-            else
-            {
-                _logger.LogError("unauth attempt to fetch profile details");
-                return BadRequest("Access denied");
-            }
-        }
-
-        [HttpGet("/api/getavatars")]
-        public async Task<IActionResult> GetAvatars()
-        {
-            try
-            {
-                List<Avatar> entries = await _profileRepo.GetAvatarsAsync();
-
-                return Ok(entries);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("error fetching avatars with msg: {msg}", ex.Message);
-                return BadRequest("Unable to fetch avatars");
-            }
-        }
 
         [HttpPost]
         [Route("/api/profile/password/update")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdatePassword(PasswordUpdateDTO passwordUpdateDTO)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Invalid Password Format");
-            }
-
+            if (!ModelState.IsValid) return BadRequest("Invalid Password Format");
             string username = HttpContext.Session.GetString("username");
-
-            if (passwordUpdateDTO.Password == username)
-            {
-                return BadRequest("Password can't be similar to your username");
-            }
-
-            try
-            {
-                bool updateResult = await _profileRepo.UpdatePassword(username, passwordUpdateDTO.Password);
-
-                if (updateResult)
-                {
-                    return Ok("Changes Saved");
-                }
-
-                _logger.LogError("Failed to update password");
-                return StatusCode(500, "Something went wrong");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Error updating password. Message: {msg}", ex.Message);
-                return StatusCode(500, "Something went wrong");
-            }
+            if (passwordUpdateDTO.Password == username) return BadRequest("Password can't be similar to your username");
+            bool updateResult = await _profileRepo.UpdatePassword(username, passwordUpdateDTO.Password);
+            return updateResult ? Ok("Changes Saved") : StatusCode(500, "Something went wrong");
         }
 
         [HttpPost]
@@ -108,10 +51,7 @@ namespace almondcove.Controllers.Api
 
             };
 
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Invalid Data");
-            }
+            if (!ModelState.IsValid) BadRequest("Invalid Data");
 
             try
             {
@@ -131,6 +71,7 @@ namespace almondcove.Controllers.Api
                 await UpdateUserProfileAsync(connection, userProfile, transaction);
 
                 transaction.Commit();
+
                 _logger.LogInformation("id is {id} and image is{image}", userProfile.AvatarId, userProfile.AvatarImg);
                 await UpdateSessionVariables(userProfile);
 
@@ -154,17 +95,31 @@ namespace almondcove.Controllers.Api
 
         private async Task UpdateUserProfileAsync(SqlConnection connection, UserProfile userProfile, SqlTransaction transaction)
         {
-            var sql = "UPDATE TblUserProfile SET UserName = @UserName, FirstName = @FirstName, LastName = @LastName, AvatarId = @AvatarId, Gender = @Gender, Bio = @Bio,EMail = @EmailId, dateupdated = @dateupdated WHERE Id = @userid";
+            var sql = @"
+                UPDATE TblUserProfile 
+                SET UserName = @UserName, 
+                    FirstName = @FirstName, 
+                    LastName = @LastName, 
+                    AvatarId = @AvatarId, 
+                    Gender = @Gender, 
+                    Bio = @Bio,
+                    EMail = @EmailId, 
+                    dateupdated = @dateupdated 
+                WHERE Id = @userid
+            ";
             using var command = new SqlCommand(sql, connection, transaction);
-            command.Parameters.AddWithValue("@FirstName", userProfile.FirstName.Trim());
-            command.Parameters.AddWithValue("@LastName", userProfile.LastName.Trim());
-            command.Parameters.AddWithValue("@Gender", userProfile.Gender?.Trim() ?? "");
-            command.Parameters.AddWithValue("@EmailId", userProfile.EMail.Trim());
-            command.Parameters.AddWithValue("@AvatarId", userProfile.AvatarId);
-            command.Parameters.AddWithValue("@dateupdated", DateTime.Now);
-            command.Parameters.AddWithValue("@UserName", userProfile.UserName.Trim());
-            command.Parameters.AddWithValue("@Bio", userProfile.Bio.Trim());
-            command.Parameters.AddWithValue("@userid", HttpContext.Session.GetString("user_id"));
+            command.Parameters.AddRange(
+            [
+                new SqlParameter("@FirstName", SqlDbType.VarChar) { Value = userProfile.FirstName.Trim() },
+                new SqlParameter("@LastName", SqlDbType.VarChar) { Value = userProfile.LastName.Trim() },
+                new SqlParameter("@Gender", SqlDbType.VarChar) { Value = userProfile.Gender?.Trim() ?? "" },
+                new SqlParameter("@EmailId", SqlDbType.VarChar) { Value = userProfile.EMail.Trim() },
+                new SqlParameter("@AvatarId", SqlDbType.Int) { Value = userProfile.AvatarId },
+                new SqlParameter("@dateupdated", SqlDbType.DateTime) { Value = DateTime.Now },
+                new SqlParameter("@UserName", SqlDbType.VarChar) { Value = userProfile.UserName.Trim() },
+                new SqlParameter("@Bio", SqlDbType.VarChar) { Value = userProfile.Bio.Trim() },
+                new SqlParameter("@userid", SqlDbType.VarChar) { Value = HttpContext.Session.GetString("user_id") }
+            ]);
             await command.ExecuteNonQueryAsync();
         }
 
@@ -179,7 +134,6 @@ namespace almondcove.Controllers.Api
         private async Task<string> GetAvatar(int avatarId)
         {
             Avatar avtr = await _profileRepo.GetAvatarByIdAsync(avatarId);
-            _logger.LogInformation("avatar received for id :{id} and image:{img}", avtr.Id, avtr.Image);
             return avtr.Image;
         }
 

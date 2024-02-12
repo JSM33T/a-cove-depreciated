@@ -41,7 +41,9 @@
     </nav>
     <div class="py-2 py-sm-3 py-md-4 my-md-2 my-xxl-3">
         <h2 class="h1 text-center pt-xxl-1">@Model.Name <small class="text-muted">(@Model.Year)</small></h2>
-        <p class="fs-lg text-center pb-3 mb-lg-4">Collection of flora from my garden and beyond</p>
+        <p class="fs-lg text-center pb-3 mb-lg-4">
+            @Html.Raw(ViewData["gallerystory"])
+        </p>
         <div class="gallery row g-3 g-md-4 pb-4 masonry-grid">
            @foreach (var album in Model.Images)
             {

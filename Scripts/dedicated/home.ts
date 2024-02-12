@@ -1,26 +1,20 @@
 ﻿import { Email } from '../Interfaces/email.interface.js';
-import { acInit, acGetData, acPostData, acToast, validateEmail, prettifyDate } from '../global.js';
+import { acInit, acGetData, acPostData, acToast, validateEmail, acSetEvent, acFormHandler } from '../global.js';
 
 const mailForm = document.querySelector('.subscription-form') as HTMLFormElement;
 
 acInit([
     loadTopBlogs,
-    formSubmitEvent
+    () => acFormHandler('sub-form', submitMail)
 ])
 
-async function formSubmitEvent() {
-    mailForm.addEventListener('submit', async function (event) {
-        event.preventDefault();
-
+async function submitMail() {
         const emailInput = document.getElementById('subscr-email') as HTMLInputElement;
         const emailData = {
             email: emailInput.value,
             origin: "HomePage",
         };
-
         await postEmailToAPI(emailData);
-
-    });
 }
 
 async function postEmailToAPI(emailData: Email) {
@@ -34,7 +28,7 @@ async function postEmailToAPI(emailData: Email) {
     const apiUrl = '/api/mailinglist/subscribe';
     const resp = await acPostData(apiUrl, emailData);
     try {
-        acToast(resp.type, resp.data);
+        acToast('mail submitted', resp.data);
         mailForm.reset();
     } catch (error: any) {
         acToast(resp.type, error.data);
@@ -54,12 +48,11 @@ async function loadTopBlogs() {
     }
 }
 
-
 async function constructArticles(responsedata: any) {
     var articleTags = responsedata.map(post => `
         <article class="swiper-slide swiper-slide-active" role="group" aria-label="1/2" style="width: 416px; margin-right: 24px;">
             <a href="/blog/${post.datePosted.substring(0, 4)}/${post.urlHandle}">
-                <img class="rounded-5" src="content/blogs/${post.datePosted.substring(0, 4)}/${[post.urlHandle]}/assets/cover.jpg" alt="Image">
+                <img class="rounded-5" src="content/blogs/${post.datePosted.substring(0, 4)}/${[post.urlHandle]}/assets/cover.webp" alt="Image">
             </a>
             <h3 class="h4 pt-4">
                 <a href="/blog/${post.datePosted.substring(0, 4)}/${post.urlHandle}">${post.title}
@@ -76,7 +69,7 @@ async function constructArticles(responsedata: any) {
                     ${post.comments}
                     <i class="ai-message fs-lg ms-1"></i>
                 </a>
-                <span class="fs-xs opacity-20 mt-2 mx-3">|</span><span class="fs-sm text-muted mt-2">${prettifyDate(post.datePosted)} </span><span class="fs-xs opacity-20 mt-2 mx-3">|</span > <a class="badge bg-faded-primary border border-primary text-primary fs-xs mt-2" href = "/blogs/category/${post.locator}">${post.category}</a>
+                <span class="fs-xs opacity-20 mt-2 mx-3">|</span><span class="fs-sm text-muted mt-2">${post.dateFormatted} </span><span class="fs-xs opacity-20 mt-2 mx-3">|</span > <a class="badge bg-faded-primary border border-primary text-primary fs-xs mt-2" href = "/blogs/category/${post.locator}">${post.category}</a>
             </div>
         </article>
     `).join('');

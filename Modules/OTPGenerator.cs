@@ -8,7 +8,7 @@ namespace almondcove.Modules
         {
             var time = DateTime.UtcNow;
             var secondsSinceEpoch = (long)(time - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
-            var timeSlice = secondsSinceEpoch / 30; // Time slice of 30 seconds
+            var timeSlice = secondsSinceEpoch / 30;
 
             var key = Base32Encoding.ToBytes(secret);
             var data = new byte[8];
@@ -20,7 +20,6 @@ namespace almondcove.Modules
             var hmac = new HMACSHA1(key);
             var hash = hmac.ComputeHash(data);
 
-            //var offset = hash[hash.Length - 1] & 0xF;
             var offset = hash[^1] & 0xF;
             var truncatedHash = (hash[offset] & 0x7F) << 24 | (hash[offset + 1] & 0xFF) << 16 | (hash[offset + 2] & 0xFF) << 8 | hash[offset + 3] & 0xFF;
 

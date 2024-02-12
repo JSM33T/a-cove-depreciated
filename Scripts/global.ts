@@ -340,7 +340,7 @@ function asBinder() {
 }
 
 function acToast(type: string, message: string) {
-
+    // long s chat gpt thing 
     let toastContainer = document.getElementById('toast-container');
 
     // Create a new toast element using the DOM API

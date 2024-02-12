@@ -25,9 +25,7 @@ namespace almondcove.Controllers.Api
             _logger = logger;
             _blogRepo = blogRepository;
             connectionString = _configManager.GetConnString();
-
         }
-
 
         [HttpGet("/api/topblogs/get")]
         [IgnoreAntiforgeryToken]
@@ -89,9 +87,6 @@ namespace almondcove.Controllers.Api
                              "ORDER BY  m.DatePosted Desc OFFSET " + mode + " " +
                              "ROWS FETCH NEXT 5 ROWS ONLY";
                     }
-
-
-
                     else if (classify == "search")
                     {
                         sql = "SELECT m.Id, m.Title,m.Description,m.UrlHandle,m.DatePosted,m.Tags,YEAR(m.DatePosted) AS Year,c.Title AS Category,c.Locator,COUNT(bc.Id) AS Comments FROM TblBlogMaster m " +

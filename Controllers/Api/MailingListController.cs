@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace almondcove.Controllers.Api
 {
     [ApiController]
-    public class MailingListController(ILogger<MailingListController> logger,IMailingListRepository mailRepo) : ControllerBase
+    public class MailingListController(ILogger<MailingListController> logger, IMailingListRepository mailRepo) : ControllerBase
     {
         private readonly ILogger<MailingListController> _logger = logger;
         private readonly IMailingListRepository _mailRepo = mailRepo;
@@ -20,7 +20,8 @@ namespace almondcove.Controllers.Api
                 var mail = MapToMailEntity(mailDTO);
                 var (Success, Message) = await _mailRepo.PostMail(mail);
 
-                _logger.LogError("email addition result {result} and message:{message}",Success,Message);
+                _logger.LogInformation("email addition result {result} and message:{message}", Success, Message);
+
                 return Success ? Ok("Mail submitted") : BadRequest(Message);
             }
             catch (Exception ex)

@@ -140,13 +140,16 @@ namespace almondcove.Controllers.Api
                             {
                                 SqlCommand maxIdCommand = new("SELECT ISNULL(MAX(Id), 0) + 1 FROM TblUserProfile", connection);
                                 int newId = Convert.ToInt32(maxIdCommand.ExecuteScalar());
-                                cmd = new("insert into TblUserProfile (Id,FirstName,LastName,EMail,UserName,IsActive,IsVerified,OTP,OTPTime,Role,Bio,Gender,Phone,AvatarId,DateJoined,CryptedPassword) VALUES(@Id,@firstname,@lastname,@email,@username,1,0,@otp,@otptime,'user','','','',1,@datejoined,@cryptedpassword)", connection);
+                                cmd = new("INSERT INTO TblUserProfile (Id,FirstName,LastName,EMail,UserName,IsActive,IsVerified,OTP,OTPTime,Role,Bio,Gender,Phone,AvatarId,DateJoined,CryptedPassword) VALUES(@Id,@firstname,@lastname,@email,@username,1,0,@otp,@otptime,'user','','','',1,@datejoined,@cryptedpassword)", connection);
                                 cmd.Parameters.AddWithValue("@Id", newId);
                                 cmd.Parameters.AddWithValue("@firstname", userProfile.FirstName.Trim());
                                 cmd.Parameters.AddWithValue("@lastname", userProfile.LastName);
                                 cmd.Parameters.AddWithValue("@email", userProfile.EMail);
                                 cmd.Parameters.AddWithValue("@username", FilteredUsername.Trim());
-                                cmd.Parameters.AddWithValue("@cryptedpassword", EnDcryptor.Encrypt(userProfile.Password.Trim(), _configManager.GetCryptKey()));
+                                cmd.Parameters.AddWithValue("" +
+                                    "@cryptedpassword",
+                                    EnDcryptor.Encrypt(userProfile.Password.Trim(), _configManager.GetCryptKey())
+                                    );
                                 cmd.Parameters.AddWithValue("@otp", otp.Trim());
                                 cmd.Parameters.Add("@otptime", SqlDbType.DateTime).Value = DateTime.Now;
                                 cmd.Parameters.Add("@datejoined", SqlDbType.DateTime).Value = DateTime.Now;

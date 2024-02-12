@@ -20,9 +20,9 @@ namespace almondcove.Controllers.Api
 
         [HttpGet("/api/admin/getallblogs")]
         [Perm("admin","editor")]
-        public async Task<IActionResult> GetAllBlogs(BlogThumbsDTO blogThumbsDTO)
+        public IActionResult GetAllBlogs(BlogThumbsDTO blogThumbsDTO)
         {
-            return Ok();
+            return Ok(blogThumbsDTO);
         }
 
 

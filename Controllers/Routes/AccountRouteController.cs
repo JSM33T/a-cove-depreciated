@@ -1,14 +1,15 @@
 ﻿using almondcove.Filters;
 using almondcove.Models;
 using Almondcove.Interefaces.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace almondcove.Controllers.Routes
 {
-    public class AccountRouteController(ILogger<AccountRouteController> logger) : Controller
+    public class AccountRouteController() : Controller
     {
-        private readonly ILogger<AccountRouteController> _logger = logger;
 
         [Perm("guest")]
         [Route("/account")]
@@ -31,10 +32,9 @@ namespace almondcove.Controllers.Routes
 
         [Route("/account/logout")]
         public void LogOut()
-        {
-            Response.Cookies.Delete("SessionKey");
-            HttpContext.Session.Clear();
-            Response.Redirect("/");
+        {   
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            Response.Redirect("/");   
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

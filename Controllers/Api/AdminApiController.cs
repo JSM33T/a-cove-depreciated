@@ -10,20 +10,12 @@ namespace almondcove.Controllers.Api
     [ApiController]
     public class AdminApiController : ControllerBase
     {
-        [IgnoreAntiforgeryToken]
+        
         [HttpGet("/api/admin/getallusers")]
-        [Perm("admin")]
-        public IActionResult GetUsers()
-        {
-            return Ok("done reaching");
-        }
+        public IActionResult GetUsers() => Ok("done reaching");
 
         [HttpGet("/api/admin/getallblogs")]
-        [Perm("admin","editor")]
-        public IActionResult GetAllBlogs(BlogThumbsDTO blogThumbsDTO)
-        {
-            return Ok(blogThumbsDTO);
-        }
+        public IActionResult GetAllBlogs(BlogThumbsDTO blogThumbsDTO) => Ok(blogThumbsDTO);
 
 
     }

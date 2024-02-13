@@ -52,6 +52,9 @@
 	<Folder Include="Models\DTO\Media\Music\" />
 	<Folder Include="Logs\" />
 	<Folder Include="wwwroot\assets\images\megamenu\" />
+	<Folder Include="wwwroot\content\gallery\lost-homes-1\assets\" />
+	<Folder Include="wwwroot\content\gallery\lost-homes-1\assets\lossless\" />
+	<Folder Include="wwwroot\content\gallery\lost-homes-1\assets\thumbs\" />
 	<Folder Include="wwwroot\content\learning-hub\" />
 	<Folder Include="wwwroot\content\studio\lr-presets\" />
   </ItemGroup>

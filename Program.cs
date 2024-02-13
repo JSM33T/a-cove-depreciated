@@ -5,7 +5,9 @@ using almondcove.Repositories;
 using almondcove.Services;
 using Almondcove.Interefaces.Services;
 using Almondcove.Services;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Session;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSession(options =>
@@ -28,14 +30,38 @@ builder.Services.AddCors(options =>
         });
 });
 
+builder.Services.AddRateLimiter(options => {
 
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 
-builder.Services.AddAuthentication("MyCookieAuthenticationScheme")
-     .AddCookie("MyCookieAuthenticationScheme", options =>
+    //options.AddPolicy("fixed", HttpContext =>
+    //RateLimitPartition.GetFixedWindowLimiter(
+    //    partitionKey: HttpContext.Connection.RemoteIpAddress?.ToString(),
+    //        factory: _ => new FixedWindowRateLimiterOptions { 
+    //            PermitLimit = 10,
+    //            Window = TimeSpan.FromSeconds(10)
+    //        }
+    //    )
+    //);
+
+    options.AddFixedWindowLimiter("fixed", o =>
+    {
+        o.PermitLimit = 10;
+        o.Window = TimeSpan.FromSeconds(10);
+    });
+});
+
+builder.Services.AddAuthentication()
+     .AddCookie(options =>
      {
-         options.LoginPath = "/account/login";
-         options.AccessDeniedPath = "/404";
-         options.ExpireTimeSpan = TimeSpan.FromDays(100);
+         options.Cookie.HttpOnly = true;
+         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+         options.Cookie.Name = "Cookie"; // Change the cookie name as needed
+         options.LoginPath = "/Account/Login"; // Set the login path
+         options.LogoutPath = "/Account/Logout"; // Set the logout path
+         options.AccessDeniedPath = "/Account/AccessDenied"; // Set the access denied path
+         options.ExpireTimeSpan = TimeSpan.FromDays(100); // Adjust expiration time as needed
+         options.SlidingExpiration = true;
      });
 //exc services
 builder.Services.AddSingleton<IConfigManager, ConfigManager>();
@@ -59,6 +85,7 @@ app.UseSession();
 app.UseMiddleware<SessionMiddleware>();
 app.UseCookieCheckMiddleware();
 app.UseHttpsRedirection();
+app.UseRateLimiter();
 app.UseStaticFiles();
 app.Use(async (context, next) =>
 {
@@ -78,7 +105,9 @@ app.UseCors(builder =>
     .AllowAnyHeader();
 });
 
+app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

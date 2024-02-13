@@ -31,7 +31,6 @@ async function postToLoginApi(username: string, password: string) {
 
     try {
         const response = await acPostData(apiUrl, data);
-        acToast(response.type, response.data);
         if (response.type === "ok") {
             submitBtn.innerHTML = "Logging in...";
             submitBtn.classList.add('pe-none');
@@ -46,6 +45,7 @@ async function postToLoginApi(username: string, password: string) {
         else {
             acToast('error', response.data);
         }
+        console.log(response.data)
     } catch (error) {
         console.error('Error during login:', error);
         acToast('error', 'Something went wrong');

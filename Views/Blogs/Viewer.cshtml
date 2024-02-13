@@ -1,4 +1,5 @@
-﻿@using almondcove.Controllers;
+﻿@using System.Security.Claims
+@using almondcove.Controllers;
 @using almondcove.Models.DTO
 @using almondcove.Models.DTO.BlogDTOs
 @using almondcove.Models.Props;
@@ -23,10 +24,9 @@
 	var htmlContent = ViewData["HtmlContent"] as string;
 	var blogDeet = ViewData["blogdeet"] as BlogLoadDTO;
 
-	if (Context.Session.GetString("role") != null && Context.Session.GetString("role").Trim() != "" &&
-	Context.Session.GetString("role") != "guest")
+	if(User.Identity.IsAuthenticated)
 	{
-		ViewData["BlogRole"] = Context.Session.GetString("role").ToString();
+		ViewData["BlogRole"] = User.FindFirst(ClaimTypes.Role)?.Value;
 	}
 	else
 	{
@@ -40,10 +40,10 @@
 			display: none;
 		}
 
-		p {
+		/* p {
 			text-align: justify;
 			text-justify: inter-word;
-		}
+		} */
 
 		.size-image {
 			width: 1024px;
@@ -202,8 +202,9 @@
 				</div>
 				<!-- Sidebar -->
 				<aside class="col-lg-3  col-sm-12 offset-lg-1 pt-4 mt-4 pt-lg-4 pb-5" style="margin-top: -7rem;">
-					<div class="position-sticky top-0 mt-2 mt-md-3 mt-lg-0" style="padding-top: 7rem;">
+					<div class="position-sticky top-0 mt-md-3 mt-lg-3">
 						<!-- Sharing -->
+                        <div class="mt-4 mb-4 pb-4 pt-4 d-none d-lg-block">&nbsp; </div>
 						<h4 class="mb-4">Share:</h4>
 						<div class="d-flex mt-n3 ms-n3 mb-lg-5 mb-4 pb-3 pb-lg-0">
 							<a class="btn btn-outline-secondary btn-icon btn-sm btn-instagram rounded-circle mt-3 ms-3"
@@ -258,10 +259,10 @@
 		<div class="card border-0 bg-secondary pt-2 pb-2 mt-2 p-md-2 p-xl-3 p-xxl-4 mt-n3 mt-md-0">
 			<div class="card-body">
 				@{
-					string role;
+					var role = "guest";
 					try
 					{
-						role = Context.Session.GetString("role");
+                        role = User.FindFirst(ClaimTypes.Role)?.Value;
 					}
 					catch
 					{

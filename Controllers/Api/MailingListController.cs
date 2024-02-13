@@ -2,6 +2,7 @@
 using almondcove.Models.Domain;
 using almondcove.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace almondcove.Controllers.Api
 {
@@ -11,8 +12,9 @@ namespace almondcove.Controllers.Api
         private readonly ILogger<MailingListController> _logger = logger;
         private readonly IMailingListRepository _mailRepo = mailRepo;
 
+        [EnableRateLimiting(policyName:"fixed")]
         [HttpPost("/api/mailinglist/subscribe")]
-        [IgnoreAntiforgeryToken]
+        
         public async Task<IActionResult> PostMail(MailDTO mailDTO)
         {
             try

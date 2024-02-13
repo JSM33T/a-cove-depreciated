@@ -1,15 +1,16 @@
-﻿using almondcove.Filters;
-using almondcove.Interefaces.Repositories;
+﻿using almondcove.Interefaces.Repositories;
 using almondcove.Interefaces.Services;
 using almondcove.Models.Domain;
 using almondcove.Models.DTO.Account;
 using almondcove.Modules;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.Data;
-using System.Text;
+using System.Security.Claims;
 
-namespace almondcove.Controllers.Api
+namespace almondcove.Controllers.Apix
 {
     [ApiController]
     public class AuthApiController(IConfigManager configManager, ILogger<AuthApiController> logger, IMailer mailer, IAuthRepository authRepository) : ControllerBase
@@ -19,13 +20,16 @@ namespace almondcove.Controllers.Api
         private readonly ILogger<AuthApiController> _logger = logger;
         private readonly IMailer _mailer = mailer;
 
-        [Perm("guest")]
         [HttpPost("/api/account/login")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UserLogin(LoginCreds loginCreds)
         {
             if (!ModelState.IsValid) return BadRequest("validation error");
+            if (await LoginUser(loginCreds)) return Ok();
+            else return BadRequest("Invalid credentials");
+        }
 
+        private async Task<bool> LoginUser(LoginCreds loginCreds)
+        {
             try
             {
                 using SqlConnection connection = new(_configManager.GetConnString());
@@ -49,68 +53,49 @@ namespace almondcove.Controllers.Api
                     var fullname = reader.GetString(reader.GetOrdinal("FirstName")) + " " + reader.GetString(reader.GetOrdinal("LastName"));
                     var role = reader.GetString(reader.GetOrdinal("Role"));
                     var avatar = reader.GetString(reader.GetOrdinal("Image"));
-                    //NULL ISSUE - BUG IN V1
-                    // var sessionKeyOld = reader.GetString(reader.GetOrdinal("SessionKey"));
-                    var sessionKeyOrdinal = reader.GetOrdinal("SessionKey");
 
-                    var sessionKeyOld = reader.IsDBNull(sessionKeyOrdinal) ? null : reader.GetString(reader.GetOrdinal("SessionKey"));
-                    // sessionKeyOld without the risk of a NullReferenceException
-
-                    //set session
-                    HttpContext.Session.SetString("user_id", user_id.ToString());
-                    HttpContext.Session.SetString("username", username);
-                    HttpContext.Session.SetString("first_name", firstname);
-                    HttpContext.Session.SetString("role", role);
-                    HttpContext.Session.SetString("fullname", fullname);
-                    HttpContext.Session.SetString("avatar", avatar.ToString());
-                    var sessionKeyNew = "";
-
-                    if (string.IsNullOrWhiteSpace(sessionKeyOld))
+                    var claims = new List<Claim>
                     {
-                        string SessionKey = StringProcessors.GenerateRandomString(20);
+                        new(ClaimTypes.NameIdentifier, user_id.ToString()),
+                        new(ClaimTypes.Name, username),
+                        new(ClaimTypes.GivenName, firstname),
+                        new(ClaimTypes.Role, role),
+                        new("fullname", fullname),
+                        new("avatar", avatar.ToString())
+                    };
 
-                        await reader.CloseAsync();
-                        SqlCommand setKey = new()
-                        {
-                            CommandText = "UPDATE TblUserProfile SET SessionKey = @sessionkey WHERE Id = @userid",
-                            Connection = connection
-                        };
-                        setKey.Parameters.AddWithValue("@sessionkey", SessionKey);
-                        setKey.Parameters.AddWithValue("@userid", user_id);
-                        await setKey.ExecuteNonQueryAsync();
-                        sessionKeyNew = SessionKey;
-                    }
-                    else
-                    {
-                        sessionKeyNew = sessionKeyOld;
-                    }
+                    var claimsIdentity = new ClaimsIdentity(claims, "Cookie");
 
-                    Response.Cookies.Append("SessionKey", sessionKeyNew, new CookieOptions
-                    {
-                        Expires = DateTime.Now.AddDays(150)
-                    });
+                    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-                    _logger.LogInformation("{user} logged in on {time}", loginCreds.UserName, DateTime.Now);
-                    return Ok("logging in...");
+                    await HttpContext.SignInAsync(
+                           CookieAuthenticationDefaults.AuthenticationScheme,
+                           new ClaimsPrincipal(claimsIdentity),
+                           new AuthenticationProperties
+                           {
+                               IsPersistent = true, // Make the cookie persistent
+                               ExpiresUtc = DateTimeOffset.UtcNow.Add(TimeSpan.FromDays(300)) // Adjust expiration time
+                           }
+                    );
+                    _logger.LogError("invalid creds by username {username}", User.FindFirst(ClaimTypes.Name)?.Value);
+                    return true;
 
                 }
                 else
                 {
                     _logger.LogError("invalid creds by username {username}", loginCreds.UserName);
-                    return BadRequest("Invalid Credentials");
+                    return false;
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError("Error in login form, message : {exmessage}, user : {user} ", ex.Message.ToString(), loginCreds.UserName);
 
-                return StatusCode(500, "something went wrong");
+                return false;
             }
         }
 
-        [Perm("guest")]
         [HttpPost("/api/account/signup")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UserSignUp(UserProfile userProfile)
         {
             if (!ModelState.IsValid) { return BadRequest("invalid state"); }
@@ -134,49 +119,32 @@ namespace almondcove.Controllers.Api
                     {
                         body = Modules.EmailBodies.SignUpEmail.SignUpEmailBody(FilteredUsername, otp);
                         bool stat = _mailer.SendEmailAsync(userProfile.EMail.ToString(), subject, body);
-                        if (stat)
-                        {
-                            try
-                            {
-                                SqlCommand maxIdCommand = new("SELECT ISNULL(MAX(Id), 0) + 1 FROM TblUserProfile", connection);
-                                int newId = Convert.ToInt32(maxIdCommand.ExecuteScalar());
-                                cmd = new("INSERT INTO TblUserProfile (Id,FirstName,LastName,EMail,UserName,IsActive,IsVerified,OTP,OTPTime,Role,Bio,Gender,Phone,AvatarId,DateJoined,CryptedPassword) VALUES(@Id,@firstname,@lastname,@email,@username,1,0,@otp,@otptime,'user','','','',1,@datejoined,@cryptedpassword)", connection);
-                                cmd.Parameters.AddWithValue("@Id", newId);
-                                cmd.Parameters.AddWithValue("@firstname", userProfile.FirstName.Trim());
-                                cmd.Parameters.AddWithValue("@lastname", userProfile.LastName);
-                                cmd.Parameters.AddWithValue("@email", userProfile.EMail);
-                                cmd.Parameters.AddWithValue("@username", FilteredUsername.Trim());
-                                cmd.Parameters.AddWithValue("" +
-                                    "@cryptedpassword",
-                                    EnDcryptor.Encrypt(userProfile.Password.Trim(), _configManager.GetCryptKey())
-                                    );
-                                cmd.Parameters.AddWithValue("@otp", otp.Trim());
-                                cmd.Parameters.Add("@otptime", SqlDbType.DateTime).Value = DateTime.Now;
-                                cmd.Parameters.Add("@datejoined", SqlDbType.DateTime).Value = DateTime.Now;
 
-                                await cmd.ExecuteNonQueryAsync();
-                                _logger.LogInformation("{user} registered,with Email:{email} ", userProfile.FirstName, userProfile.EMail);
-                                return Ok("verification email send please verify your account");
+                        if (!stat) return BadRequest("unable to send the mail");
+                        
+                        SqlCommand maxIdCommand = new("SELECT ISNULL(MAX(Id), 0) + 1 FROM TblUserProfile", connection);
+                        int newId = Convert.ToInt32(maxIdCommand.ExecuteScalar());
+                        cmd = new("INSERT INTO TblUserProfile (Id,FirstName,LastName,EMail,UserName,IsActive,IsVerified,OTP,OTPTime,Role,Bio,Gender,Phone,AvatarId,DateJoined,CryptedPassword) VALUES(@Id,@firstname,@lastname,@email,@username,1,0,@otp,@otptime,'user','','','',1,@datejoined,@cryptedpassword)", connection);
+                        cmd.Parameters.AddWithValue("@Id", newId);
+                        cmd.Parameters.AddWithValue("@firstname", userProfile.FirstName.Trim());
+                        cmd.Parameters.AddWithValue("@lastname", userProfile.LastName);
+                        cmd.Parameters.AddWithValue("@email", userProfile.EMail);
+                        cmd.Parameters.AddWithValue("@username", FilteredUsername.Trim());
+                        cmd.Parameters.AddWithValue("" +
+                            "@cryptedpassword",
+                            EnDcryptor.Encrypt(userProfile.Password.Trim(), _configManager.GetCryptKey())
+                            );
+                        cmd.Parameters.AddWithValue("@otp", otp.Trim());
+                        cmd.Parameters.Add("@otptime", SqlDbType.DateTime).Value = DateTime.Now;
+                        cmd.Parameters.Add("@datejoined", SqlDbType.DateTime).Value = DateTime.Now;
 
-
-                            }
-                            catch (Exception exm)
-                            {
-                                _logger.LogError("Exception while user {username} 's registration on {datetime},ex message: {exmessage}", userProfile.UserName, DateTime.Now, exm.Message.ToString());
-                                return BadRequest("something went wrong");
-
-                            }
-
-                        }
-                        else
-                        {
-                            _logger.LogError("unable to send mail to {user} on datetime: {datetime}", userProfile.UserName, DateTime.Now);
-                            return BadRequest("unable to send the mail");
-                        }
+                        await cmd.ExecuteNonQueryAsync();
+                        _logger.LogInformation("{user} registered,with Email:{email} ", userProfile.FirstName, userProfile.EMail);
+                        return Ok("verification email send please verify your account");
                     }
                     catch (Exception ex2)
                     {
-                        _logger.LogError(ex2.Message.ToString());
+                        _logger.LogError("error creating user msg: {message}",ex2.Message.ToString());
                         return BadRequest("something went wrong");
 
                     }
@@ -193,13 +161,11 @@ namespace almondcove.Controllers.Api
             catch (Exception ex)
             {
                 _logger.LogError("error while signup exception: {exmessage}", ex.Message.ToString());
-                return BadRequest("something went wrong");
+                return StatusCode(500,"Something went wrong");
             }
         }
 
-        [HttpPost]
-        [Route("/api/user/verification")]
-        [IgnoreAntiforgeryToken]
+        [HttpPost("/api/user/verification")]
         public async Task<IActionResult> UserVerification(Verify verify)
         {
             try
@@ -241,7 +207,6 @@ namespace almondcove.Controllers.Api
         }
 
         [HttpPost("/api/account/recover")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> RecoverAccount(RecoveryDTO recovery)
         {
 
@@ -287,16 +252,7 @@ namespace almondcove.Controllers.Api
             }
         }
 
-        [Perm("user", "admin", "editor")]
-        [HttpPost("/api/account/clearallsessions")]
-        public async Task<IActionResult> DisposeSessionKey()
-        {
-            var username = HttpContext.Session.GetString("username");
-            return await _authRepo.DisposeSessionKey(username) ? Ok("session key disposed") : BadRequest("Unable to dispose session key");
-        }
-
         [HttpPost("/api/account/loginviaotp")]
-        [IgnoreAntiforgeryToken]
         public IActionResult LogInViaOtp([FromBody] Verify verify)
         {
             try
@@ -330,14 +286,16 @@ namespace almondcove.Controllers.Api
                     var fullname = reader.GetString(reader.GetOrdinal("FirstName")) + " " + reader.GetString(reader.GetOrdinal("LastName"));
                     var role = reader.GetString(reader.GetOrdinal("Role"));
                     var avatar = reader.GetString(reader.GetOrdinal("Image"));
-                    //set session
-                    HttpContext.Session.SetString("user_id", user_id.ToString());
-                    HttpContext.Session.SetString("username", username);
-                    HttpContext.Session.SetString("first_name", firstname);
-                    HttpContext.Session.SetString("role", role);
-                    HttpContext.Session.SetString("fullname", fullname);
-                    HttpContext.Session.SetString("avatar", avatar.ToString());
-                    connection.Close();
+                    var claims = new List<Claim>
+                    {
+                        new(ClaimTypes.NameIdentifier, user_id.ToString()),
+                        new(ClaimTypes.Name, username),
+                        new(ClaimTypes.GivenName, firstname),
+                        new(ClaimTypes.Role, role),
+                        new("fullname", fullname),
+                        new("avatar", avatar.ToString())
+                    };
+
                     return Ok("logging in...");
 
                 }

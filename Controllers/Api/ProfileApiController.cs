@@ -2,10 +2,16 @@
 using almondcove.Interefaces.Repositories;
 using almondcove.Interefaces.Services;
 using almondcove.Models.Domain;
+using almondcove.Models.DTO.Account;
 using almondcove.Models.DTO.Profile;
+using almondcove.Modules;
+using almondcove.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Security.Claims;
 
 namespace almondcove.Controllers.Api
 {
@@ -14,8 +20,7 @@ namespace almondcove.Controllers.Api
     public class ProfileApiController(IConfigManager _configuration, ILogger<ProfileApiController> _logger, IProfileRepository _profileRepo) : ControllerBase
     {
         [HttpGet("/api/profile/getdetails")]
-        [Perm("admin", "user", "editor")]
-        public async Task<IActionResult> Index() => Ok(await _profileRepo.GetProfileByUsername(HttpContext.Session.GetString("username")));
+        public async Task<IActionResult> Index() => Ok(await _profileRepo.GetProfileByUsername( User.FindFirst(ClaimTypes.Name)?.Value));
 
 
         [HttpGet("/api/getavatars")]        
@@ -28,7 +33,7 @@ namespace almondcove.Controllers.Api
         public async Task<IActionResult> UpdatePassword(PasswordUpdateDTO passwordUpdateDTO)
         {
             if (!ModelState.IsValid) return BadRequest("Invalid Password Format");
-            string username = HttpContext.Session.GetString("username");
+            string username =  User.FindFirst(ClaimTypes.Name)?.Value;
             if (passwordUpdateDTO.Password == username) return BadRequest("Password can't be similar to your username");
             bool updateResult = await _profileRepo.UpdatePassword(username, passwordUpdateDTO.Password);
             return updateResult ? Ok("Changes Saved") : StatusCode(500, "Something went wrong");
@@ -59,7 +64,7 @@ namespace almondcove.Controllers.Api
                 await connection.OpenAsync();
 
                 using var transaction = connection.BeginTransaction();
-                if (userProfile.UserName != HttpContext.Session.GetString("username"))
+                if (userProfile.UserName !=  User.FindFirst(ClaimTypes.Name)?.Value)
                 {
                     if (await IsUsernameTakenAsync(connection, userProfile.UserName, transaction))
                     {
@@ -118,17 +123,35 @@ namespace almondcove.Controllers.Api
                 new SqlParameter("@dateupdated", SqlDbType.DateTime) { Value = DateTime.Now },
                 new SqlParameter("@UserName", SqlDbType.VarChar) { Value = userProfile.UserName.Trim() },
                 new SqlParameter("@Bio", SqlDbType.VarChar) { Value = userProfile.Bio.Trim() },
-                new SqlParameter("@userid", SqlDbType.VarChar) { Value = HttpContext.Session.GetString("user_id") }
+                new SqlParameter("@userid", SqlDbType.VarChar) { Value =  User.FindFirst(ClaimTypes.NameIdentifier)?.Value }
             ]);
             await command.ExecuteNonQueryAsync();
         }
 
         private async Task UpdateSessionVariables(UserProfile userProfile)
         {
-            HttpContext.Session.SetString("username", userProfile.UserName);
-            HttpContext.Session.SetString("first_name", userProfile.FirstName.Trim());
-            HttpContext.Session.SetString("fullname", userProfile.FirstName.Trim() + " " + userProfile.LastName.Trim());
-            HttpContext.Session.SetString("avatar",await GetAvatar(userProfile.AvatarId));
+            var claimsIdentity = User.Identity as ClaimsIdentity;
+
+            // Update the existing claims or add new ones
+            claimsIdentity.RemoveClaim(claimsIdentity.FindFirst(ClaimTypes.Name));
+            claimsIdentity.RemoveClaim(claimsIdentity.FindFirst(ClaimTypes.GivenName));
+            claimsIdentity.RemoveClaim(claimsIdentity.FindFirst("fullname"));
+            claimsIdentity.RemoveClaim(claimsIdentity.FindFirst("avatar"));
+
+            claimsIdentity.AddClaim(new Claim(ClaimTypes.Name, userProfile.UserName));
+            claimsIdentity.AddClaim(new Claim(ClaimTypes.GivenName, userProfile.FirstName.Trim()));
+            claimsIdentity.AddClaim(new Claim("fullname", userProfile.FirstName.Trim() + " " + userProfile.LastName.Trim()));
+            claimsIdentity.AddClaim(new Claim("avatar", await GetAvatar(userProfile.AvatarId)));
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await HttpContext.SignInAsync(
+                   CookieAuthenticationDefaults.AuthenticationScheme,
+                   new ClaimsPrincipal(claimsIdentity),
+                   new AuthenticationProperties
+                   {
+                       IsPersistent = true, // Make the cookie persistent
+                       ExpiresUtc = DateTimeOffset.UtcNow.Add(TimeSpan.FromDays(300)) // Adjust expiration time
+                   }
+            );
         }
 
         private async Task<string> GetAvatar(int avatarId)

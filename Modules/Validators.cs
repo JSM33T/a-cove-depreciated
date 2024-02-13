@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace almondcove.Modules
 {
-    public class Validators
+    public partial class Validators
     {
         public static bool IsValidEmail(string email)
         {
@@ -20,8 +20,11 @@ namespace almondcove.Modules
 
         public static bool IsAlphaNumeric(string input)
         {
-            Regex regex = new("^[a-zA-Z0-9]+$");
+            Regex regex = IsAlphaNum();
             return regex.IsMatch(input);
         }
+
+        [GeneratedRegex("^[a-zA-Z0-9]+$")]
+        private static partial Regex IsAlphaNum();
     }
 }

@@ -1,13 +1,12 @@
-﻿using almondcove.Filters;
-using almondcove.Interefaces.Repositories;
+﻿using almondcove.Interefaces.Repositories;
 using almondcove.Interefaces.Services;
 using almondcove.Models.DTO.BlogDTOs;
-using almondcove.Modules;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Data.SqlClient;
-using System.ComponentModel.DataAnnotations;
 using System.Data;
+using System.Security.Claims;
 using System.Web;
 
 namespace almondcove.Controllers.Api
@@ -27,17 +26,18 @@ namespace almondcove.Controllers.Api
             connectionString = _configManager.GetConnString();
         }
 
+
+        [EnableRateLimiting(policyName: "fixed")]
         [HttpGet("/api/topblogs/get")]
-        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> GetTopBlogs()
         {
             try
             {
-               return Ok(await _blogRepo.GetTopBlogsAsync());
+                return Ok(await _blogRepo.GetTopBlogsAsync());
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                _logger.LogError("error fetchingblogs message: {message}",ex.Message);
+                _logger.LogError("error fetchingblogs message: {message}", ex.Message);
                 return BadRequest("error fetching blogs");
             }
         }
@@ -109,8 +109,8 @@ namespace almondcove.Controllers.Api
                             "ROWS FETCH NEXT 5 ROWS ONLY";
                 }
                 using SqlCommand command = new(sql, connection);
-                command.Parameters.AddWithValue("@key",key);
-                command.Parameters.AddWithValue("@mode",mode);
+                command.Parameters.AddWithValue("@key", key);
+                command.Parameters.AddWithValue("@mode", mode);
                 using SqlDataReader dataReader = await command.ExecuteReaderAsync();
                 if (dataReader.HasRows)
                 {
@@ -135,7 +135,7 @@ namespace almondcove.Controllers.Api
 
         [HttpGet]
         [Route("/api/blog/{Slug}/authors")]
-        [IgnoreAntiforgeryToken]
+
         public async Task<IActionResult> LoadAuthors(string Slug)
         {
             List<object> data = [];
@@ -170,7 +170,7 @@ namespace almondcove.Controllers.Api
 
         [HttpGet]
         [Route("/api/blog/{Slug}/likes")]
-        [IgnoreAntiforgeryToken]
+
         public async Task<int> LoadLikes(string Slug)
         {
             List<object> data = [];
@@ -191,108 +191,94 @@ namespace almondcove.Controllers.Api
 
         }
 
-        [HttpPost]
-        [Route("/api/blog/addlike")]
-        [IgnoreAntiforgeryToken]
+
+        [HttpPost("/api/blog/addlike")]
         public async Task<IActionResult> AddLike(BlogLikeDTO blogLike)
         {
 
-            if (HttpContext.Session.GetString("user_id") != null)
+            List<object> data = [];
+            var SessionUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            // var SessionUserId = 1;
+            try
             {
-                List<object> data = [];
-                var SessionUserId = HttpContext.Session.GetString("user_id");
-                // var SessionUserId = 1;
-                try
+                using var connection = new SqlConnection(connectionString);
+                await connection.OpenAsync();
+                var command = new SqlCommand("SELECT COUNT(*) FROM TblBlogLike a,TblBlogMaster b where a.UserId = @userid and b.UrlHandle = @slug and b.Id = a.BlogId", connection);
+                command.Parameters.AddWithValue("@userid", SessionUserId);
+                command.Parameters.AddWithValue("@slug", blogLike.Slug);
+                int likecounter = (int)await command.ExecuteScalarAsync();
+
+                SqlCommand blogIdFind = new("SELECT Id from TblBlogMaster where UrlHandle = @blogslug", connection);
+                blogIdFind.Parameters.AddWithValue("@blogslug", blogLike.Slug);
+                int blogId = Convert.ToInt32(blogIdFind.ExecuteScalar());
+
+                if (likecounter == 1)
                 {
-                    using var connection = new SqlConnection(connectionString);
-                    await connection.OpenAsync();
-                    var command = new SqlCommand("SELECT COUNT(*) FROM TblBlogLike a,TblBlogMaster b where a.UserId = @userid and b.UrlHandle = @slug and b.Id = a.BlogId", connection);
+                    command = new SqlCommand("DELETE FROM TblBlogLike where UserId = @userid and BlogId = @blogid", connection);
+                    command.Parameters.AddWithValue("@blogid", blogId);
                     command.Parameters.AddWithValue("@userid", SessionUserId);
-                    command.Parameters.AddWithValue("@slug", blogLike.Slug);
-                    int likecounter = (int)await command.ExecuteScalarAsync();
-
-                    SqlCommand blogIdFind = new("SELECT Id from TblBlogMaster where UrlHandle = @blogslug", connection);
-                    blogIdFind.Parameters.AddWithValue("@blogslug", blogLike.Slug);
-                    int blogId = Convert.ToInt32(blogIdFind.ExecuteScalar());
-
-                    if (likecounter == 1)
-                    {
-                        command = new SqlCommand("DELETE FROM TblBlogLike where UserId = @userid and BlogId = @blogid", connection);
-                        command.Parameters.AddWithValue("@blogid", blogId);
-                        command.Parameters.AddWithValue("@userid", SessionUserId);
-                        command.ExecuteNonQuery();
-                        await connection.CloseAsync();
-                        return Ok("Like deleted");
-                    }
-                    else
-                    {
-                        SqlCommand maxIdCommand = new("SELECT ISNULL(MAX(Id), 0) + 1 FROM TblBlogLike", connection);
-                        int newLikeId = Convert.ToInt32(maxIdCommand.ExecuteScalar());
-
-                        SqlCommand commandIns = new("INSERT INTO TblBlogLike(Id,BlogId,UserId,DateAdded) values(@id,@blogid,@userid,@dateadded)", connection);
-                        commandIns.Parameters.AddWithValue("@id", newLikeId);
-                        commandIns.Parameters.AddWithValue("@blogid", blogId);
-                        commandIns.Parameters.AddWithValue("@userid", SessionUserId);
-                        commandIns.Parameters.AddWithValue("@slug", blogLike.Slug);
-                        commandIns.Parameters.AddWithValue("@dateadded", DateTime.Now);
-                        commandIns.ExecuteNonQuery();
-                        //   await connection.CloseAsync();
-                        //   await TeleLog.Logstuff("*" + HttpContext.Session.GetString("username") + "* liked a blog:\n\"" + blogLike.Slug + "\"");
-                        return Ok("Like added");
-
-
-                    }
-
+                    command.ExecuteNonQuery();
+                    await connection.CloseAsync();
+                    return Ok("Like deleted");
                 }
-                catch (Exception ex)
+                else
                 {
-                    _logger.LogError("load user's isLiked message {message}", ex.Message.ToString());
-                    return BadRequest("Something went wrong");
+                    SqlCommand maxIdCommand = new("SELECT ISNULL(MAX(Id), 0) + 1 FROM TblBlogLike", connection);
+                    int newLikeId = Convert.ToInt32(maxIdCommand.ExecuteScalar());
+
+                    SqlCommand commandIns = new("INSERT INTO TblBlogLike(Id,BlogId,UserId,DateAdded) values(@id,@blogid,@userid,@dateadded)", connection);
+                    commandIns.Parameters.AddWithValue("@id", newLikeId);
+                    commandIns.Parameters.AddWithValue("@blogid", blogId);
+                    commandIns.Parameters.AddWithValue("@userid", SessionUserId);
+                    commandIns.Parameters.AddWithValue("@slug", blogLike.Slug);
+                    commandIns.Parameters.AddWithValue("@dateadded", DateTime.Now);
+                    commandIns.ExecuteNonQuery();
+                    //   await connection.CloseAsync();
+                    //   await TeleLog.Logstuff("*" + HttpContext.Session.GetString("username") + "* liked a blog:\n\"" + blogLike.Slug + "\"");
+                    return Ok("Like added");
+
+
                 }
+
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest("Unauthorized attempt");
+                _logger.LogError("load user's isLiked message {message}", ex.Message.ToString());
+                return BadRequest("Something went wrong");
             }
+
         }
 
         [HttpPost]
         [Route("/api/blog/likestat")]
-        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> IsLiked(BlogLikeDTO blogLike)
         {
 
-            if (HttpContext.Session.GetString("user_id") != null)
+            if (!User.Identity.IsAuthenticated) return Ok(false);
+            string LoggedInUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            List<object> data = [];
+            try
             {
-                string LoggedInUserId = HttpContext.Session.GetString("user_id").ToString();
-                List<object> data = [];
-                try
-                {
-                    using var connection = new SqlConnection(connectionString);
-                    await connection.OpenAsync();
-                    var command = new SqlCommand("SELECT COUNT(*) FROM TblBlogLike a,TblBlogMaster b where a.UserId = @userid and b.UrlHandle = @slug and b.Id = a.BlogId", connection);
-                    command.Parameters.AddWithValue("@userid", HttpContext.Session.GetString("user_id"));
-                    command.Parameters.AddWithValue("@slug", blogLike.Slug);
-                    int likecounter = (int)await command.ExecuteScalarAsync();
-                    await connection.CloseAsync();
-                    return likecounter == 1 ? Ok(true) : Ok(false);
+                using var connection = new SqlConnection(connectionString);
+                await connection.OpenAsync();
+                var command = new SqlCommand("SELECT COUNT(*) FROM TblBlogLike a,TblBlogMaster b where a.UserId = @userid and b.UrlHandle = @slug and b.Id = a.BlogId", connection);
+                command.Parameters.AddWithValue("@userid", LoggedInUserId);
+                command.Parameters.AddWithValue("@slug", blogLike.Slug);
+                int likecounter = (int)await command.ExecuteScalarAsync();
+                await connection.CloseAsync();
+                return likecounter == 1 ? Ok(true) : Ok(false);
 
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError("load user's isLiked message:" + ex.Message.ToString() + " user logged in:" + HttpContext.Session.GetString("username").ToString());
-                    return BadRequest();
-                }
             }
-            else
+            catch (Exception ex)
             {
+                _logger.LogError("load user's isLiked message:" + ex.Message.ToString() + " user logged in:" + HttpContext.Session.GetString("username").ToString());
                 return BadRequest();
             }
+
         }
 
         [HttpGet]
         [Route("/api/blogs/categories/load")]
-        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> LoadCategories()
         {
             List<object> data = [];
@@ -337,73 +323,48 @@ namespace almondcove.Controllers.Api
             return new JsonResult(data);
         }
 
-        [HttpPost]
-        [Route("/api/blog/comment/add")]
-        [IgnoreAntiforgeryToken]
+
+        [Authorize]
+        [HttpPost("/api/blog/comment/add")]
         public async Task<IActionResult> AddComment(BlogCommentDTO blogComment)
         {
 
-            string userid = "", blogid = "";
-
-
-            if (blogComment.Comment != null && blogComment.Slug != null)
+           
+            if (blogComment.Comment == null || blogComment.Slug == null) return BadRequest("invalid data");
+            try
             {
+                string blogid = "";
+                string encodedcomment = HttpUtility.HtmlEncode(blogComment.Comment.ToString().Trim());
+                if (encodedcomment.Length <= 3) return BadRequest("comment too short");
+                    
+                using var connection = new SqlConnection(connectionString);
+                await connection.OpenAsync();
+                var command = new SqlCommand("SELECT Id FROM TblBlogMaster WHERE UrlHandle = @urlhandle", connection);
+                command.Parameters.AddWithValue("@urlhandle", blogComment.Slug);
+                var reader = await command.ExecuteReaderAsync();
 
-                try
-                {
-                    string encodedcomment = HttpUtility.HtmlEncode(blogComment.Comment.ToString().Trim());
-                    if (encodedcomment.Length >= 3)
-                    {
-                        using var connection = new SqlConnection(connectionString);
-                        await connection.OpenAsync();
-                        var command = new SqlCommand("SELECT Id FROM TblBlogMaster WHERE UrlHandle = @urlhandle", connection);
-                        command.Parameters.AddWithValue("@urlhandle", blogComment.Slug);
-                        var reader = await command.ExecuteReaderAsync();
+                if (await reader.ReadAsync()) { blogid = reader.GetInt32(0).ToString(); }
+                await reader.CloseAsync();
 
-                        if (await reader.ReadAsync())
-                        {
-                            blogid = reader.GetInt32(0).ToString();
-                        }
-                        reader.Close();
-                        command = new SqlCommand("SELECT Id FROM TblUserProfile WHERE UserName = @username", connection);
-                        command.Parameters.AddWithValue("@username", HttpContext.Session.GetString("username").ToString());
-                        reader = await command.ExecuteReaderAsync();
+                SqlCommand maxIdCommand = new("SELECT ISNULL(MAX(Id), 0) + 1 FROM TblBlogComment", connection);
+                int newId = Convert.ToInt32(maxIdCommand.ExecuteScalar());
 
-                        if (await reader.ReadAsync())
-                        {
-                            userid = reader.GetInt32(0).ToString();
-                        }
-                        reader.Close();
-                        SqlCommand maxIdCommand = new("SELECT ISNULL(MAX(Id), 0) + 1 FROM TblBlogComment", connection);
-                        int newId = Convert.ToInt32(maxIdCommand.ExecuteScalar());
+                command = new SqlCommand("insert into TblBlogComment(Id,Comment,UserId,PostId,IsActive,DatePosted) values(" + newId + ",'" + encodedcomment + "'," + User.FindFirst(ClaimTypes.NameIdentifier).Value + "," + blogid + ",1,@dateposted)", connection);
+                command.Parameters.Add("@dateposted", SqlDbType.DateTime).Value = DateTime.Now;
+                await command.ExecuteNonQueryAsync();
+                return Ok("Comment added");
+                 
 
-                        command = new SqlCommand("insert into TblBlogComment(Id,Comment,UserId,PostId,IsActive,DatePosted) values(" + newId + ",'" + encodedcomment + "'," + userid + "," + blogid + ",1,@dateposted)", connection);
-                        command.Parameters.Add("@dateposted", SqlDbType.DateTime).Value = DateTime.Now;
-                        await command.ExecuteNonQueryAsync();
-                        return Ok("Comment added");
-                    }
-                    else
-                    {
-                        return BadRequest("Comment too short");
-                    }
-
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError("error in adding comment on a blog msg {msg} ", ex.Message.ToString());
-                    return BadRequest("Something went wrong");
-                }
             }
-            else
+            catch (Exception ex)
             {
+                _logger.LogError("error in adding comment on a blog msg {msg} ", ex.Message.ToString());
                 return BadRequest("Something went wrong");
             }
-
         }
 
-        [HttpPost]
-        [Route("/api/blog/comments/load")]
-        [IgnoreAntiforgeryToken]
+        [HttpPost("/api/blog/comments/load")]
+        
         public async Task<IActionResult> LoadComments(BlogCommentDTO blogComment)
         {
 
@@ -443,13 +404,13 @@ namespace almondcove.Controllers.Api
             command.Parameters.AddWithValue("@posturl", blogComment.Slug);
             var reader = await command.ExecuteReaderAsync();
             string user = "";
-            string SessionUser = HttpContext.Session.GetString("username");
+            string SessionUser = User.FindFirst(ClaimTypes.Name)?.Value;
             bool editable = false, replyeditable = false;
             if (reader.HasRows)
             {
                 while (reader.Read())
                 {
-                    if (HttpContext.Session.GetString("username") != null)
+                    if (SessionUser != null)
                     {
                         user = "yes";
                         try
@@ -492,25 +453,6 @@ namespace almondcove.Controllers.Api
                         value = comment;
                         comments.Add(commentId, value);
                     }
-                    //if (!comments.ContainsKey(commentId))
-                    //{
-                    //    var comment = new
-                    //    {
-                    //        id = commentId,
-                    //        edit = editable,
-                    //        user,
-                    //        fullname = reader.GetString(3) + " " + reader.GetString(4),
-                    //        userid = reader.GetInt32(2),
-                    //        username = reader.GetString(5),
-                    //        comment = HttpUtility.HtmlDecode(reader.GetString(1)),
-                    //        date = reader.GetString(7),
-                    //        avatar = reader.GetString(8),
-                    //        replies = new List<object>()
-                    //    };
-
-                    //    comments.Add(commentId, comment);
-                    //}
-
                     if (!reader.IsDBNull(9))
                     {
                         var reply = new
@@ -543,14 +485,13 @@ namespace almondcove.Controllers.Api
 
         }
 
+        [Authorize]
         [HttpPost]
         [Route("/api/blog/comment/edit")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditComment(BlogCommentDTO blogComment)
         {
-            if (HttpContext.Session.GetString("username") != null)
-            {
-                var Userdet = HttpContext.Session.GetString("user_id").ToString();
+                var Userdet = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 try
                 {
                     using var connection = new SqlConnection(connectionString);
@@ -568,22 +509,15 @@ namespace almondcove.Controllers.Api
                     _logger.LogError("error while editing comment exception:{msg}", ex.Message);
                     return BadRequest("Something went wrong");
                 }
-            }
-            else
-            {
-                return BadRequest("Access denied");
-            }
-
         }
 
-        [HttpPost]
-        [Route("/api/blog/reply/edit")]
+        [Authorize]
+        [HttpPost("/api/blog/reply/edit")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditrReply(BlogCommentDTO blogComment)
         {
-            if (HttpContext.Session.GetString("username") != null)
-            {
-                string Userdet = HttpContext.Session.GetString("user_id").ToString();
+           
+                string Userdet = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 try
                 {
                     using var connection = new SqlConnection(connectionString);
@@ -602,66 +536,48 @@ namespace almondcove.Controllers.Api
                     _logger.LogError("error editing reply by user " + Userdet + "message:" + ex.Message.ToString());
                     return BadRequest("Something went wrong");
                 }
-            }
-            else
-            {
-                return BadRequest("Access denied");
-            }
-
         }
 
 
-        [HttpPost]
-        [Route("/api/blog/comment/delete")]
-        [IgnoreAntiforgeryToken]
+        [Authorize]
+        [HttpPost("/api/blog/comment/delete")]
         public async Task<IActionResult> DeleteComment(BlogCommentDTO blogComment)
         {
-            if (HttpContext.Session.GetString("username") != null)
+            using var connection = new SqlConnection(connectionString);
+            await connection.OpenAsync();
+            using var transaction = connection.BeginTransaction();
+            try
             {
-                using var connection = new SqlConnection(connectionString);
-                await connection.OpenAsync();
-                using var transaction = connection.BeginTransaction();
-                try
-                {
-                    // Perform multiple database operations within the transaction
-                    using var command1 = connection.CreateCommand();
-                    command1.Transaction = transaction;
-                    command1.CommandText = "DELETE FROM TblBlogComment WHERE Id = @id and UserId = @user_id";
-                    command1.Parameters.AddWithValue("@id", blogComment.Id);
-                    command1.Parameters.AddWithValue("@user_id", HttpContext.Session.GetString("user_id"));
+                using var command1 = connection.CreateCommand();
+                command1.Transaction = transaction;
+                command1.CommandText = "DELETE FROM TblBlogComment WHERE Id = @id and UserId = @user_id";
+                command1.Parameters.AddWithValue("@id", blogComment.Id);
+                command1.Parameters.AddWithValue("@user_id", User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
 
-                    await command1.ExecuteNonQueryAsync();
+                await command1.ExecuteNonQueryAsync();
 
-                    using var command2 = connection.CreateCommand();
-                    command2.Transaction = transaction;
-                    command2.CommandText = "DELETE FROM TblBlogReply WHERE CommentId = @id";
-                    command2.Parameters.AddWithValue("@id", blogComment.Id);
-                    command2.Parameters.AddWithValue("@user_id", HttpContext.Session.GetString("user_id"));
-                    await command2.ExecuteNonQueryAsync();
-                    transaction.Commit();
-                    return Ok("Commend deleted");
+                using var command2 = connection.CreateCommand();
+                command2.Transaction = transaction;
+                command2.CommandText = "DELETE FROM TblBlogReply WHERE CommentId = @id";
+                command2.Parameters.AddWithValue("@id", blogComment.Id);
+                command2.Parameters.AddWithValue("@user_id", User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+                await command2.ExecuteNonQueryAsync();
+                transaction.Commit();
+                return Ok("Commend deleted");
 
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    _logger.LogError("error deleting comment: {msg}", ex.Message.ToString());
-                    return BadRequest("Something went wrong");
-                }
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest("Access Denied");
+                transaction.Rollback();
+                _logger.LogError("error deleting comment: {msg}", ex.Message.ToString());
+                return BadRequest("Something went wrong");
             }
-
         }
 
-        [HttpPost]
-        [Route("/api/blog/reply/add")]
-        [IgnoreAntiforgeryToken]
+        [Authorize]
+        [HttpPost("/api/blog/reply/add")]
         public async Task<IActionResult> AddReply(BlogReplyDTO blogReply)
         {
-            string userid = "";
             string encodedreply = HttpUtility.HtmlEncode(blogReply.ReplyText.ToString().Trim());
 
             try
@@ -670,18 +586,9 @@ namespace almondcove.Controllers.Api
                 
                 using var connection = new SqlConnection(connectionString);
                 await connection.OpenAsync();
-                var command = new SqlCommand("SELECT Id FROM TblUserProfile WHERE UserName = @username", connection);
-                command.Parameters.AddWithValue("@username", HttpContext.Session.GetString("username").ToString());
-                var reader = await command.ExecuteReaderAsync();
-                if (await reader.ReadAsync())
-                {
-                    userid = reader.GetInt32(0).ToString();
-                }
-                reader.Close();
                 SqlCommand maxIdCommand = new("SELECT ISNULL(MAX(Id), 0) + 1 FROM TblBlogReply", connection);
                 int newId = Convert.ToInt32(maxIdCommand.ExecuteScalar());
-
-                command = new SqlCommand("insert into TblBlogReply(Id,CommentId,UserId,Reply,IsActive,DatePosted) values(" + newId + ",'" + blogReply.CommentId + "','" + userid + "','" + encodedreply + "',1,@dateposted)", connection);
+                var command = new SqlCommand("insert into TblBlogReply(Id,CommentId,UserId,Reply,IsActive,DatePosted) values(" + newId + ",'" + blogReply.CommentId + "','" + User.FindFirst(ClaimTypes.NameIdentifier).Value + "','" + encodedreply + "',1,@dateposted)", connection);
                 command.Parameters.Add("@dateposted", SqlDbType.DateTime).Value = DateTime.Now;
                 await command.ExecuteNonQueryAsync();
                 return Ok("reply added");
@@ -689,18 +596,16 @@ namespace almondcove.Controllers.Api
             }
             catch (Exception ex)
             {
-                _logger.LogInformation("error in adding reply by {username} exc message: {eexmessage}", HttpContext.Session.GetString("username"), ex.Message);
+                _logger.LogInformation("error in adding reply exc message: {eexmessage}", ex.Message);
                 return BadRequest("Something went wrong");
             }
-
         }
 
 
 
-        [HttpPost]
-        [Route("/api/blog/reply/delete")]
-        [Perm("user", "admin", "editor")]
-        [ValidateAntiForgeryToken]
+        [Authorize]
+        [HttpPost("/api/blog/reply/delete")]
+        
         public async Task<IActionResult> DeleteReply(BlogReplyDTO blogReply)
         {
             try
@@ -710,14 +615,15 @@ namespace almondcove.Controllers.Api
                 using var command = connection.CreateCommand();
                 command.CommandText = "DELETE FROM TblBlogReply WHERE Id = @id and UserId = @user_id";
                 command.Parameters.AddWithValue("@id", blogReply.ReplyId);
-                command.Parameters.AddWithValue("@user_id", HttpContext.Session.GetString("user_id"));
+                command.Parameters.AddWithValue("@user_id", User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 await command.ExecuteNonQueryAsync();
                 return Ok("Reply deleted");
 
             }
-            catch
+            catch(Exception ex)
             {
-                return BadRequest("Something went wrong");
+                _logger.LogError(ex.Message.ToString());
+                return StatusCode(500,"Error deletng reply");
             }
         }
 

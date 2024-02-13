@@ -31,7 +31,7 @@ _____  |  |   _____   ____   ____    __| _/____  _______  __ ____      |__| ____
 (____  /____/__|_|  /\____/|___|  /\____ |\___  >____/ \_/  \___  > /\ |__|___|  /
 	 \/           \/            \/      \/    \/                \/  \/         \/
 
- v.2.0.0
+ v.2.0.1
 
 
 -->
@@ -234,10 +234,13 @@ _____  |  |   _____   ____   ____    __| _/____  _______  __ ____      |__| ____
 		(function () {
 			window.onload = function () {
 				const preloader = document.querySelector('.page-loading')
-				preloader.classList.remove('active')
-				setTimeout(function () {
-					preloader.remove()
-				}, 800)
+                if (preloader) { 
+                    preloader.classList.remove('active')
+				    setTimeout(function () {
+					    preloader.remove()
+				    }, 800)
+                }
+				
 			}
 		})()
 

@@ -1,7 +1,13 @@
-﻿<!-- Navbar brand (Logo) -->
+﻿@using System.Security.Claims
+
 @{
-	var Avatar = "/assets/images/avatars/default/" + ViewData["avatar"] + ".png";
-	var UserName = Context.Session.GetString("username");
+    var avt = "default";
+    if (User.Identity.IsAuthenticated)
+    {
+        avt = User.FindFirst("avatar").Value.ToString();
+    }
+
+	 var Avatar = "/assets/images/avatars/default/" + avt + ".png";
 }
 <a class="navbar-brand pe-sm-3" href="/">
 	<span class="text-primary flex-shrink-0 me-2">
@@ -47,13 +53,24 @@ class="ai-search"></i></a>
 		<img class="border rounded-circle avatar-placeholder" src="@Avatar" width="48" alt="user profile pic">
 		<div class="ps-2">
 			<div class="fs-xs lh-1 opacity-60">Hello,</div>
-			<div class="fs-sm dropdown-toggle name-placeholder">@ViewData["first_name"]</div>
+			<div class="fs-sm dropdown-toggle name-placeholder">
+                
+               @if (User.Identity.IsAuthenticated)
+                    {
+                        <span>@User.FindFirst(ClaimTypes.GivenName)?.Value</span>
+                    }
+                    else
+                    {
+                        <span>guest</span>
+                    }
+
+            </div>
 		</div>
 	</a>
 	<div class="dropdown-menu dropdown-menu-end my-1">
 		<h6 class="dropdown-header fs-xs fw-medium text-body-secondary text-uppercase pb-1">Account</h6>
 		@{
-			if (UserName != null)
+			if (User.Identity.IsAuthenticated)
 			{
 				<a class="dropdown-item" href="/profile">
 					<i class="ai-user fs-lg opacity-70 me-2"></i>
@@ -192,7 +209,16 @@ class="ai-search"></i></a>
 				<img class="border rounded-circle avatar-placeholder" src="@Avatar" width="48" alt="user profile pic">
 				<div class="ps-2">
 					<div class="fs-xs lh-1 opacity-60">Hello,</div>
-					<div class="fs-sm dropdown-toggle name-placeholder">@ViewData["first_name"]</div>
+					<div class="fs-sm dropdown-toggle name-placeholder">
+                    @if (User.Identity.IsAuthenticated)
+                        {
+                            <span>@User.FindFirst(ClaimTypes.GivenName)?.Value</span>
+                        }
+                        else
+                        {
+                            <span>guest</span>
+                        }
+                    </div>
 				</div>
 			</a>
 			<div class="dropdown-menu dropdown-menu-end my-1">
@@ -204,7 +230,7 @@ class="ai-search"></i></a>
 				class="ai-logout fs-lg opacity-70 me-2"></i>Log Out</a> *@
 
 				@{
-					if (UserName != null)
+					if (User.Identity.IsAuthenticated)
 					{
 						<a class="dropdown-item" href="/profile">
 							<i class="ai-user fs-lg opacity-70 me-2"></i>

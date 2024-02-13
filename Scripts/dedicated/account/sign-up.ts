@@ -85,10 +85,9 @@ const verifyDeets = async function () {
                         setTimeout(redirect, 2000);
                 }
                 else {
-                        console.log("error", response.data);
+                    acToast("error", response.data);
                 }
         } catch (error) {
-                console.error('Error during login:', error);
                 acToast('error', 'something went wrong');
         } finally {
                 otpSubmit.innerHTML = "Verify";

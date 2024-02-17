@@ -8,5 +8,6 @@
         public string Slug { get; set; }
         public string Year { get; set; }
         public string Likes { get; set; }
+        public string Description { get; set; }
     }
 }

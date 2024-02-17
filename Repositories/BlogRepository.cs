@@ -20,11 +20,11 @@ namespace almondcove.Repositories
             await connection.OpenAsync();
 
             string extractQuery = @"
-                SELECT a.Id, a.Tags, a.Title, a.PostContent, a.UrlHandle,YEAR(CONVERT(DATE, a.DatePosted)) AS Year, COUNT(b.blogid) AS LikeCount
+                SELECT a.Id, a.Tags, a.Title, a.PostContent,a.Description, a.UrlHandle,YEAR(CONVERT(DATE, a.DatePosted)) AS Year, COUNT(b.blogid) AS LikeCount
                 FROM TblBlogMaster a
                 LEFT JOIN TblBlogLike b ON a.Id = b.blogid
                 WHERE a.UrlHandle = @Slug
-                GROUP BY a.Id, a.Tags, a.Title, a.UrlHandle, a.PostContent,a.DatePosted
+                GROUP BY a.Id, a.Tags, a.Title, a.UrlHandle, a.PostContent, a.Description , a.DatePosted
             ";
 
             using var command = new SqlCommand(extractQuery, connection);
@@ -38,6 +38,7 @@ namespace almondcove.Repositories
                     Id = (int)reader["Id"],
                     Tags = reader["Tags"].ToString(),
                     Title = reader["Title"].ToString(),
+                    Description = reader["Description"].ToString(),
                     Slug = reader["UrlHandle"].ToString(),
                     Year = reader["Year"].ToString(),
                     Likes = reader["LikeCount"].ToString()

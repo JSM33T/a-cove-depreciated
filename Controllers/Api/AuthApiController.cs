@@ -53,6 +53,7 @@ namespace almondcove.Controllers.Apix
                     var fullname = reader.GetString(reader.GetOrdinal("FirstName")) + " " + reader.GetString(reader.GetOrdinal("LastName"));
                     var role = reader.GetString(reader.GetOrdinal("Role"));
                     var avatar = reader.GetString(reader.GetOrdinal("Image"));
+                    var email = reader.GetString(reader.GetOrdinal("EMail"));
 
                     var claims = new List<Claim>
                     {
@@ -60,6 +61,7 @@ namespace almondcove.Controllers.Apix
                         new(ClaimTypes.Name, username),
                         new(ClaimTypes.GivenName, firstname),
                         new(ClaimTypes.Role, role),
+                        new(ClaimTypes.Email,email),
                         new("fullname", fullname),
                         new("avatar", avatar.ToString())
                     };

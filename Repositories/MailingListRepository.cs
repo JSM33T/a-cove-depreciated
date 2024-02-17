@@ -29,7 +29,7 @@ namespace almondcove.Repositories
                 command.Parameters.AddWithValue("@Email", mail.Email);
 
                 using var reader = await command.ExecuteReaderAsync();
-                if (reader.Read())
+                if (await reader.ReadAsync())
                 {
                     emailCount = reader.GetInt32(reader.GetOrdinal("EmailCount"));
                     maxId = reader.GetInt32(reader.GetOrdinal("MaxId"));
@@ -38,6 +38,7 @@ namespace almondcove.Repositories
                 {
                     return (false, "Invalid data");
                 }
+                await reader.CloseAsync();
 
 
                 if (emailCount != 0) return (false, "Email already exists");
@@ -47,10 +48,10 @@ namespace almondcove.Repositories
                     VALUES (@Id, @Email, @Origin, @DateAdded)";
 
                 using var command2 = new SqlCommand(insertQuery, connection);
-                command.Parameters.AddWithValue("@Id", maxId + 1);
-                command.Parameters.AddWithValue("@Email", mail.Email?.Trim());
-                command.Parameters.AddWithValue("@Origin", mail.Origin?.Trim());
-                command.Parameters.AddWithValue("@DateAdded", DateTime.Now);
+                command2.Parameters.AddWithValue("@Id", maxId + 1);
+                command2.Parameters.AddWithValue("@Email", mail.Email?.Trim());
+                command2.Parameters.AddWithValue("@Origin", mail.Origin?.Trim());
+                command2.Parameters.AddWithValue("@DateAdded", DateTime.Now);
 
                 int rowsAffected = await command2.ExecuteNonQueryAsync();
                 return (true, "Email added successfully");

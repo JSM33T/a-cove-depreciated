@@ -2,43 +2,15 @@ using almondcove.Interefaces.Services;
 
 namespace almondcove.Services
 {
-	public class ConfigManager : IConfigManager
+	public class ConfigManager(IConfiguration configuration) : IConfigManager
 	{
-		private readonly IConfiguration _configuration;
+		private readonly IConfiguration _configuration = configuration;
 
-		public ConfigManager(IConfiguration configuration)
-		{
-			_configuration = configuration;
-		}
-
-		public string GetConnString()
-		{
-			return _configuration["ConnectionStrings:almondCoveStr"]?.ToString();
-		}
-
-		public string GetSmtpServer()
-		{
-			return _configuration["SmtpSettings:Server"];
-		}
-
-		public string GetSmtpPort()
-		{
-		  return _configuration["SmtpSettings:Port"];
-		}
-
-		public string GetSmtpUsername()
-		{
-		  return _configuration["SmtpSettings:Username"];
-		}
-
-		public string GetSmtpPassword()
-		{
-		  return _configuration["SmtpSettings:Password"];
-		}
-
-		public string GetCryptKey()
-		{
-		  return _configuration["EncryptionKey"]?.ToString();
-		}
+        public string GetConnString() => _configuration["ConnectionStrings:almondCoveStr"]?.ToString();
+		public string GetSmtpServer() => _configuration["SmtpSettings:Server"];
+		public string GetSmtpPort() => _configuration["SmtpSettings:Port"];
+		public string GetSmtpUsername() => _configuration["SmtpSettings:Username"];
+		public string GetSmtpPassword() => _configuration["SmtpSettings:Password"];
+		public string GetCryptKey() => _configuration["EncryptionKey"]?.ToString();
 	}
 }

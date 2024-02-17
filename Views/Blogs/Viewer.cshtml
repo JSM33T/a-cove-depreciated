@@ -5,6 +5,10 @@
 @using almondcove.Models.Props;
 
 @{
+
+
+    var htmlContent = ViewData["HtmlContent"] as string;
+    var blogDeet = ViewData["blogdeet"] as BlogLoadDTO;
 	HTMLProps props = new()
 			{
 				DataBsTheme = "",
@@ -12,17 +16,15 @@
 				BodyClass = "bg-secondary"
 			};
 
-	MetaProps meta = new()
-			{
-				Title = "Home",
-			};
+    MetaProps meta = new()
+            {
+                Title = "Blog | " + blogDeet.Title,
+                Description = blogDeet.Description,
+                Tags = blogDeet.Tags
+            };
 
-
-	ViewData["HtmlProps"] = props;
-	ViewData["MetaProps"] = meta;
-
-	var htmlContent = ViewData["HtmlContent"] as string;
-	var blogDeet = ViewData["blogdeet"] as BlogLoadDTO;
+    ViewData["HtmlProps"] = props;
+    ViewData["MetaProps"] = meta;
 
 	if(User.Identity.IsAuthenticated)
 	{

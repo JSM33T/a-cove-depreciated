@@ -20,7 +20,7 @@ namespace almondcove.Controllers.Routes
         public IActionResult Attributions() => View("Views/Home/Attributions.cshtml");
 
         [Route("/contact")]
-        public IActionResult Contact() => View("Views/Home/Attributions.cshtml");
+        public IActionResult Contact() => View("Views/Home/Contact.cshtml");
 
         [Route("/404")]
         public IActionResult NF() => View("Views/Home/404.cshtml");

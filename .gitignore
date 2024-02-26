@@ -6,6 +6,7 @@
 # UserDirs
 
 wwwroot/assets/img
+wwwroot/assets/js
 wwwroot/content
 wwwroot/lib
 appsettings.json

@@ -1,0 +1,54 @@
+{
+  "Name": "Decayed Elegance Ep.1 - Ghusik colliery",
+  "Year": "2022",
+  "Images": [
+    {
+      "Id": 1,
+      "Title": "The mine",
+      "Desc": "Other thing",
+      "Slug": "ghusik-coll-1"
+    },
+    {
+      "Id": 2,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "ghusik-coll-2"
+    },
+    {
+      "Id": 3,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "ghusik-coll-3"
+    },
+    {
+      "Id": 3,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "ghusik-coll-4"
+    },
+    {
+      "Id": 3,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "ghusik-coll-5"
+    },
+    {
+      "Id": 3,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "ghusik-coll-6"
+    },
+    {
+      "Id": 3,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "ghusik-coll-7"
+    },
+    {
+      "Id": 3,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "ghusik-coll-8"
+    }
+  ]
+}

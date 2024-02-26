@@ -1,0 +1,19 @@
+{
+  "gallery": [
+    {
+      "album_id": 1,
+      "album_name": "Garden State",
+      "year": "2019"
+    },
+    {
+      "album_id": 2,
+      "album_name": "Birdies",
+      "year": "2022"
+    },
+    {
+      "album_id": 3,
+      "album_name": "Darjeeling",
+      "year": "2022"
+    }
+  ]
+}

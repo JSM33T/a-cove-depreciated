@@ -1,0 +1,210 @@
+{
+  "Name": "Birdies",
+  "Year": "2023",
+  "Images": [
+    {
+      "Id": 1,
+      "Title": "Some nice ass title",
+      "Desc": "Jungle blabbers",
+      "Slug": "blabbers_1"
+    },
+    {
+      "Id": 2,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "blabbers_2"
+    },
+    {
+      "Id": 3,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "blabbers_3"
+    },
+    {
+      "Id": 4,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "blabbers_4"
+    },
+    {
+      "Id": 5,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "blabbers_5"
+    },
+    {
+      "Id": 6,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "blabbers_6"
+    },
+    {
+      "Id": 7,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "blabbers_7"
+    },
+    {
+      "Id": 8,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "blabbers_8"
+    },
+    {
+      "Id": 9,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "blabbers_9"
+    },
+    {
+      "Id": 10,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "brahminy_starling_1"
+    },
+    {
+      "Id": 11,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "brahminy_starling_2"
+    },
+    {
+      "Id": 12,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "brahminy_starling_3"
+    },
+    {
+      "Id": 13,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "bulbul_1"
+    },
+    {
+      "Id": 14,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "bulbul_2"
+    },
+    {
+      "Id": 15,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "bulbul_3"
+    },
+    {
+      "Id": 16,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "bulbul_4"
+    },
+    {
+      "Id": 17,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "bulbul_5"
+    },
+    {
+      "Id": 18,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "myna_2"
+    },
+    {
+      "Id": 19,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "myna_3"
+    },
+    {
+      "Id": 20,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "myna_4"
+    },
+    {
+      "Id": 21,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "myna_5"
+    },
+    {
+      "Id": 22,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "myna_6"
+    },
+    {
+      "Id": 23,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "myna_7"
+    },
+    {
+      "Id": 24,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "myna_8"
+    },
+    {
+      "Id": 25,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "myna_9"
+    },
+    {
+      "Id": 26,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "oriental_magpie"
+    },
+    {
+      "Id": 27,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "spotted_dove_1"
+    },
+    {
+      "Id": 28,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "spotted_dove_2"
+    },
+    {
+      "Id": 28,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "spotted_dove_3"
+    },
+    {
+      "Id": 28,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "spotted_dove_4"
+    },
+    {
+      "Id": 28,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "spotted_dove_5"
+    },
+    {
+      "Id": 28,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "spotted_dove_6"
+    },
+    {
+      "Id": 28,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "spotted_dove_7"
+    },
+    {
+      "Id": 28,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "spotted_dove_8"
+    }
+  ]
+}

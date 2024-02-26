@@ -1,0 +1,18 @@
+{
+  "Name": "Decayed Elegance Ep.1 - The paper mills ruins",
+  "Year": "2022",
+  "Images": [
+    {
+      "Id": 1,
+      "Title": "from OPM Colonies",
+      "Desc": "something",
+      "Slug": "lost-homes-1_1"
+    },
+    {
+      "Id": 2,
+      "Title": "Another image",
+      "Desc": "Description for Album One",
+      "Slug": "lost-homes-1_2"
+    }
+  ]
+}

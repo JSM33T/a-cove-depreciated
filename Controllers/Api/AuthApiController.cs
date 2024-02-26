@@ -75,8 +75,8 @@ namespace almondcove.Controllers.Apix
                            new ClaimsPrincipal(claimsIdentity),
                            new AuthenticationProperties
                            {
-                               IsPersistent = true, // Make the cookie persistent
-                               ExpiresUtc = DateTimeOffset.UtcNow.Add(TimeSpan.FromDays(300)) // Adjust expiration time
+                               IsPersistent = true,
+                               ExpiresUtc = DateTimeOffset.UtcNow.Add(TimeSpan.FromDays(300))
                            }
                     );
                     _logger.LogError("invalid creds by username {username}", User.FindFirst(ClaimTypes.Name)?.Value);
@@ -126,7 +126,12 @@ namespace almondcove.Controllers.Apix
                         
                         SqlCommand maxIdCommand = new("SELECT ISNULL(MAX(Id), 0) + 1 FROM TblUserProfile", connection);
                         int newId = Convert.ToInt32(maxIdCommand.ExecuteScalar());
-                        cmd = new("INSERT INTO TblUserProfile (Id,FirstName,LastName,EMail,UserName,IsActive,IsVerified,OTP,OTPTime,Role,Bio,Gender,Phone,AvatarId,DateJoined,CryptedPassword) VALUES(@Id,@firstname,@lastname,@email,@username,1,0,@otp,@otptime,'user','','','',1,@datejoined,@cryptedpassword)", connection);
+                        cmd = new(@"
+                                INSERT INTO TblUserProfile 
+                                (Id,FirstName,LastName,EMail,UserName,IsActive,IsVerified,OTP,OTPTime,Role,Bio,Gender,Phone,AvatarId,DateJoined,CryptedPassword) 
+                                VALUES
+                                (@Id,@firstname,@lastname,@email,@username,1,0,@otp,@otptime,'user','','','',1,@datejoined,@cryptedpassword)
+                            ", connection);
                         cmd.Parameters.AddWithValue("@Id", newId);
                         cmd.Parameters.AddWithValue("@firstname", userProfile.FirstName.Trim());
                         cmd.Parameters.AddWithValue("@lastname", userProfile.LastName);

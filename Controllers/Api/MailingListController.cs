@@ -70,16 +70,5 @@ namespace almondcove.Controllers.Api
             }
         }
 
-
-
-        private static Mail MapToMailEntity(MailDTO mailDTO)
-        {
-            return new Mail
-            {
-                Email = mailDTO.EMail,
-                Origin = mailDTO.Origin,
-                DateAdded = DateTime.Now,
-            };
-        }
     }
 }

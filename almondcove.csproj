@@ -48,7 +48,6 @@
   </ItemGroup>
 
   <ItemGroup>
-	<Folder Include="Migrations\DDL\" />
 	<Folder Include="Models\DTO\Media\Music\" />
 	<Folder Include="Logs\" />
 	<Folder Include="wwwroot\assets\images\megamenu\" />

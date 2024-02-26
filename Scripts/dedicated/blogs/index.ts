@@ -76,7 +76,7 @@ const CategorisedBlogComponent = {
         <div v-else>
             <div v-for="blog in blogs" :key="blog.title">
                 <article class="row g-0 border-0 mb-4 fade-in">
-                    <a class="col-sm-5 bg-repeat-0 bg-size-cover bg-position-center rounded-5" v-bind:href="'/blog/' + blog.datePosted.substring(0,4) + '/' + blog.urlHandle " v-bind:style="{ 'background-image': 'url(/content/blogs/' + blog.datePosted.substring(0, 4) + '/' + blog.urlHandle + '/assets/cover.webp)', 'min-height': '14rem' }"></a>
+                    <a class="col-sm-5 bg-repeat-0 bg-size-cover bg-position-center rounded-5" v-bind:href="'/blog/' + blog.datePosted.substring(0,4) + '/' + blog.urlHandle " v-bind:style="{ 'background-image': 'url(https://res.cloudinary.com/dkpmezpui/image/upload/v1707656187/almondcoveassets/blogs/' + blog.datePosted.substring(0, 4) + '/' + blog.urlHandle + '/cover.webp)', 'min-height': '14rem' }"></a>
                     <div class="col-sm-7">
                         <div class="pt-4 pb-sm-4 ps-sm-4 pe-lg-4">
                             <h3>
@@ -109,7 +109,7 @@ const HomeComponent = {
                 <div v-if="blogs.length > 0">
                     <div v-for="blog in blogs" :key="blog.title" class="fade-in">
                         <article class="row g-0 border-0 mb-4 ">
-                            <a class="col-sm-5 bg-repeat-0 bg-size-cover bg-position-center rounded-5" v-bind:href="'/blog/' + blog.datePosted.substring(0,4) + '/' + blog.urlHandle " v-bind:style="{ 'background-image': 'url(/content/blogs/' + blog.datePosted.substring(0, 4) + '/' + blog.urlHandle + '/assets/cover.webp)', 'min-height': '14rem' }"></a>
+                            <a class="col-sm-5 bg-repeat-0 bg-size-cover bg-position-center rounded-5" v-bind:href="'/blog/' + blog.datePosted.substring(0,4) + '/' + blog.urlHandle " v-bind:style="{ 'background-image': 'url(https://res.cloudinary.com/dkpmezpui/image/upload/v1707656187/almondcoveassets/blogs/' + blog.datePosted.substring(0, 4) + '/' + blog.urlHandle + '/cover.webp)', 'min-height': '14rem' }"></a>
                             <div class="col-sm-7">
                                 <div class="pt-4 pb-sm-4 ps-sm-4 pe-lg-4 ">
                                     <h3>

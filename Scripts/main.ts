@@ -38,7 +38,6 @@ async function getUpdates() {
                     <dd class="nav-link"><a href="${entry.link}"><span> ${entry.title}</span></a></dd>
                 `;
                 }
-                
             }
         } else {
             console.error('Invalid or missing changelog data');

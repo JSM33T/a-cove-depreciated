@@ -99,36 +99,30 @@ namespace almondcove.Repositories
 
         public async Task<List<Avatar>> GetAvatarsAsync()
         {
-            try
+            
+            using SqlConnection connection = new(_configManager.GetConnString());
+            await connection.OpenAsync();
+
+            string sql = "SELECT Id, Title, Image FROM TblAvatarMaster";
+
+            using SqlCommand command = new(sql, connection);
+            using SqlDataReader dataReader = await command.ExecuteReaderAsync().ConfigureAwait(false);
+
+            List<Avatar> entries = [];
+
+            while (await dataReader.ReadAsync())
             {
-                using SqlConnection connection = new(_configManager.GetConnString());
-                await connection.OpenAsync();
-
-                string sql = "SELECT Id, Title, Image FROM TblAvatarMaster";
-
-                using SqlCommand command = new(sql, connection);
-                using SqlDataReader dataReader = await command.ExecuteReaderAsync().ConfigureAwait(false);
-
-                List<Avatar> entries = [];
-
-                while (await dataReader.ReadAsync())
+                Avatar entry = new()
                 {
-                    Avatar entry = new()
-                    {
-                        Id = dataReader["Id"] as int? ?? 0,
-                        Title = dataReader["Title"] as string ?? "",
-                        Image = dataReader["Image"] as string ?? ""
-                    };
-                    entries.Add(entry);
-                }
+                    Id = dataReader["Id"] as int? ?? 0,
+                    Title = dataReader["Title"] as string ?? "",
+                    Image = dataReader["Image"] as string ?? ""
+                };
+                entries.Add(entry);
+            }
 
-                return entries;
-            }
-            catch (SqlException ex)
-            {
-                _logger.LogError("error getting avatar{message}", ex.Message);
-                throw;
-            }
+            return entries;
+           
         }
 
         public async Task<bool> UpdatePassword(string username, string newPassword)
@@ -181,11 +175,11 @@ namespace almondcove.Repositories
 
                     return _avatar;
                 }
-                return null;
+                return default;
             }
             catch
             {
-                return null;
+                return default;
             }
         }
     }

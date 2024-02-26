@@ -11,7 +11,7 @@
     MetaProps meta = new()
             {
                 Title = Model.Name + " |Gallery",
-                Description = Model.Name + "gallery" ,
+                Description = Model.Name + ", Almondcove gallery" ,
                 Tags = "gallery, almondcove, photography, urbanexploration"
             };
 
@@ -49,18 +49,22 @@
         <div class="gallery row g-3 g-md-4 pb-4 masonry-grid">
            @foreach (var album in Model.Images)
             {
-                <div class="col-md-3 col-sm-6  masonry-grid-item shuffle-item shuffle-item--visible">
-                    <a class="gallery-item d-block card-hover zoom-effect" href="@($"/content/gallery/{ViewData["gallery_slug"]}/lossless/{album.Slug}.jpg")"
-                       data-lg-id="565e885e-f001-4f5f-b4c0-17e97850b696">
-                        <div class="d-flex justify-content-center align-items-center position-absolute top-0 start-0 w-100 h-100 rounded-4 overflow-hidden zindex-2 opacity-0">
-                            <i class="ai-zoom-in fs-2 text-white position-relative zindex-2"></i>
-                            <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-40"></div>
-                        </div>
-                        <div class="zoom-effect-wrapper rounded-4">
-                            <img class="zoom-effect-img" data-sub-html="<h4>Photo by - <a href='https://unsplash.com/therawhunter' >Massimiliano Morosinotto </a></h4><p> Location - <a href='https://unsplash.com/s/photos/tre-cime-di-lavaredo%2C-italia'>Tre Cime di Lavaredo, Italia</a>This is the Way</p>" src="@($"/content/gallery/{ViewData["gallery_slug"]}/thumbs/{album.Slug}.webp")" height="800" width="600" loading="lazy" alt="@album.Desc">
-                        </div>
-                    </a>
-                </div>
+                if (album.Slug != "")
+                {
+                    <div class="col-md-3 col-sm-6  masonry-grid-item shuffle-item shuffle-item--visible">
+                        <a class="gallery-item d-block card-hover zoom-effect" href="@($"https://res.cloudinary.com/dkpmezpui/image/upload/v1708841047/almondcoveassets/gallery/{ViewData["gallery_slug"]}/{album.Slug}.jpg")" data-lg-id="565e885e-f001-4f5f-b4c0-17e97850b696">
+                            <div class="d-flex justify-content-center align-items-center position-absolute top-0 start-0 w-100 h-100 rounded-4 overflow-hidden zindex-2 opacity-0">
+                                <i class="ai-zoom-in fs-2 text-white position-relative zindex-2"></i>
+                                <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-40"></div>
+                            </div>
+                            <div class="zoom-effect-wrapper rounded-4">
+                                <img class="zoom-effect-img" data-sub-html="<h4>Photo by - <a href='https://unsplash.com/therawhunter' >Massimiliano Morosinotto </a></h4><p> Location - <a href='https://unsplash.com/s/photos/tre-cime-di-lavaredo%2C-italia'>Tre Cime di Lavaredo, Italia</a>This is the Way</p>"
+                                     src="@($"https://res.cloudinary.com/dkpmezpui/image/upload/c_fill,w_400,g_face/v1708841047/almondcoveassets/gallery/{ViewData["gallery_slug"]}/{album.Slug}.jpg")" height="800" width="600" loading="lazy" alt="@album.Desc">
+                            </div>
+                        </a>
+                    </div>
+                }
+                
             }
         </div>
     </div>

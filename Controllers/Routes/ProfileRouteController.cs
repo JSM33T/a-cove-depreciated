@@ -1,5 +1,4 @@
-﻿using almondcove.Filters;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace almondcove.Controllers.Routes
 {

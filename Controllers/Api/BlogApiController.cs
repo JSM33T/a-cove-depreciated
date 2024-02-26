@@ -31,14 +31,11 @@ namespace almondcove.Controllers.Api
         [HttpGet("/api/topblogs/get")]
         public async Task<IActionResult> GetTopBlogs()
         {
-            try
-            {
-                return Ok(await _blogRepo.GetTopBlogsAsync());
+            try {
+                return Ok(await _blogRepo.GetTopBlogsAsync()); 
             }
-            catch (Exception ex)
-            {
-                _logger.LogError("error fetchingblogs message: {message}", ex.Message);
-                return BadRequest("error fetching blogs");
+            catch (Exception ex) {
+                _logger.LogError("error fetchingblogs message: {message}", ex.Message); return BadRequest("error fetching blogs"); 
             }
         }
 

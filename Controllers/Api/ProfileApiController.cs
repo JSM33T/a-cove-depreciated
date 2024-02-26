@@ -1,13 +1,9 @@
-﻿using almondcove.Filters;
-using almondcove.Interefaces.Repositories;
+﻿using almondcove.Interefaces.Repositories;
 using almondcove.Interefaces.Services;
 using almondcove.Models.Domain;
-using almondcove.Models.DTO.Account;
 using almondcove.Models.DTO.Profile;
-using almondcove.Modules;
-using almondcove.Services;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.Data;

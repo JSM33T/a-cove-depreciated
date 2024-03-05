@@ -11,7 +11,8 @@
 
     public class AlbumCollection{
         public string Name { get; set; }
-        public string Year{ get; set; }
+        public string Year { get; set; }
+        public string Desc { get; set; }
         public List<AlbumItemsDTO> Images { get; set; }
         
     }

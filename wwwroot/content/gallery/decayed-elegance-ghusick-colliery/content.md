@@ -1,2 +1,0 @@
-
-Ghusik colliery: Description

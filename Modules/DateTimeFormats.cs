@@ -29,7 +29,6 @@
             {
                 int hoursDiff = (int)Math.Floor(timeDifference.TotalHours);
                 return hoursDiff + " Hours ago";
-                //log and check the o/p
             }
             else if (timeDifference.TotalDays < 7)
             {

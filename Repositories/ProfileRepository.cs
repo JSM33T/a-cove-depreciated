@@ -80,7 +80,6 @@ namespace almondcove.Repositories
 
             if (reader.Read())
             {
-                // Map reader data to a User object
                 var user = new UserProfile
                 {
                     UserName = reader.GetString(reader.GetOrdinal("UserName")),

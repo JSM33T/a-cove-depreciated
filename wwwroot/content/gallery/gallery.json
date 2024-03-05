@@ -1,12 +1,12 @@
 [
   {
     "Id": 1,
-    "Title": "Garden State",
+    "Title": "Garden State Ep.1",
     "Desc": "Flora from my backyard",
     "Category": "nature",
     "Year": "2019",
     "IsActive": true,
-    "Slug": "garden-state"
+    "Slug": "garden-state-1"
   },
   {
     "Id": 2,
@@ -19,20 +19,29 @@
   },
   {
     "Id": 3,
-    "Title": "Decayed Elegance Ep.1 - Ghusik Colliery",
-    "Desc": "The tour through the abandoned Ghusik Colliery",
+    "Title": "Decayed Elegance Ep.1",
+    "Desc": "Abandoned Ghusik Colliery,WB",
     "Category": "urbex",
     "Year": "2022",
     "IsActive": true,
-    "Slug": "decayed-elegance-ghusick-colliery"
+    "Slug": "decayed-elegance-1"
   },
- {
+  {
     "Id": 4,
-    "Title": "Decayed Elegance Ep.2",
+    "Title": "Lost Homes Ep1",
     "Desc": "All about the Colonies now being reclaimed by nature",
     "Category": "urbex",
     "Year": "2022",
-    "IsActive": false,
-    "Slug": "decayed-elegance-2"
+    "IsActive": true,
+    "Slug": "lost-homes-1"
+  },
+  {
+    "Id": 5,
+    "Title": "Decayed Elegance Ep2",
+    "Desc": "Clubs of the OPM mills",
+    "Category": "urbex",
+    "Year": "2022",
+    "IsActive": true,
+    "Slug": "decayed-elegance-1"
   }
 ]
